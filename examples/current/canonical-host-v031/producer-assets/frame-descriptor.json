@@ -1,1 +1,819 @@
-{"activation_sha256":"19ebfcba6110f483aa4279b979dd0cf51978306f3b1dbd7193f86c7e63158c07","canonical_entries":[{"argument_alignment":4,"argument_kind":"value","argument_projection":"__wasmc_app_arg_0_0","argument_shape":{"alignment":4,"fields":[{"name":"method","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"path","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"parameters","offset":16,"value":{"alignment":4,"element":{"alignment":4,"fields":[{"name":"name","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"value","offset":8,"value":{"alignment":4,"kind":"string","size":8}}],"kind":"record","size":16},"kind":"list","size":8}},{"name":"query","offset":24,"value":{"alignment":4,"element":{"alignment":4,"fields":[{"name":"name","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"value","offset":8,"value":{"alignment":4,"kind":"string","size":8}}],"kind":"record","size":16},"kind":"list","size":8}},{"name":"headers","offset":32,"value":{"alignment":4,"element":{"alignment":4,"fields":[{"name":"name","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"value","offset":8,"value":{"alignment":4,"element":{"alignment":1,"kind":"scalar","size":1,"type":"U8"},"kind":"list","size":8}}],"kind":"record","size":16},"kind":"list","size":8}},{"name":"body","offset":40,"value":{"alignment":4,"element":{"alignment":1,"kind":"scalar","size":1,"type":"U8"},"kind":"list","size":8}}],"kind":"record","size":48},"argument_size":48,"canonical_export":"__wasmc_invoke_canonical_run","owned_result":{"drop_function":"object_drop","drop_module":"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0","projection":"__wasmc_app_result_0","shape":{"alignment":4,"fields":[{"name":"status","offset":0,"value":{"alignment":2,"kind":"scalar","size":2,"type":"U16"}},{"name":"body","offset":4,"value":{"alignment":4,"element":{"alignment":1,"kind":"scalar","size":1,"type":"U8"},"kind":"list","size":8}}],"kind":"record","size":12},"type_ordinal":21},"result_lane":"i32","source_export":"run"}],"entry_binding_sha256":"3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe","expected_final_host_imports":[{"function":"request-body-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-body-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"request-headers-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-headers-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"request-method-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-method-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"request-parameters-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-parameters-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"request-path-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-path-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"request-query-len","module":"mcpgit:http/v1","params":[],"results":["i32"]},{"function":"request-query-read","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"response-canonical-write","module":"mcpgit:http/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"error-case","module":"mcpgit:lib-error/v1","params":["i32"],"results":["i32"]},{"function":"error-drop","module":"mcpgit:lib-error/v1","params":["i32"],"results":["i32"]},{"function":"error-message-len","module":"mcpgit:lib-error/v1","params":["i32"],"results":["i32"]},{"function":"error-message-read","module":"mcpgit:lib-error/v1","params":["i32","i32","i32"],"results":["i32"]},{"function":"wit-table-transact","module":"mcpgit:lib/v1","params":["i32","i32"],"results":["i32","i32"]}],"lib_import_module":"wasmc:lib/wasmc-json@0.0.6","modules":[{"bytes":23895,"module":"wasmc-snapshot-caller","offset":0,"path":"caller.wasm","sha256":"d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"},{"bytes":13727,"module":"wasmc-native-value-projection","offset":23895,"path":"lib-projection.wasm","sha256":"eaa02aa601016b4ca5807e600ca77a64b344a60a0bf40775a81b0a88a1799be0"},{"bytes":5971,"module":"wasmc-native-value-calls","offset":37622,"path":"lib-calls.wasm","sha256":"ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"},{"bytes":499,"module":"wasmc-canonical-app-entry","offset":43593,"path":"canonical-entry.wasm","sha256":"6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"},{"bytes":7269,"module":"wasmc-app-value-projection","offset":44092,"path":"app-projection.wasm","sha256":"918eafa4d32aa90bbb95132db09c87fa01a19605f9924f2c130ac024f247e414"},{"bytes":1318,"module":"wasmc-host-entry","offset":51361,"path":"host-entry.wasm","sha256":"419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"},{"bytes":9877,"module":"wasmc-host-value-projection","offset":52679,"path":"host-projection.wasm","sha256":"123fd32c6a059c99a9ee7cbbdc4b0387b5f9fbfcefb4a3b011194521547165c3"},{"bytes":872,"module":"wasmc-native-host-calls","offset":62556,"path":"host-calls.wasm","sha256":"eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"}],"native_host_projection":[{"argument_shape":{"alignment":4,"fields":[{"name":"table-path","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"expected-revision","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"transaction-id","offset":16,"value":{"alignment":4,"kind":"string","size":8}},{"name":"idempotency-key","offset":24,"value":{"alignment":4,"cases":[{"alignment":1,"kind":"unit","size":0},{"alignment":4,"kind":"string","size":8}],"kind":"option","payload_offset":4,"size":12,"tag_size":1}},{"name":"operations","offset":36,"value":{"alignment":4,"element":{"alignment":8,"cases":[{"alignment":4,"fields":[{"name":"operation-id","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"key","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"row-json","offset":16,"value":{"alignment":4,"kind":"string","size":8}}],"kind":"record","size":24},{"alignment":8,"fields":[{"name":"operation-id","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"key","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"expected-row-version","offset":16,"value":{"alignment":8,"kind":"scalar","size":8,"type":"U64"}},{"name":"field-updates","offset":24,"value":{"alignment":4,"element":{"alignment":4,"cases":[{"alignment":4,"fields":[{"name":"field","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"value-json","offset":8,"value":{"alignment":4,"kind":"string","size":8}}],"kind":"record","size":16},{"alignment":4,"kind":"string","size":8},{"alignment":4,"fields":[{"name":"field","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"patch","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"expected-value-sha256","offset":16,"value":{"alignment":4,"cases":[{"alignment":1,"kind":"unit","size":0},{"alignment":4,"kind":"string","size":8}],"kind":"option","payload_offset":4,"size":12,"tag_size":1}}],"kind":"record","size":28}],"kind":"variant","payload_offset":4,"size":32,"tag_size":1},"kind":"list","size":8}}],"kind":"record","size":32},{"alignment":8,"fields":[{"name":"operation-id","offset":0,"value":{"alignment":4,"kind":"string","size":8}},{"name":"key","offset":8,"value":{"alignment":4,"kind":"string","size":8}},{"name":"expected-row-version","offset":16,"value":{"alignment":8,"kind":"scalar","size":8,"type":"U64"}}],"kind":"record","size":24}],"kind":"variant","payload_offset":8,"size":40,"tag_size":1},"kind":"list","size":8}}],"kind":"record","size":44},"error_cases":["invalid-argument","permission-denied","stale-revision","transaction-rejected","budget-exceeded"],"error_family":"table-error","host_authorities":["mcpgit.table.write"],"maximum_message_bytes":65536,"maximum_window_bytes":4294967295,"original_operation_id":10,"original_result":"Result { ok: Record(7), err: ErrorVariantString(\"table-error\") }","original_source_name":"transact","private_function":"__wasmc_host_operation_10","private_module":"wasmc-native-host-calls","private_source_name":"transact-discarded","raw_function":"wit-table-transact","raw_module":"mcpgit:lib/v1","raw_params":["I32","I32"],"raw_results":["I32","I32"],"result_open":"__wasmc_host_make_result_10","result_shape":{"alignment":4,"cases":[{"alignment":1,"kind":"unit","size":0},{"alignment":4,"cases":[{"alignment":4,"kind":"string","size":8},{"alignment":4,"kind":"string","size":8},{"alignment":4,"kind":"string","size":8},{"alignment":4,"kind":"string","size":8},{"alignment":4,"kind":"string","size":8}],"kind":"variant","payload_offset":4,"size":12,"tag_size":1}],"kind":"result","payload_offset":4,"size":16,"tag_size":1},"runtime_bridge":"complete-value-window/error-handle-wire","schema":"wasmc.native-host-projection/v1","success_projection":"explicit-discard-to-unit","window_open":"__wasmc_host_window_10"}],"operation_binding_sha256":"b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797","root":{"artifact_sha256":"eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd","manifest_sha256":"07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f","template_sha256":"9a7146580e8227612caaad59cb2da600a57ec787f4520dad050ceda168010538","wit_sha256":"2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"},"schema":"wasmc.canonical-host-modules/v1","source_sha256":"011041202dcd18b34504f535950508cc6defb157a979efa47c14559db5e8b3dc","transfer_source_sha256":"07e6d760158a8c4724d1552ebfe72f94f8b2041374d86e95e131e37a7acbd62e"}
+{
+  "activation_sha256": "19ebfcba6110f483aa4279b979dd0cf51978306f3b1dbd7193f86c7e63158c07",
+  "canonical_entries": [
+    {
+      "argument_alignment": 4,
+      "argument_kind": "value",
+      "argument_projection": "__wasmc_app_arg_0_0",
+      "argument_shape": {
+        "alignment": 4,
+        "fields": [
+          {
+            "name": "method",
+            "offset": 0,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "path",
+            "offset": 8,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "parameters",
+            "offset": 16,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "query",
+            "offset": 24,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "headers",
+            "offset": 32,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "element": {
+                        "alignment": 1,
+                        "kind": "scalar",
+                        "size": 1,
+                        "type": "U8"
+                      },
+                      "kind": "list",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "body",
+            "offset": 40,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 1,
+                "kind": "scalar",
+                "size": 1,
+                "type": "U8"
+              },
+              "kind": "list",
+              "size": 8
+            }
+          }
+        ],
+        "kind": "record",
+        "size": 48
+      },
+      "argument_size": 48,
+      "canonical_export": "__wasmc_invoke_canonical_run",
+      "owned_result": {
+        "drop_function": "object_drop",
+        "drop_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "projection": "__wasmc_app_result_0",
+        "shape": {
+          "alignment": 4,
+          "fields": [
+            {
+              "name": "status",
+              "offset": 0,
+              "value": {
+                "alignment": 2,
+                "kind": "scalar",
+                "size": 2,
+                "type": "U16"
+              }
+            },
+            {
+              "name": "body",
+              "offset": 4,
+              "value": {
+                "alignment": 4,
+                "element": {
+                  "alignment": 1,
+                  "kind": "scalar",
+                  "size": 1,
+                  "type": "U8"
+                },
+                "kind": "list",
+                "size": 8
+              }
+            }
+          ],
+          "kind": "record",
+          "size": 12
+        },
+        "type_ordinal": 21
+      },
+      "result_lane": "i32",
+      "source_export": "run"
+    }
+  ],
+  "entry_binding_sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
+  "expected_final_host_imports": [
+    {
+      "function": "request-body-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-body-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-method-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-method-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "response-canonical-write",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-case",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-drop",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-message-len",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-message-read",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "wit-table-transact",
+      "module": "mcpgit:lib/v1",
+      "params": [
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32",
+        "i32"
+      ]
+    }
+  ],
+  "lib_import_module": "wasmc:lib/wasmc-json@0.0.6",
+  "modules": [
+    {
+      "bytes": 23895,
+      "module": "wasmc-snapshot-caller",
+      "offset": 0,
+      "path": "caller.wasm",
+      "sha256": "d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"
+    },
+    {
+      "bytes": 13766,
+      "module": "wasmc-native-value-projection",
+      "offset": 23895,
+      "path": "lib-projection.wasm",
+      "sha256": "9431cb494f38b674cdf75da83a26fc1d6e7f7917f80d7f742f8dd2e4c7a617af"
+    },
+    {
+      "bytes": 5971,
+      "module": "wasmc-native-value-calls",
+      "offset": 37661,
+      "path": "lib-calls.wasm",
+      "sha256": "ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"
+    },
+    {
+      "bytes": 499,
+      "module": "wasmc-canonical-app-entry",
+      "offset": 43632,
+      "path": "canonical-entry.wasm",
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "bytes": 7310,
+      "module": "wasmc-app-value-projection",
+      "offset": 44131,
+      "path": "app-projection.wasm",
+      "sha256": "19ac84cc3cf900f5131f5fc8be6ebb703610cb0d2b86850f7585c046c6521a45"
+    },
+    {
+      "bytes": 1318,
+      "module": "wasmc-host-entry",
+      "offset": 51441,
+      "path": "host-entry.wasm",
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "bytes": 9917,
+      "module": "wasmc-host-value-projection",
+      "offset": 52759,
+      "path": "host-projection.wasm",
+      "sha256": "a4458d6634c5168ce6629e1bfee4f44ed2f8ff3f7f2ae0c8d50f1821db32a56d"
+    },
+    {
+      "bytes": 872,
+      "module": "wasmc-native-host-calls",
+      "offset": 62676,
+      "path": "host-calls.wasm",
+      "sha256": "eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"
+    }
+  ],
+  "native_host_projection": [
+    {
+      "argument_shape": {
+        "alignment": 4,
+        "fields": [
+          {
+            "name": "table-path",
+            "offset": 0,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "expected-revision",
+            "offset": 8,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "transaction-id",
+            "offset": 16,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "offset": 24,
+            "value": {
+              "alignment": 4,
+              "cases": [
+                {
+                  "alignment": 1,
+                  "kind": "unit",
+                  "size": 0
+                },
+                {
+                  "alignment": 4,
+                  "kind": "string",
+                  "size": 8
+                }
+              ],
+              "kind": "option",
+              "payload_offset": 4,
+              "size": 12,
+              "tag_size": 1
+            }
+          },
+          {
+            "name": "operations",
+            "offset": 36,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 8,
+                "cases": [
+                  {
+                    "alignment": 4,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "row-json",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 24
+                  },
+                  {
+                    "alignment": 8,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "expected-row-version",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 8,
+                          "kind": "scalar",
+                          "size": 8,
+                          "type": "U64"
+                        }
+                      },
+                      {
+                        "name": "field-updates",
+                        "offset": 24,
+                        "value": {
+                          "alignment": 4,
+                          "element": {
+                            "alignment": 4,
+                            "cases": [
+                              {
+                                "alignment": 4,
+                                "fields": [
+                                  {
+                                    "name": "field",
+                                    "offset": 0,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "value-json",
+                                    "offset": 8,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "size": 16
+                              },
+                              {
+                                "alignment": 4,
+                                "kind": "string",
+                                "size": 8
+                              },
+                              {
+                                "alignment": 4,
+                                "fields": [
+                                  {
+                                    "name": "field",
+                                    "offset": 0,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "patch",
+                                    "offset": 8,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "expected-value-sha256",
+                                    "offset": 16,
+                                    "value": {
+                                      "alignment": 4,
+                                      "cases": [
+                                        {
+                                          "alignment": 1,
+                                          "kind": "unit",
+                                          "size": 0
+                                        },
+                                        {
+                                          "alignment": 4,
+                                          "kind": "string",
+                                          "size": 8
+                                        }
+                                      ],
+                                      "kind": "option",
+                                      "payload_offset": 4,
+                                      "size": 12,
+                                      "tag_size": 1
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "size": 28
+                              }
+                            ],
+                            "kind": "variant",
+                            "payload_offset": 4,
+                            "size": 32,
+                            "tag_size": 1
+                          },
+                          "kind": "list",
+                          "size": 8
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 32
+                  },
+                  {
+                    "alignment": 8,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "expected-row-version",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 8,
+                          "kind": "scalar",
+                          "size": 8,
+                          "type": "U64"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 24
+                  }
+                ],
+                "kind": "variant",
+                "payload_offset": 8,
+                "size": 40,
+                "tag_size": 1
+              },
+              "kind": "list",
+              "size": 8
+            }
+          }
+        ],
+        "kind": "record",
+        "size": 44
+      },
+      "error_cases": [
+        "invalid-argument",
+        "permission-denied",
+        "stale-revision",
+        "transaction-rejected",
+        "budget-exceeded"
+      ],
+      "error_family": "table-error",
+      "host_authorities": [
+        "mcpgit.table.write"
+      ],
+      "maximum_message_bytes": 65536,
+      "maximum_window_bytes": 4294967295,
+      "original_operation_id": 10,
+      "original_result": "Result { ok: Record(7), err: ErrorVariantString(\"table-error\") }",
+      "original_source_name": "transact",
+      "private_function": "__wasmc_host_operation_10",
+      "private_module": "wasmc-native-host-calls",
+      "private_source_name": "transact-discarded",
+      "raw_function": "wit-table-transact",
+      "raw_module": "mcpgit:lib/v1",
+      "raw_params": [
+        "I32",
+        "I32"
+      ],
+      "raw_results": [
+        "I32",
+        "I32"
+      ],
+      "result_open": "__wasmc_host_make_result_10",
+      "result_shape": {
+        "alignment": 4,
+        "cases": [
+          {
+            "alignment": 1,
+            "kind": "unit",
+            "size": 0
+          },
+          {
+            "alignment": 4,
+            "cases": [
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              }
+            ],
+            "kind": "variant",
+            "payload_offset": 4,
+            "size": 12,
+            "tag_size": 1
+          }
+        ],
+        "kind": "result",
+        "payload_offset": 4,
+        "size": 16,
+        "tag_size": 1
+      },
+      "runtime_bridge": "complete-value-window/error-handle-wire",
+      "schema": "wasmc.native-host-projection/v1",
+      "success_projection": "explicit-discard-to-unit",
+      "window_open": "__wasmc_host_window_10"
+    }
+  ],
+  "operation_binding_sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+  "root": {
+    "artifact_sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd",
+    "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+    "template_sha256": "9a7146580e8227612caaad59cb2da600a57ec787f4520dad050ceda168010538",
+    "wit_sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+  },
+  "schema": "wasmc.canonical-host-modules/v1",
+  "source_sha256": "011041202dcd18b34504f535950508cc6defb157a979efa47c14559db5e8b3dc",
+  "transfer_source_sha256": "07e6d760158a8c4724d1552ebfe72f94f8b2041374d86e95e131e37a7acbd62e"
+}
