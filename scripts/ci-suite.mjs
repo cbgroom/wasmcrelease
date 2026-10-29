@@ -24,6 +24,11 @@ function currentProductControls() {
   return {product:'scripts/test-current-product-v4.mjs',license:'scripts/test-current-license-policy-v4.mjs',catalog:policy.catalog_sha256};
 }
 
+export function compilerCarrierCheck(version,runtime='node') {
+  const parts=version?.split('.').map(Number);
+  return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
+    ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read'])}:null;
+}
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
@@ -62,6 +67,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
+    ...[compilerCarrierCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
     ...mixedModuleChecks,
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),

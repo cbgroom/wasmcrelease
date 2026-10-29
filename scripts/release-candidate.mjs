@@ -472,6 +472,7 @@ export const currentV3ProductInputs=Object.freeze([
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
+    ...(usesExpandedCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs']:[]),
     ...(Number(version.split('.')[2])>=31?['scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
@@ -511,6 +512,18 @@ export function currentProductInputsForVersion(version,variant){
     'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs','scripts/test-current-values-component.mjs',
     'scripts/test-json-current-differential.mjs'];
 }
+// Historical release carriers retain their original size limit.
+function usesExpandedCompilerCarrier(version) {
+  assert.match(version,/^\d+\.\d+\.\d+$/);
+  const [major,minor,patch]=version.split('.').map(Number);
+  return major>0||minor>0||patch>=31;
+}
+export function validateCurrentCompilerBytes(raw, compiler, version) {
+  const limit=usesExpandedCompilerCarrier(version) ? 16*1024*1024 : 2*1024*1024;
+  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes||raw.length>limit)
+    throw Error('compiler identity or byte budget drift');
+  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+}
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
   const exact=path=>{
@@ -537,9 +550,7 @@ export function currentCandidateClosure(candidate,read){
     const selected=loadBoundProtocol(exact);assert.equal(selected.protocol.release_binding.version,candidate.version);
   }
   const raw=exact('current/wasmc_compiler.wasm');
-  if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
-    throw Error('compiler identity or byte budget drift');
-  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+  validateCurrentCompilerBytes(raw,compiler.compiler,candidate.version);
   const binaries=[],embeddings=[];
   for(const [path]of rows){
     if(path.endsWith('.wasm')){
