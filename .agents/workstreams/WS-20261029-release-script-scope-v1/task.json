@@ -1,0 +1,45 @@
+{
+  "schema": "wasmc-public-release-workstream/v1",
+  "task_id": "WS-20261029-release-script-scope-v1",
+  "owner": "01a129c3-6473-7c62-8856-2cb7a6abca28",
+  "state": "in-progress",
+  "base": "3ed99aa6f558f25940d4baa09a31cbae3336b911",
+  "branch": "work/WS-20261029-release-script-scope-v1",
+  "scope": "Serial owner release and successor compiler-carrier byte boundary; preserve old versions, existing source claims, and product semantics.",
+  "claims": [
+    {
+      "kind": "file",
+      "scope": ".agents/workstreams/WS-20261029-release-script-scope-v1",
+      "mode": "exclusive"
+    }
+  ],
+  "source_releases": {
+    "WS-20261021-formal-normal-functional-v022": "3e06e12c0310411ee99b6b28eb9940127940c0a4",
+    "WS-20261021-normal-functional-successor-v023": "8f8a20d20d38523e597f61174cc3af77c06c8007",
+    "WS-20261022-json006-current-admission-v024": "2713cc94366f839fdef788f1710d201fbb7da06a",
+    "WS-20261026-lib-memory-release-v031": "dc1e99d5b645fc97f46a07d0cd9fa953aabd42fd"
+  },
+  "next": "Independent target integration, normal hosted CI, the real v031 candidate/compiler manifest and full production route remain open.",
+  "validation": {
+    "node_bun_deno": "v030 2MiB / v031 16MiB exact boundaries, overflow and identity controls pass",
+    "version_channel": "normal version and channel regressions pass",
+    "v030_reopen": "actual frozen candidate 2333 files, exact pinned fallback, pass",
+    "future_ci": "explicit 0.0.30 vs 0.0.31, 0.0.32, 0.1.0 selection on Node/Bun/Deno validated",
+    "receipt": ".agents/workstreams/WS-20261029-release-script-scope-v1/qualification/evidence.json",
+    "source_integrity": "FAIL retained: v030 manifest pins old scripts; candidate v031 assembly required before new whole-product manifest; no frozen refresh"
+  },
+  "serial_release_candidate": {
+    "scope": "scripts/release-candidate.mjs",
+    "to": "WS-20261026-lib-memory-release-v031",
+    "status": "released by same owner; remaining carrier files and candidate patch retained"
+  },
+  "serial_release_carrier": {
+    "scopes": [
+      "scripts/ci-suite.mjs",
+      "scripts/test-current-compiler-byte-boundary-v031.mjs",
+      "scripts/test-release-channel.mjs"
+    ],
+    "to": "WS-20261026-lib-memory-release-v031",
+    "status": "same-owner released for integration"
+  }
+}
