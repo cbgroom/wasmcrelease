@@ -1,0 +1,36 @@
+{
+  "schema": "mcpgit.mixed-http-json-executor-candidate/v1",
+  "status": "isolated candidate, test-only provider injection; not integrated or deployed",
+  "baseline": "eb8683ac private archive with selected 7797450d overlays, private shared-budget SDK v2 and earlier MCPGit candidate patches; not exact full 779 tree",
+  "patch_sha256": "afc8059c3ebfb892aecf1d37c823fd170525c1dc2d75d0135a915d6c39911d34",
+  "requires": [
+    "WAsmC core-runtime-shared-memory-budget-v2 candidate and prerequisites",
+    "mcpgit-json-shared-memory-host-v2-20261029.patch",
+    "hosted-json-import-boundary-20261029.patch",
+    "hosted-mixed-import-plan-candidate-20261029.patch"
+  ],
+  "fixture_install": "copy mixed-http-json-guest-20261029.rs and .wasm to crates/mcpgit-executable-runtime/tests/fixtures/mixed-http-json-20261029/guest.rs and guest.wasm",
+  "guest_source_sha256": "db3ac680dc81a2d45fac696352d515b81b75d98121f1f9b3fc16cc63bccb5ec9",
+  "guest_wasm_sha256": "cabff85cb8b621344a42db2977ab0b2c7344a96267945dfdbe662d5b7535e0d3",
+  "guest_sdk_source_sha256": "21434cb3685ceb0db7dc2db9004937cdf2cd650922cfa5f6c093c04152a44efa",
+  "guest_build": "rustc 1.99.1 --edition 2024 --target wasm32-unknown-unknown; decompress mixed-http-json-sdk-20261029.rs.gz and compile its exact source as crate wasmc rlib, then link guest source as cdylib. The tested JSON Root is in the MCPGit fixture; pin checked in test.",
+  "implementation": "HTTP execution candidate adds optional ordered mixed plan, fresh JSON provider per call and a common linear-memory budget. Test-only preparer manually injects a pinned JSON Root and skips production route activation and capability admission. Existing non-mixed path remains available.",
+  "validation": "Same compiled Rust Guest receives distinct HTTP request bodies, invokes exact JSON 0.2.1 Core compact_bytes, returns compacted responses; invalid input returns 400, 33-page combined budget rejects and a later 64MiB invocation succeeds. Baseline invocation followed by optimized Ready invocation; mixed planner controls 1, existing canonical HTTP path 1 and HTTP adapter 4 tests passed. Patch rebuilt against prerequisite patches and changed source byte compared.",
+  "retained_failure": "initial missing HttpStoreData initializer fields fixed and retained; one preliminary cargo check stopped because it initiated a separate cold check build; mistaken canonical test filter selected zero tests and was corrected.",
+  "limitations": [
+    "no actual Service, dispatcher, live Hosted route, activation selection, production capability admission or cache identity in this test",
+    "no Source integration or deployment, formal release or anonymous download",
+    "only linear Wasm memory is shared; host heap, provider fuel, deadline and cancellation are not",
+    "single selected Lib provider only"
+  ],
+  "logs_sha256": {
+    "mixed-http-executor-check-v1-20261029.log": "e470690710486f26ea10fa0b900ea696d9678af40930733d6e6cdcbee3d85f4a",
+    "mixed-http-executor-v1-20261029.log": "c0fe3f13f3a30f25336ad57f7662a7691f3058c27c305f5ad3453b9af7283520",
+    "mixed-http-executor-v2-20261029.log": "d92c779a609cb84bd0072a5f754cfab26a73126930f922160e9152de4782ee07",
+    "mixed-http-planner-regression-20261029.log": "f030507087ab3f2ba35f05e92dee5b3f2fe980e3009a79f42b243c4cad2a26aa",
+    "mixed-http-canonical-regression-20261029.log": "71be0b02cb7991a80fd25d0d5b8c19f88ac2b6a0dfffb92dd0404a91c67d3a3c",
+    "mixed-http-canonical-regression-v2-20261029.log": "478eceb3f0402b3d3bbac9f1c71ba3e9e262d5734314f525cd7b60d7c920b683",
+    "mixed-http-adapter-regression-20261029.log": "ae340b18175961daa5acea0d8f81b615c0929bb40ed204ddf2e5696cd8129206"
+  },
+  "guest_sdk_gzip_sha256": "c40bc0e4717a012ed89ad6ec7bcd3abc3bda5c8f6890dec754737785f815af40"
+}

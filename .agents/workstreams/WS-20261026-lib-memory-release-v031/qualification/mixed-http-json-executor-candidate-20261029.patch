@@ -1,0 +1,217 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -823,0 +824 @@
++        mixed: Option<Arc<MixedRoutePlan>>,
+@@ -1010,0 +1012 @@
++    lib: Option<crate::core_lib::BudgetedCoreLibInstance>,
+@@ -5216,0 +5219,37 @@
++            mixed: None,
++        },
++        compiled_image_bytes: 0,
++    })
++}
++
++#[cfg(test)]
++fn prepare_mixed_route_fixture(
++    runtime: &Arc<CoreDomainRuntime>,
++    wasm: &[u8],
++    provider: crate::core_lib::PreparedCoreLib,
++) -> Result<CachedModule> {
++    let inspection = runtime.inspect_core(wasm)?;
++    let plan = mixed_route_plan_from_inspection(&inspection, provider)?;
++    let memory = inspection
++        .exports()
++        .iter()
++        .find(|e| e.name() == "memory")
++        .context("HTTP memory missing")?;
++    ensure!(
++        matches!(memory.external_type(), CoreDomainModuleExternType::Memory),
++        "HTTP memory type drift"
++    );
++    let handle = inspection
++        .exports()
++        .iter()
++        .find(|e| e.name() == HTTP_ENTRYPOINT)
++        .context("HTTP handle missing")?;
++    ensure_i32_core_signature(handle.external_type(), 0, 1)?;
++    let artifact = runtime.prepare_scalar_host(wasm, [91; 32], &plan.imports)?;
++    Ok(CachedModule {
++        source_bytes: Arc::from(wasm),
++        kind: CachedModuleKind::Core {
++            runtime: Arc::clone(runtime),
++            artifact,
++            functions: Arc::from([]),
++            mixed: Some(Arc::new(plan)),
+@@ -5549,0 +5589,8 @@
++    let CachedModuleKind::Core { mixed, .. } = &module.kind;
++    let shared_budget = mixed
++        .as_ref()
++        .map(|_| wasmc_core_runtime::CoreSharedMemoryBudget::new(limits.memory_bytes));
++    let lib = match (mixed.as_ref(), shared_budget.as_ref()) {
++        (Some(plan), Some(budget)) => Some(plan.lib.instantiate_with_memory_budget(budget)?),
++        _ => None,
++    };
+@@ -5560,0 +5608 @@
++            lib,
+@@ -5568,0 +5617 @@
++        mixed,
+@@ -5585,0 +5635,4 @@
++        let expected = host
++            .extension::<HttpStoreData>()
++            .and_then(|http| http.lib.as_ref())
++            .map(|lib| lib.instance());
+@@ -5587,6 +5640,38 @@
+-        for function in functions.iter().copied() {
+-            session = if function.module == HTTP_HOST_MODULE {
+-                core_http_adapter::bind_canonical_http_core(session, function.name)?
+-            } else {
+-                mcpgit_programmable_query_runtime::bind_programmable_wit_core(session, function)?
+-            };
++        if let Some(budget) = shared_budget {
++            session = session.with_memory_budget(budget);
++        }
++        if let Some(mixed) = mixed {
++            let expected = expected.context("mixed route provider instance missing")?;
++            for entry in &mixed.ordered {
++                session = match entry {
++                    MixedRouteImport::Lib(import) => {
++                        mixed
++                            .lib
++                            .bind_budgeted_import(session, import, expected, |host| {
++                                host.extension_mut::<HttpStoreData>()
++                                    .expect("HTTP state")
++                                    .lib
++                                    .as_mut()
++                                    .expect("Core Lib instance")
++                            })?
++                    }
++                    MixedRouteImport::Host(function) if function.module == HTTP_HOST_MODULE => {
++                        core_http_adapter::bind_canonical_http_core(session, function.name)?
++                    }
++                    MixedRouteImport::Host(function) => {
++                        mcpgit_programmable_query_runtime::bind_programmable_wit_core(
++                            session, *function,
++                        )?
++                    }
++                };
++            }
++        } else {
++            for function in functions.iter().copied() {
++                session = if function.module == HTTP_HOST_MODULE {
++                    core_http_adapter::bind_canonical_http_core(session, function.name)?
++                } else {
++                    mcpgit_programmable_query_runtime::bind_programmable_wit_core(
++                        session, function,
++                    )?
++                };
++            }
+@@ -5922,0 +6008,99 @@
++    fn mixed_json_rust_http_executes_distinct_inputs_and_recovers() {
++        use super::*;
++        use crate::core_lib::{CoreLibPackage, CoreLibPin, PreparedCoreLib};
++        const ROOT: &str = concat!(
++            env!("CARGO_MANIFEST_DIR"),
++            "/../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/root/"
++        );
++        let manifest = fs::read(format!("{ROOT}lib.json")).unwrap();
++        let wit = fs::read(format!("{ROOT}lib.wit")).unwrap();
++        let artifact = fs::read(format!("{ROOT}artifact.wasm")).unwrap();
++        let abi = fs::read(format!("{ROOT}core-abi.json")).unwrap();
++        fn digest(b: &[u8]) -> String {
++            format!("{:x}", Sha256::digest(b))
++        }
++        assert_eq!(
++            digest(&artifact),
++            "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7"
++        );
++        let provider = PreparedCoreLib::prepare(
++            &Engine::default(),
++            CoreLibPackage {
++                manifest: &manifest,
++                wit: &wit,
++                artifact: &artifact,
++                core_abi: &abi,
++            },
++            &CoreLibPin {
++                package_id: "wasmc-json".into(),
++                version: "0.2.1".into(),
++                manifest_sha256: digest(&manifest),
++                wit_sha256: digest(&wit),
++                artifact_sha256: digest(&artifact),
++                artifact_bytes: artifact.len(),
++            },
++        )
++        .unwrap();
++        let guest = include_bytes!("../tests/fixtures/mixed-http-json-20261029/guest.wasm");
++        let runtime = Arc::new(CoreDomainRuntime::default());
++        let module = prepare_mixed_route_fixture(&runtime, guest, provider).unwrap();
++        let engine = engine();
++        let request = |body: &'static [u8]| EncodedHttpRequestEnvelope {
++            prefix: Bytes::new(),
++            body: Bytes::new(),
++            canonical: Some(CanonicalHttpRequest {
++                method: "POST".into(),
++                path: "/json".into(),
++                parameters: Vec::new(),
++                query: Vec::new(),
++                headers: Vec::new(),
++                body: Bytes::from_static(body),
++            }),
++        };
++        let invoke = |body, limits: &HttpRouteLimits| {
++            execute_http_module(
++                &engine,
++                &module,
++                request(body),
++                false,
++                limits,
++                HttpExecutionControl {
++                    blocking_dispatch_us: 0,
++                },
++            )
++        };
++        let mut limits = HttpRouteLimits::bounded_default();
++        let first = invoke(br#"{ "n": 1 }"#, &limits).unwrap();
++        assert_eq!(first.response.status, 200);
++        assert_eq!(first.response.body, br#"{"n":1}"#);
++        let CachedModuleKind::Core { artifact, .. } = &module.kind;
++        let status = artifact.wait_for_optimization(Duration::from_secs(30));
++        if status.state == crate::core_runtime::CoreDomainState::Candidate {
++            assert!(
++                artifact
++                    .publish_optimization(true, true, u64::MAX, 0)
++                    .unwrap()
++            );
++        }
++        assert_eq!(
++            artifact.status().state,
++            crate::core_runtime::CoreDomainState::Ready
++        );
++        let second = invoke(br#"[ 1, 2, 3 ]"#, &limits).unwrap();
++        assert_eq!(second.response.status, 200);
++        assert_eq!(second.response.body, b"[1,2,3]");
++        let bad = invoke(b"{", &limits).unwrap();
++        assert_eq!(bad.response.status, 400);
++        assert_eq!(bad.response.body, b"invalid json");
++        limits.memory_bytes = 33 * 65536;
++        assert!(invoke(br#"{"n":2}"#, &limits).is_err());
++        limits.memory_bytes = 64 * 1024 * 1024;
++        let recovered = invoke(br#"{ "new": true }"#, &limits).unwrap();
++        assert_eq!(recovered.response.status, 200);
++        assert_eq!(recovered.response.body, br#"{"new":true}"#);
++        println!(
++            "MIXED_HTTP_JSON_OK wasmi_then_wasmtime=true distinct_inputs=3 invalid_and_budget_recovery=true"
++        );
++    }
++
++    #[test]
+@@ -6173,0 +6358 @@
++                    lib: None,
+--- a/crates/mcpgit-executable-runtime/src/core_http_adapter.rs
++++ b/crates/mcpgit-executable-runtime/src/core_http_adapter.rs
+@@ -1107,0 +1108 @@
++                    lib: None,
+@@ -1230,0 +1232 @@
++                    lib: None,
+@@ -1379,0 +1382 @@
++                    lib: None,
