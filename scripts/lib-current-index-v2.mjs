@@ -132,7 +132,10 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
   }
   entries.sort((a, b) => order(a.identity, b.identity));
   assert.equal(new Set(entries.map(e => e.identity)).size, entries.length, 'duplicate search identity');
-  assert.ok(entries.length <= 4096, 'index entry budget');
+  // Frozen Search 0.5.0 rejects larger snapshots; successor Roots allocate
+  // dynamically and are constrained by their runtime's available memory.
+  const legacySearch = sources.get('wasmc-lib-search')?.spec.version === '0.5.0';
+  if (legacySearch) assert.ok(entries.length <= 4096, 'index entry budget');
   const input = Object.fromEntries(Object.entries(source).sort(([a], [b]) => order(a, b)));
   const packages = entries.filter(e => e.kind === 'package').map(e => {
     const { identity, kind, ...base } = e;
@@ -143,7 +146,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
     source_fingerprint: digest(input), packages };
   assert.deepEqual(indexEntries(index), entries, 'normalization lost discovery data');
   const bytes = Buffer.from(JSON.stringify(index) + '\n');
-  assert.ok(bytes.length <= 2 * 1024 * 1024, 'index byte budget');
+  if (legacySearch) assert.ok(bytes.length <= 2 * 1024 * 1024, 'index byte budget');
   for (const [path, expected] of Object.entries(input)) assert.equal(sha(await readFile(join(repo, path))), expected, 'source changed during index generation: ' + path);
   assert.equal(sha(await readFile(join(repo, 'libspec/registry.json'))), index.registry_sha256);
   assert.equal(sha(await readFile(join(repo, 'libspec/rust-policy.json'))), sha(policyBytes));
