@@ -1,0 +1,75 @@
+{
+  "schema": "wasmc.json023-installed-root-evidence/v1",
+  "status": "SCOPED_CONTROLLED_INSTALL_PASS",
+  "source_commit": "7b8730f9052f4fe5df8b33d8b9e9b737dd2c530a",
+  "producer_base_commit": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "private_patch_sha256": "b97da19043709b1b7fe3b82eae9f31d68c31e7d8279423207fd010364a14f8f9",
+  "producer_sha256": "52d94d2e7e09dfb35772263c959f8e171b7d85d2818d628e298a10932f00e47e",
+  "rust": "1.99.0 on E5; Rust 1.99.1 on Mac host",
+  "producer_manifest_sha256": "ba2dcee272ae6fe45edbb10a24d663b63c68ae5f1d218640ecd98cbf737f9385",
+  "licensed_manifest_sha256": "f7e77baa125b46f6856b8b0fe06f7a343e9f6dfb076a0ddb19a1b6f52bce8572",
+  "root_inventory_sha256": "1f4acaa306c15f8ca30490819b28739a2c8d78de4f656badbbd8a74e389b1993",
+  "core_sha256": "93feb69adb063df73dab39ac9b1640630452c108167a6bd75f447f33179f2cff",
+  "component_sha256": "b17a7f65b7dfed775edf803c5be6f243259a5418250f3cc338e8d80e2b192dda",
+  "validation": "Producer and licensed Root verification pass. Both generated Rust SDK manifests use edition 2024. Actual installer used controlled in-memory byte transport and synthetic catalog; all 25 files independently read back. Same installed Root passed 9 ordinary WAsmC calls plus 8 constructor/edit/typed-read calls on each of Wasmi2 and Wasmtime49. Installed generated Rust Component SDK exercised 17825793-byte input and 20000 nesting, ordered edits, typed reads, invalid and same-instance recovery.",
+  "limitations": [
+    "Controlled transport and synthetic catalog do not establish public/anonymous availability or formal publication.",
+    "E5 Rust1.99.1 installation timed out; producer compiled with 1.99.0 and private unadmitted WAsmC source patch.",
+    "Scoped standalone Cargo lock and producer output are not full Q0/source provenance; notice bytes checked but full Q0/CI not established.",
+    "No real deployed MCPGit Service route; no main Source scope integration or release."
+  ],
+  "files": [
+    {
+      "path": "producer2024-build-receipt.json",
+      "sha256": "98ee68d754ee53de999fad060d5791cf85de936e48409033adccbb21135e5e74"
+    },
+    {
+      "path": "producer2024-verify-receipt.json",
+      "sha256": "53f54e50b37183d7653e533d745a488d36a0a534a4ee1bbfa9d37244f27aee29"
+    },
+    {
+      "path": "json023-root2024-license.log",
+      "sha256": "c04dfeb9c7fca772ec681c3ea12c6a1d0266b87b74268202bfe4738154d30495"
+    },
+    {
+      "path": "json023-root2024-licensed-verify.log",
+      "sha256": "78a3b30c7cfd70ab730688766c294a499e9b1db45d1c6e9b8821e74b2aef8292"
+    },
+    {
+      "path": "json023-controlled-install.mjs",
+      "sha256": "178d2f09a1acf3072777d6a1c6fffd9d41ec88e2d0d48042872bb5b43a113f84"
+    },
+    {
+      "path": "json023-controlled-install.log",
+      "sha256": "b8345aaaff1d90c9887b7944f80c84f8bc295e397a0ac0edf2e15574cf2837d7"
+    },
+    {
+      "path": "json023-controlled-install-first-failure.log",
+      "sha256": "24240105d7ec5d12bfe68dde65de45762127db22b1b99b586d951dcb09c22858"
+    },
+    {
+      "path": "json023-installed-q2-input.json",
+      "sha256": "79dbaf8c76fa4200f9f54f1cab9d9113d971efd79f83d3a8ed8c3436e2db3767"
+    },
+    {
+      "path": "json023-installed-edit-q2-input.json",
+      "sha256": "548bddf4a9003e81eb808c873434343bbbcba0840c506634ea6219154afbaf9a"
+    },
+    {
+      "path": "json023-installed-q2.log",
+      "sha256": "3742c89bca5122c6c21de02b6ff94d779b0d2fb613d55af84037b04c271a741f"
+    },
+    {
+      "path": "json023-installed-edit-q2.log",
+      "sha256": "5222bdbe929bd4f4c257947a4ba61d20739e0dfc61f412aa52e2f0948ef72e33"
+    },
+    {
+      "path": "json023-installed-sdk-component-host.log",
+      "sha256": "74234346fae0a07f3cb90327b5536305caa5d548048ffb6c0dbe8663fb3aaf2f"
+    },
+    {
+      "path": "installed-sdk-component-host.rs",
+      "sha256": "4f65e06eb987a3ea051f949d96f857039eb82c2f82994358ee6c5285cd2589fd"
+    }
+  ]
+}
