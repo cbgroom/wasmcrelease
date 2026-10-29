@@ -1,0 +1,156 @@
+--- a/libspec/wasmc-json/delta.rs
++++ b/libspec/wasmc-json/delta.rs
+@@ -4 +4 @@
+-use serde_json::{value::RawValue, Number, Value};
++use serde_json::{Number, Value, value::RawValue};
+@@ -40,0 +41,29 @@
++// `RawValue` has already checked the complete JSON grammar. Decode entries
++// in input order so values hidden by a later duplicate key are still parsed.
++fn object_entries(text: &str) -> Result<Vec<(String, &RawValue)>> {
++    let mut rest = text[1..text.len() - 1].trim_start();
++    let mut entries = Vec::new();
++    while !rest.is_empty() {
++        let mut keys = serde_json::Deserializer::from_str(rest).into_iter::<String>();
++        let key = json(keys.next().ok_or(Error::InvalidJson)?)?;
++        rest = &rest[keys.byte_offset()..];
++        rest = rest
++            .trim_start()
++            .strip_prefix(':')
++            .ok_or(Error::InvalidJson)?
++            .trim_start();
++        let mut values = serde_json::Deserializer::from_str(rest).into_iter::<&RawValue>();
++        let value = json(values.next().ok_or(Error::InvalidJson)?)?;
++        rest = rest[values.byte_offset()..].trim_start();
++        push(&mut entries, (key, value))?;
++        if rest.is_empty() {
++            break;
++        }
++        rest = rest
++            .strip_prefix(',')
++            .ok_or(Error::InvalidJson)?
++            .trim_start();
++    }
++    Ok(entries)
++}
++
+@@ -62,0 +92 @@
++        let mut garbage = Vec::new();
+@@ -80,2 +110,3 @@
+-                    // serde_json owns decoded key and duplicate-key semantics.
+-                    let values: BTreeMap<String, &RawValue> = json(serde_json::from_str(text))?;
++                    // Keep duplicates until their values have been checked; the
++                    // last decoded key wins exactly as with serde_json::Value.
++                    let values = object_entries(text)?;
+@@ -85 +116,3 @@
+-                        children.insert(key, i);
++                        if let Some(old) = children.insert(key, i) {
++                            push(&mut garbage, old)?;
++                        }
+@@ -97,0 +131,3 @@
++        }
++        for old in garbage {
++            self.retire(old)?;
+@@ -386,5 +422,21 @@
+-        assert_eq!(array_or(values, "fallback".into()), format!("[{}]", vec!["123"; 300].join(",")));
+-        assert_eq!(array_or(vec!["not-json".into()], "雪 fallback".into()), "雪 fallback");
+-        let fields = vec![("x".into(), "1".into()), ("name".into(), "\"雪\"".into()), ("x".into(), "2".into())];
+-        assert_eq!(object_or(fields, "fallback".into()), "{\"name\":\"雪\",\"x\":2}");
+-        assert_eq!(object_or(vec![("bad".into(), "not-json".into())], "fallback".into()), "fallback");
++        assert_eq!(
++            array_or(values, "fallback".into()),
++            format!("[{}]", vec!["123"; 300].join(","))
++        );
++        assert_eq!(
++            array_or(vec!["not-json".into()], "雪 fallback".into()),
++            "雪 fallback"
++        );
++        let fields = vec![
++            ("x".into(), "1".into()),
++            ("name".into(), "\"雪\"".into()),
++            ("x".into(), "2".into()),
++        ];
++        assert_eq!(
++            object_or(fields, "fallback".into()),
++            "{\"name\":\"雪\",\"x\":2}"
++        );
++        assert_eq!(
++            object_or(vec![("bad".into(), "not-json".into())], "fallback".into()),
++            "fallback"
++        );
+@@ -520,0 +573,76 @@
++
++#[cfg(test)]
++mod duplicate_regressions {
++    use super::*;
++    #[test]
++    fn duplicate_value_validation_handles_many_and_deep_inputs() {
++        let entries = (0..4096)
++            .map(|i| format!("\"k\":{i}"))
++            .collect::<Vec<_>>()
++            .join(",");
++        let input = format!("{{{entries}}}");
++        assert_eq!(compact(input.as_bytes()), Ok("{\"k\":4095}".into()));
++        let nested = format!("{}1e400{}", "[".repeat(5000), "]".repeat(5000));
++        let hidden = format!("{{\"k\":{nested},\"k\":1}}");
++        assert_eq!(validate(hidden.as_bytes()), Err(Error::InvalidJson));
++        assert_eq!(
++            edit(
++                br#"{"root":0}"#,
++                vec![Edit {
++                    kind: EditKind::Set,
++                    path: "/root".into(),
++                    value_json: hidden
++                }]
++            ),
++            Err(Error::InvalidJson)
++        );
++        assert_eq!(
++            compact(br#"{"recovery":true}"#),
++            Ok(r#"{"recovery":true}"#.into())
++        );
++    }
++
++    #[test]
++    fn duplicate_objects_match_serde_across_generated_cases() {
++        for i in 0..512_u64 {
++            let first = if i % 7 == 0 {
++                "1e400".to_owned()
++            } else {
++                format!("[{},{{\"n\":{}}}]", i, i * 3)
++            };
++            let raw = format!(r#"{{"x":{first},"a":true,"x":{{"v":{i}}},"x":{}}}"#, i + 1);
++            let expected = serde_json::from_str::<serde_json::Value>(&raw)
++                .map(|value| serde_json::to_string(&value).unwrap());
++            match expected {
++                Ok(value) => assert_eq!(compact(raw.as_bytes()), Ok(value), "{raw}"),
++                Err(_) => assert_eq!(compact(raw.as_bytes()), Err(Error::InvalidJson), "{raw}"),
++            }
++        }
++    }
++
++    #[test]
++    fn every_duplicate_value_is_validated_before_last_wins() {
++        for raw in [
++            r#"{"x":1e400,"x":1}"#,
++            r#"{"x":{"z":1e400},"x":1}"#,
++            r#"{"x":1,"x":1e400}"#,
++            r#"[{"z":1e400,"z":1}]"#,
++            r#"{"x":"\ud800","x":1}"#,
++        ] {
++            assert!(serde_json::from_str::<serde_json::Value>(raw).is_err());
++            assert_eq!(validate(raw.as_bytes()), Err(Error::InvalidJson), "{raw}");
++            assert_eq!(compact(raw.as_bytes()), Err(Error::InvalidJson), "{raw}");
++        }
++        for raw in [
++            r#"{"x":1,"x":2}"#,
++            r#"{"a":{"q":1,"q":2},"a":{"z":2,"z":3}}"#,
++            r#"{"x\u002fy":1,"x/y":2}"#,
++        ] {
++            let expected =
++                serde_json::to_string(&serde_json::from_str::<serde_json::Value>(raw).unwrap())
++                    .unwrap();
++            assert_eq!(compact(raw.as_bytes()), Ok(expected), "{raw}");
++        }
++        assert_eq!(validate(br#"{"ok":true}"#), Ok(()));
++    }
++}
