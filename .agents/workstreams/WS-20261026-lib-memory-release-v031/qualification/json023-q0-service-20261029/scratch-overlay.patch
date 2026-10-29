@@ -1,0 +1,63 @@
+--- a/scripts/json-portable-q0-v1.mjs
++++ b/scripts/json-portable-q0-v1.mjs
+@@ -27,7 +27,7 @@
+     if(!captured.has(expected)){await put(join(out,'external',expected),b);captured.add(expected);}
+   }
+   const pb=await readFile(producer);assert.equal(sha(pb),r.producer.sha256);await put(join(out,'producer'),pb);
+-  const original=join(run,'packages/wasmc-json'),verified=await verifyRoot(original,'wasmc-json','0.2.2','value');
++  const original=join(run,'packages/wasmc-json'),verified=await verifyRoot(original,'wasmc-json','0.2.3','value');
+   assert.equal(digest(verified.files),r.rows[0].root_inventory_sha256);
+   for(const path of Object.keys(verified.files)){const target=inside(join(out,'root'),path);await mkdir(dirname(target),{recursive:true});await copyFile(inside(original,path),target);}
+ }
+@@ -35,7 +35,7 @@
+   for(const p of [capsule,witPath])assert.ok(isAbsolute(p));for(const p of [receiptSha,witSha])assert.match(p,pin);
+   const rb=await readFile(join(capsule,'receipt.json'));assert.equal(sha(rb),receiptSha);const r=JSON.parse(rb);
+   assert.equal(r.schema,'wasmc.lib-refresh-receipt/v2');assert.equal(r.accepted,true);
+-  assert.deepEqual(r.rows.map(x=>x.id),['wasmc-json']);const row=r.rows[0];assert.equal(row.version,'0.2.2');assert.equal(row.profile,'value');
++  assert.deepEqual(r.rows.map(x=>x.id),['wasmc-json']);const row=r.rows[0];assert.equal(row.version,'0.2.3');assert.equal(row.profile,'value');
+   assert.equal(r.resource_core_input_manifest,null);assert.deepEqual(r.resource_core_inputs,{});
+   const src=join(capsule,'source');
+   for(const [path,expected] of Object.entries(r.source_digests)){assert.match(expected,pin);assert.equal(sha(await readFile(inside(src,path))),expected,'source '+path);}
+--- a/scripts/json-project-index-v1.mjs
++++ b/scripts/json-project-index-v1.mjs
+@@ -15,9 +15,9 @@
+   for (const p of index.packages) {
+     const prior = previous.get(p.package_id); assert.ok(prior, 'new package');
+     if (p.package_id === 'wasmc-json') {
+-      assert.equal(prior.version, '0.2.1'); assert.equal(p.version, '0.2.2');
++      assert.equal(prior.version, '0.2.1'); assert.equal(p.version, '0.2.3');
+       assert.ok(prior.delivery && p.delivery); assert.equal(p.delivery.receipt_sha256, newReceipt);
+-      assert.deepEqual(prior.apis, p.apis, 'JSON API changed'); changed++; continue;
++      assert.deepEqual(prior.apis.map(({description,...rest})=>rest), p.apis.map(({description,...rest})=>rest), 'JSON API routes changed'); changed++; continue;
+     }
+     assert.equal(p.delivery, null, 'unexpected fresh binding'); assert.ok(prior.delivery, 'old delivery missing');
+     assert.deepEqual({ ...prior, delivery:null }, { ...p, delivery:null }, p.package_id + ': index source drift');
+--- a/scripts/json-overlay-public-v1.mjs
++++ b/scripts/json-overlay-public-v1.mjs
+@@ -11,7 +11,7 @@
+ const parse=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
+ const pinned=(pin,read)=>{const b=read(pin.path);assert.equal(b.length,pin.bytes,'pinned byte count');assert.equal(hash(b),pin.sha256,'pinned digest');return b;};
+ const inventory=row=>Object.fromEntries(row.files.map(f=>[f.path.slice(row.root.length+1),{bytes:f.bytes,sha256:f.sha256}]));
+-const normalizedIndex=p=>{const{version,wit_sha256,wit_route,delivery,...rest}=p;return rest;};
++const normalizedIndex=p=>{const{version,wit_sha256,wit_route,delivery,description,...rest}=p;return {...rest,apis:rest.apis.map(({description,...api})=>api)};};
+ const fixedRow=p=>{const{version,root,manifest_sha256,root_inventory_sha256,wit_sha256,source,views,delivery,files,...rest}=p;return rest;};
+ export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,read,productPaths,receiptSha,authorityCommit}){
+   assert.match(receiptSha,/^[a-f0-9]{64}$/);assert.match(authorityCommit,/^[a-f0-9]{40}$/);
+@@ -23,7 +23,7 @@
+   assert.equal(priorIndexBytes.length,prior.index.bytes);assert.equal(hash(priorIndexBytes),prior.index.sha256,'independent previous index pin');
+   const previous=new Map(prior.packages.map(row=>[row.id,row]));assert.equal(previous.size,catalog.packages.length);
+   for(const row of catalog.packages){const old=previous.get(row.id);assert.ok(old,'package not in previous catalog');
+-    if(row.id==='wasmc-json'){assert.equal(old.version,'0.2.1');assert.equal(row.version,'0.2.2');assert.deepEqual(fixedRow(row),fixedRow(old),'JSON fixed metadata drift');}
++    if(row.id==='wasmc-json'){assert.equal(old.version,'0.2.1');assert.equal(row.version,'0.2.3');assert.deepEqual(fixedRow(row),fixedRow(old),'JSON fixed metadata drift');}
+     else assert.deepEqual(row,old,'unchanged package row drift: '+row.id);
+   }
+   const indexBytes=pinned(catalog.index,read),index=parse(indexBytes),oldIndex=parse(priorIndexBytes);
+@@ -45,7 +45,7 @@
+     assert.equal(manifest.id,row.id);assert.equal(manifest.version,row.version);assert.equal(manifest.wit.sha256,row.wit_sha256);if(row.profile!=='native'||manifest.wit.world!==undefined)assert.equal(manifest.wit.world,row.wit_world);
+     for(const pin of Object.values(row.source))pinned(pin,read);
+     if(row.id==='wasmc-json'){
+-      const spec=parse(pinned(row.source.spec,read));assert.equal(spec.id,row.id);assert.equal(spec.version,row.version);assert.equal(spec.profile,row.profile);
++      const spec=parse(pinned(row.source.spec,read));const item=index.packages.find(p=>p.package_id===row.id);assert.equal(item.description,spec.description,'JSON package description source drift');const descriptions=new Map(spec.apis.map(a=>[a.api,a.delta]));for(const api of item.apis){const name=api.route.split('#').at(-1);assert.equal(api.description,descriptions.get(name),'JSON description source drift');}assert.equal(spec.id,row.id);assert.equal(spec.version,row.version);assert.equal(spec.profile,row.profile);
+       assert.deepEqual(pinned(row.source.wit,read),read(row.root+'/lib.wit'),'JSON source and Root WIT');
+       assert.deepEqual(Object.keys(manifest.bindings).sort(),row.views);
+       for(const [field,pin] of [['artifact',row.delivery.artifact],['component',row.delivery.component]]){
