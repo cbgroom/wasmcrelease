@@ -53,7 +53,14 @@ const matches=index.entries.filter(e=>[e.identity,e.wit_route,e.description,e.pr
 add('search','result<list<hit>,search_error>',`let q:query={text:"json",package_id:none,profile:none,bound_only:false};return catalog::search(${literal},q,0,2);`,{ok:matches.map(hit)});
 add('bound','result<list<hit>,search_error>',`let q:query={text:"",package_id:none,profile:none,bound_only:true};return catalog::search(${literal},q,0,1);`,{ok:index.entries.filter(e=>e.delivery).slice(0,1).map(hit)});
 add('reject','result<snapshot_info,search_error>','return catalog::snapshot("{}");',{err:'invalid-index'});
-add('limit','result<list<hit>,search_error>','let q:query={text:"",package_id:none,profile:none,bound_only:false};return catalog::search("{}",q,0,0);',{err:'invalid-limit'});
+// Search 0.5.0 deliberately bounded pages to 1..64. The 0.6.0 successor
+// accepts caller-selected pages, including an empty page and more than 64.
+if (selected.row.version === '0.6.0') {
+  add('limit','result<list<hit>,search_error>',`let q:query={text:"",package_id:none,profile:none,bound_only:false};return catalog::search(${literal},q,0,0);`,{ok:[]});
+  add('wide_page','result<list<hit>,search_error>',`let q:query={text:"",package_id:none,profile:none,bound_only:false};return catalog::search(${literal},q,0,65);`,{ok:index.entries.slice(0,65).map(hit)});
+} else {
+  add('limit','result<list<hit>,search_error>','let q:query={text:"",package_id:none,profile:none,bound_only:false};return catalog::search("{}",q,0,0);',{err:'invalid-limit'});
+}
 const resumePosition=args.indexOf('--resume-attempt');
 const attempt=resumePosition<0 ? await mkdtemp(join(run,'current-search-app-q2-')) : resolve(args[resumePosition+1]);
 assert.ok(attempt.startsWith(resolve(run)+'/current-search-app-q2-') && !attempt.slice(resolve(run).length+1).includes('/'));
