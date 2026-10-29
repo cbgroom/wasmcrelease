@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.wit16-checked-union/v1",
+  "status": "private source candidate; not integrated or released",
+  "parent_producer_sha256": "924dc71ebaa01f027d0ce8a247b7d22f9743dee1c10bc57aef6470996f373179",
+  "producer_sha256": "201a01fc9a98a8a181ac5a663a98f3f207de55ce57912be98ab5eddceac42f8b",
+  "private_incremental_patch_sha256": "92da3e24715caeae71c599e4e71b525ddd78c714cdca699f4c95bd3601b8cc69",
+  "private_incremental_patch_location": "~/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wit16-checked-union-incremental-20261029.patch",
+  "change": "Restore previously qualified removal of 256 total record fields and unify checked-record, checked-owner, canonical SDK generation, Root verification and package SDK source reads under the existing 16 MiB SDK source ceiling. Retain empty-record and semantic graph checks. Legacy frozen output stays unchanged.",
+  "baseline": "Exact existing parent source with test-only WIT fixture: 311 valid total record fields rejected with Budget total record fields.",
+  "validation": "After fix WIT-derived fixture passes on Wasmi and Wasmtime: original operation 2048 calls per engine, additional 50-field operation 32 calls per engine. Focused codec suite passes 28 tests on both-engine build with six unavailable historical input tests explicitly skipped. SDK bounded-reader exact 16 MiB and 16 MiB+1 test passes. Built producer re-verifies 23 prior controlled-installed nonnative roots; this is compatibility verification, not a new Q0 refresh. The incremental patch applies to the unchanged parent source.",
+  "preserved_failures": "Initial exact test filter erroneously selected zero tests; second baseline proves failure. Unfiltered suite ran 34 tests: 28 passed and 6 failed because original Counter or Std retained inputs were not supplied. Both failures and the interrupted cold target build remain in local logs.",
+  "limitations": [
+    "The prior 43-Root Q0 used parent producer, not this new binary; new full-cohort refresh and install have not run.",
+    "The 16 MiB SDK reader test verifies the file boundary, not end-to-end generation of a 16 MiB owner SDK.",
+    "This candidate still has record, lane and operation limits; it does not establish removal of all capacity limits.",
+    "Candidate native canonical transfer still explicitly compiles as Rust 2021; it requires restoration of 2024 glue and verification before release.",
+    "Source admission, formal release, production route and anonymous download remain unproven."
+  ],
+  "logs_sha256": {
+    "zero_test_baseline": "f5b78a6cd7ef5e7f2fc2f1af11fb1a0a49e869c379166d1c8c110d1669578812",
+    "baseline_failure": "5ac0716b11eb8231004a4bd96445f7ac37fe9daefd8aefbfa3924a8471e7b085",
+    "unfiltered_dual": "185230201ef7e57a8bc3409d73d464d4e8b946593fa7367f58cd40cea32bca21",
+    "filtered_dual": "ee1623a7a711f07aaf0d4b707874e0557e0dbcb04717d8be2ad392e60141eca1",
+    "sdk_boundary": "75c8edcc8cc84d8de1bf1e6eb693697e2d46b6bb12d384b7a9e9e687022184e1",
+    "cold_build_interrupted": "1f989b071ea8d37912785922d9246e06aba1e71303754115fd488a94443c1993",
+    "reused_target_build": "cc6496a5cd2456ddf33aaa476e2b29f5d4487c4dd4161d34fda2c856000b0944",
+    "verify_installed": "a79966f274007a1d4eefffbbc5f58952bbd69dd22920bd4c789317b965c55fe0"
+  }
+}
