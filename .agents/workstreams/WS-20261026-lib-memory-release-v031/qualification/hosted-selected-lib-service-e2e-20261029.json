@@ -1,0 +1,37 @@
+{
+  "schema": "mcpgit.hosted-selected-lib-service-e2e/v1",
+  "status": "isolated candidate, temporary Service and lab Hosted dispatcher; not Source-integrated or deployed",
+  "baseline": "eb8683ac private archive with selected 7797450d overlays and candidate SDK/route patches; lab test file is not an exact 779 file; private lab lock hash provided",
+  "requires": [
+    "hosted-selected-core-lib-candidate-20261029.patch and all its prerequisites",
+    "mixed-http-json-sdk-20261029.rs.gz to reproduce guest",
+    "exact JSON Root and service fixture from 779 workstream"
+  ],
+  "patch_sha256": "51817576c1bd9bb307d7d48bf615f91fc063937d4f9d4340df5afd94fbbc79b4",
+  "tested_lab_source_sha256": "c972dffc3666a662b077bdd39d4ae93be32c1aa8c97b8fd4188f848f9b053bc5",
+  "tested_lab_lock_sha256": "07095a0523363fc545991c3a79c04d88b361450a947ff6c068dcb845c074660f",
+  "fixture_install": "copy hosted-selected-lib-guest-20261029.rs and .wasm into crates/mcpgit-executable-runtime/tests/fixtures/mixed-http-json-20261029/hosted-binary-guest.rs and hosted-binary-guest.wasm",
+  "guest_source_sha256": "dbf94d50e9d952d99a64753707041ba5063ea139254e71df3ce5b55cde911e65",
+  "guest_wasm_sha256": "703f25cee7ce0249d02d4788cef27ec6827966fc2f2c3fe1de141563dd897bd0",
+  "evidence": "A temporary real McpGitService hosts HTTP Skill and JSON Root, records separate HTTP and Core Lib activation rows, and publishes a route. RegistryHostedPluginDispatcher drives the normal candidate load_route, selects exact JSON activation from the HTTP manifest at publication revision and invokes one Rust 2024 HTTP Guest binary. It calls real TableGit status, compacts three distinct valid JSON bodies, returns 400 for invalid JSON and recovers. Missing caller Table capability returns BadGateway through this lab dispatcher; the generic mapping means the response alone is not proof of the precise internal reason.",
+  "legacy_regression": "Existing tablegit_wasmtime_http_route_revalidates_pins_and_records_terminal_runs failed once because an infinite guest did not yield the expected Deadline class; original log has no actual class. A diagnostic rerun passed and reported Deadline. This intermittent failure remains unresolved, not a clean regression pass.",
+  "failures": "Initial test compile failed due ambiguous AsRef; next attempt failed request/response profile mismatch; corrected. Initial missing capability expectation Forbidden failed because lab dispatcher produced BadGateway; original failure and diagnostic are preserved.",
+  "patch_scope": "Test patch is checked for application to exact 779 lab source but the run used the private archive lab file, not that reconstructed source. No claim of exact-head or deployment verification.",
+  "limitations": [
+    "temporary service and lab dispatcher, not live production endpoint or browser",
+    "no formal Source admission, full CI, integration, release or anonymous download",
+    "single Core Lib provider; shared memory accounts linear Wasm only",
+    "legacy deadline classification failure remains unresolved"
+  ],
+  "logs_sha256": {
+    "hosted-selected-lib-e2e-v1-20261029.log": "c3f39e637b3890a3566e9a9985ef980b93f9c1e34212cd7455a7bbcb0a19a6f2",
+    "hosted-selected-lib-e2e-v2-20261029.log": "b30d091d7672544d00a180a75f971ae0ff3fe78b00d75c3b2ed8bbabc8788212",
+    "hosted-selected-lib-e2e-v3-20261029.log": "d819178b922fd94500cbaafa2100e261f7998f25e35d18ae7286af6c2bb1b68f",
+    "hosted-selected-lib-e2e-v4-20261029.log": "55efc198ee36e42ae8ac4878441f5e8f489869fbfcda88730747aad30630be01",
+    "hosted-selected-lib-e2e-v5-20261029.log": "6110cf8f4e50b031fe59017151dd96a2e6e3e0ce34d92b28759f4b63b70382b8",
+    "hosted-selected-lib-e2e-v6-20261029.log": "3c3ab49c2586fc93b082096ca8d240a4bd7ed424af8621f9974f3b4fd3193666",
+    "hosted-selected-lib-e2e-legacy-20261029.log": "07d29250182f46ab28378e3def928705bdde5b5ff0b34a648b1bbaa5ced0e5c6",
+    "hosted-selected-lib-e2e-legacy-diagnostic-20261029.log": "37e02c2fd2f1238c2c7d09967305b56565ac99c6e19343902aead36004f0ec67",
+    "hosted-selected-lib-e2e-branch-readback-20261029.log": "a530d0002e04282844b024514dfd444bf90bcf39a78280f6c8b1f183072e31eb"
+  }
+}

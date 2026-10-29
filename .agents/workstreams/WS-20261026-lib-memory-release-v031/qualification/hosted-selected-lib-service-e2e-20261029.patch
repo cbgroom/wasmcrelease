@@ -1,0 +1,355 @@
+--- a/labs/executable-skill-runtime/tests/end_to_end.rs
++++ b/labs/executable-skill-runtime/tests/end_to_end.rs
+@@ -4536,0 +4537,352 @@
++
++#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++async fn hosted_route_selects_service_json_lib_and_processes_new_inputs() -> Result<()> {
++    use mcpgit_executable_runtime::core_lib::{
++        CORE_LIB_ACTIVATION_KIND, CORE_LIB_ACTIVATION_SCHEMA, CORE_LIB_RUNTIME_ABI,
++        CoreLibActivationObjects, CoreLibActivationRow, CoreLibObjectPin,
++    };
++    const LIB_ID: &str = "b1100000-0000-4000-8000-000000000001";
++    const LIB_ACT: &str = "b1100000-0000-4000-8000-000000000002";
++    const HTTP_ACT: &str = "b1100000-0000-4000-8000-000000000003";
++    let mut fixture = Fixture::new_with_http_route()?;
++    let lib_root = fixture.repo_path.join("runtime_skills/json-lib");
++    fs::create_dir_all(&lib_root)?;
++    fs::write(
++        lib_root.join("SKILL.md"),
++        format!(
++            "---\nname: json-lib\ndescription: JSON Core Lib\nmetadata:\n  yxs.skillsgit.id: {LIB_ID}\n  mcpgit.kind: core-lib\n---\n# JSON\n"
++        ),
++    )?;
++    let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/root");
++    for file in ["lib.json", "lib.wit", "artifact.wasm", "core-abi.json"] {
++        fs::copy(source.join(file), lib_root.join(file))?;
++    }
++    let capabilities = BTreeSet::from([mcpgit_guest_contract::TABLE_CAPABILITY_V1.to_string()]);
++    let app = fixture.repo_path.join("runtime_skills/http-route");
++    let plugin = app.join("runtime/plugin.json");
++    let mut manifest: Value = serde_json::from_slice(&fs::read(&plugin)?)?;
++    manifest["requested_capabilities"] = serde_json::to_value(&capabilities)?;
++    manifest["core_lib"] = json!({"activation_id":LIB_ACT,"activation_row_version":1});
++    fs::write(plugin, serde_json::to_vec_pretty(&manifest)?)?;
++    fs::write(
++        app.join("wit/http.wit"),
++        mcpgit_executable_runtime::route_wasm_executor::HTTP_BINARY_EXCHANGE_WIT_BYTES,
++    )?;
++    fs::write(
++        app.join("wit/programmable-query.wit"),
++        mcpgit_guest_contract::PROGRAMMABLE_QUERY_WIT_BYTES,
++    )?;
++    let repo = Repository::open(&fixture.repo_path)?;
++    let mut index = repo.index()?;
++    index.add_all(["*"], IndexAddOption::DEFAULT, None)?;
++    index.write()?;
++    let tree = repo.find_tree(index.write_tree()?)?;
++    let parent = repo.head()?.peel_to_commit()?;
++    let signature = Signature::now("Mixed route fixture", "mixed@example.invalid")?;
++    fixture.initial_revision = repo
++        .commit(
++            Some("HEAD"),
++            &signature,
++            &signature,
++            "Seed mixed route and JSON Root",
++            &tree,
++            &[&parent],
++        )?
++        .to_string();
++    drop(tree);
++    drop(parent);
++    drop(index);
++    drop(repo);
++    let service = McpGitService::new(
++        configured_store(fixture.repo_path.clone()),
++        ServiceAuthorization::local(),
++    )?;
++    let client = service_client(service);
++    let mut revision =
++        initialize_skill_table(&client, "runtime_skills", fixture.initial_revision.clone()).await?;
++    let fields = [
++        ("schema", sdk::TableFieldType::String),
++        ("kind", sdk::TableFieldType::String),
++        ("activation_id", sdk::TableFieldType::String),
++        ("skill_id", sdk::TableFieldType::String),
++        ("table_path", sdk::TableFieldType::String),
++        ("package_id", sdk::TableFieldType::String),
++        ("package_version", sdk::TableFieldType::String),
++        ("package_revision", sdk::TableFieldType::String),
++        ("package_tree_oid", sdk::TableFieldType::String),
++        ("objects", sdk::TableFieldType::Json),
++        ("runtime_abi", sdk::TableFieldType::String),
++        ("approved_capabilities", sdk::TableFieldType::Array),
++        ("state", sdk::TableFieldType::String),
++        ("artifact_locator", sdk::TableFieldType::String),
++        ("artifact_object_version", sdk::TableFieldType::String),
++        ("artifact_sha256", sdk::TableFieldType::String),
++    ];
++    let required = [
++        "activation_id",
++        "skill_id",
++        "table_path",
++        "package_revision",
++        "package_tree_oid",
++        "runtime_abi",
++        "approved_capabilities",
++        "state",
++    ];
++    let definitions = fields
++        .iter()
++        .map(|(name, kind)| {
++            (
++                (*name).to_string(),
++                sdk::TableFieldDefinition {
++                    field_type: *kind,
++                    required: required.contains(name),
++                    source: None,
++                    role: if *name == "activation_id" {
++                        sdk::TableFieldRole::Key
++                    } else {
++                        sdk::TableFieldRole::Value
++                    },
++                    projection: sdk::TableFieldProjection::Default,
++                },
++            )
++        })
++        .collect();
++    revision = client
++        .create_table(sdk::CreateTableRequest {
++            repo: REPO.into(),
++            worktree: sdk::TableWorktree::main(),
++            path: "skill_activations".into(),
++            expected_revision: revision,
++            definition: sdk::TableDefinitionInput {
++                key_field: Some("activation_id".into()),
++                fields: definitions,
++                required_fields: required.iter().map(|v| (*v).to_string()).collect(),
++                indexes: vec![],
++                object_indexes: vec![],
++                prewarm: false,
++                description: None,
++            },
++            message: Some("Create mixed activation fixture".into()),
++        })
++        .await?
++        .revision
++        .context("missing activation revision")?;
++    revision = create_typed_control_table(
++        &client,
++        "json_results",
++        "id",
++        &[("id", sdk::TableFieldType::String)],
++        revision,
++    )
++    .await?;
++    let guest=fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("../../crates/mcpgit-executable-runtime/tests/fixtures/mixed-http-json-20261029/hosted-binary-guest.wasm"))?;
++    revision = add_artifact(
++        &client,
++        "runtime_skills",
++        HTTP_ROUTE_SKILL,
++        revision,
++        &guest,
++    )
++    .await?;
++    let app_package =
++        package_manifest(&client, "runtime_skills", HTTP_ROUTE_SKILL, &revision).await?;
++    let pin = artifact_pin_from_manifest(
++        "runtime_skills",
++        HTTP_ROUTE_SKILL,
++        ARTIFACT,
++        &artifact_digest(&guest),
++        &app_package,
++    )?;
++    let lib_package = package_manifest(&client, "runtime_skills", LIB_ID, &revision).await?;
++    async fn pin_object(
++        client: &sdk::McpGitClient,
++        m: &sdk::GetTableAggregateManifestResult,
++        name: &str,
++    ) -> Result<CoreLibObjectPin> {
++        let o = client
++            .get_table_aggregate_object(sdk::GetTableAggregateObjectRequest {
++                view: sdk::TableView::Committed {
++                    revision: Some(m.revision.clone()),
++                },
++                manifest: m.clone(),
++                locator: name.into(),
++                max_object_bytes: Some(sdk::MAX_BUFFERED_TABLE_OBJECT_BYTES),
++                chunk_bytes: Some(65536),
++            })
++            .await?;
++        Ok(CoreLibObjectPin {
++            locator: name.into(),
++            object_version: o.object_version,
++            sha256: o
++                .content_version
++                .strip_prefix("sha256:")
++                .context("invalid object digest")?
++                .into(),
++            bytes: o.bytes.len(),
++        })
++    }
++    let objects = CoreLibActivationObjects {
++        manifest: pin_object(&client, &lib_package, "lib.json").await?,
++        wit: pin_object(&client, &lib_package, "lib.wit").await?,
++        artifact: pin_object(&client, &lib_package, "artifact.wasm").await?,
++        core_abi: pin_object(&client, &lib_package, "core-abi.json").await?,
++    };
++    let lib_activation = CoreLibActivationRow {
++        schema: CORE_LIB_ACTIVATION_SCHEMA.into(),
++        kind: CORE_LIB_ACTIVATION_KIND.into(),
++        activation_id: LIB_ACT.into(),
++        skill_id: LIB_ID.into(),
++        table_path: "runtime_skills".into(),
++        package_id: "wasmc-json".into(),
++        package_version: "0.2.1".into(),
++        package_revision: lib_package.revision.clone(),
++        package_tree_oid: lib_package.stat.aggregate_version.clone(),
++        objects,
++        runtime_abi: CORE_LIB_RUNTIME_ABI.into(),
++        approved_capabilities: vec![],
++        state: "active".into(),
++    };
++    let tx = client
++        .transact_table(sdk::TransactTableRequest {
++            repo: REPO.into(),
++            worktree: sdk::TableWorktree::main(),
++            path: "skill_activations".into(),
++            expected_revision: revision,
++            transaction_id: Uuid::new_v4().to_string(),
++            idempotency_key: None,
++            durability: None,
++            actor: Some(json!({"kind":"fixture"})),
++            operations: vec![sdk::TableOperation::Insert {
++                operation_id: Uuid::new_v4().to_string(),
++                key: LIB_ACT.into(),
++                row: serde_json::to_value(&lib_activation)?,
++            }],
++            message: Some("Activate JSON Lib".into()),
++        })
++        .await?;
++    ensure!(tx.applied, "Lib activation not applied");
++    revision = tx.revision.context("Lib activation revision missing")?;
++    let activation = ActivationRow {
++        activation_id: HTTP_ACT.into(),
++        skill_id: HTTP_ROUTE_SKILL.into(),
++        table_path: "runtime_skills".into(),
++        package_revision: pin.package_revision.clone(),
++        package_tree_oid: pin.package_tree_oid.clone(),
++        artifact_locator: pin.artifact_locator.clone(),
++        artifact_object_version: pin.artifact_object_version.clone(),
++        artifact_sha256: pin.artifact_sha256.clone(),
++        runtime_abi: CORE_RUNTIME_ABI.into(),
++        approved_capabilities: capabilities.iter().cloned().collect(),
++        state: "active".into(),
++    };
++    revision = insert_activation(&client, &activation, revision).await?;
++    let mut raw = route_binding("json-mixed-route", "/json");
++    raw.activation_id = activation.activation_id.clone();
++    raw.activation_pin_sha256 = activation_pin_sha256(&activation)?;
++    raw.methods = BTreeSet::from(["POST".to_string()]);
++    raw.binding_capabilities = capabilities.clone();
++    raw.response_profile =
++        mcpgit_executable_runtime::http_pipeline::HTTP_BINARY_EXCHANGE_PROFILE.into();
++    raw.request_profile = raw.response_profile.clone();
++    let binding = VersionedHttpRouteBinding {
++        row_version: 1,
++        row_sha256: http_route_binding_sha256(&raw)?,
++        binding: raw,
++    };
++    let limits = HttpRouteLimits::bounded_default();
++    let publication = RoutePublication::ready(
++        "publication-json-mixed",
++        1,
++        revision,
++        vec![binding],
++        limits.schema.clone(),
++    )?;
++    let authority = Arc::new(MemoryRouteAuthority::default());
++    authority.insert_publication(publication.clone())?;
++    let caller_client = client.clone();
++    let executor = Arc::new(
++        TableGitWasmtimeRouteExecutor::new_with_policies(
++            REPO,
++            client.clone(),
++            limits,
++            WasmModuleCacheLimits::bounded_default(),
++            RouteLogPolicy::none(),
++        )?
++        .with_table_client_resolver(Arc::new(move |_| caller_client.clone())),
++    );
++    let route_executor: Arc<dyn RouteExecutor> = executor;
++    let registry = Arc::new(
++        OrganizationRouteRegistry::restore("organization-a", authority, route_executor).await?,
++    );
++    registry
++        .publish(&publication.publication_id, None, Duration::ZERO)
++        .await?;
++    let dispatcher = RegistryHostedPluginDispatcher::new(REPO, registry);
++    for (body, status, expected) in [
++        (r#"{ "n": 11 }"#, 200, r#"{"n":11}"#),
++        (r#"[ 9, 8 ]"#, 200, "[9,8]"),
++        ("{", 400, "invalid json"),
++        (r#"{ "ok": true }"#, 200, r#"{"ok":true}"#),
++    ] {
++        let request = hosting::HostedPluginRequest {
++            organization_id: "organization-a".into(),
++            repository_id: REPO.into(),
++            site_id: "prototype".into(),
++            method: "POST".into(),
++            path: "/json".into(),
++            query: vec![],
++            headers: BTreeMap::new(),
++            header_fields: vec![],
++            body: Bytes::from(body.to_owned()),
++            caller: hosting::HostedPluginCaller {
++                principal_id: "hosted:fixture".into(),
++                person_id: Some(PERSON.into()),
++                authentication_mode: "fixture".into(),
++                permissions: BTreeSet::from(["repo.read".into(), "table.read".into()]),
++                capabilities: capabilities.clone(),
++                table_scope_restricted: false,
++            },
++        };
++        match hosting::HostedPluginDispatcher::dispatch(&dispatcher, request).await {
++            hosting::HostedPluginDispatch::Response(response) => {
++                ensure!(
++                    response.status == status,
++                    "status expected {status}, got {}",
++                    response.status
++                );
++                ensure!(
++                    response.body.as_slice() == expected.as_bytes(),
++                    "body mismatch: {:?}",
++                    response.body
++                );
++            }
++            other => anyhow::bail!("unexpected route result: {other:?}"),
++        }
++    }
++    let no_capability = hosting::HostedPluginRequest {
++        organization_id: "organization-a".into(),
++        repository_id: REPO.into(),
++        site_id: "prototype".into(),
++        method: "POST".into(),
++        path: "/json".into(),
++        query: vec![],
++        headers: BTreeMap::new(),
++        header_fields: vec![],
++        body: Bytes::from_static(b"{}"),
++        caller: hosting::HostedPluginCaller {
++            principal_id: "hosted:fixture".into(),
++            person_id: Some(PERSON.into()),
++            authentication_mode: "fixture".into(),
++            permissions: BTreeSet::from(["repo.read".into(), "table.read".into()]),
++            capabilities: BTreeSet::new(),
++            table_scope_restricted: false,
++        },
++    };
++    let denied = hosting::HostedPluginDispatcher::dispatch(&dispatcher, no_capability).await;
++    println!("MISSING_CALLER_CAPABILITY_RESULT={denied:?}");
++    ensure!(matches!(denied, hosting::HostedPluginDispatch::BadGateway), "unexpected missing capability result");
++    println!(
++        "REAL_SERVICE_HOSTED_SELECTED_JSON_OK valid=3 invalid_recovery=true missing_capability_bad_gateway=true"
++    );
++    Ok(())
++}
