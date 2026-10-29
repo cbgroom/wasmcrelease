@@ -11,6 +11,13 @@ function currentProductControls() {
   const cohort=readFileSync(join(root,catalog.cohort.path));
   if(cohort.length!==catalog.cohort.bytes||createHash('sha256').update(cohort).digest('hex')!==catalog.cohort.sha256)throw Error('CI current cohort identity drift');
   const schema=JSON.parse(cohort).schema;
+  if(schema==='wasmc.json-overlay-cohort/v1'){
+    if(!/^\d+\.\d+\.\d+$/.test(catalog.version??''))throw Error('CI JSON overlay version rejected');
+    const candidate=JSON.parse(readFileSync(join(root,`channels/candidates/${catalog.version}.json`)));
+    const digest=createHash('sha256').update(catalogBytes).digest('hex');
+    if(candidate.schema!=='wasmc.release-product-candidate/v3'||candidate.version!==catalog.version||candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||candidate.current_catalog.sha256!==digest)throw Error('CI JSON overlay candidate catalog identity drift');
+    return {product:'scripts/test-json-overlay-product-ci-v1.mjs',license:'scripts/test-json-overlay-product-ci-v1.mjs',catalog:digest,jsonOverlay:true};
+  }
   if(schema==='wasmc.mixed-current-cohort/v1'){
     const policy=JSON.parse(readFileSync(join(root,'catalog/current-mixed-license-policy-v1.json')));
     if(policy.schema!=='wasmc.current-license-policy/mixed-v1'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI mixed catalog identity drift');
@@ -62,7 +69,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('current-release-version-and-qualification-contract','scripts/test-current-release-version.mjs'),
     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives',current.license),
+    item(current.jsonOverlay?'json-overlay-declared-notice-bytes':'current-original-license-reopen-negatives',current.license,current.jsonOverlay?['--product','.', '--catalog-sha256',current.catalog,'--mode','notices']:[]),
     item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
@@ -77,7 +84,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     ...mixedModuleChecks,
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives',current.license),
+    item(current.jsonOverlay?'json-overlay-declared-notice-bytes':'current-original-license-reopen-negatives',current.license,current.jsonOverlay?['--product','.', '--catalog-sha256',current.catalog,'--mode','notices']:[]),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),

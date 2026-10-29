@@ -495,7 +495,7 @@ export function currentProductInputsForVersion(version,variant){
   const base=currentV3ProductInputsForVersion(version);
   if(variant==='v3')return base;
   if(variant==='json-overlay'){assert.ok(/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(version),'JSON overlay requires successor version');return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
-    'admission/json-overlay-cohort-v1.json','admission/json-overlay-prior-catalog-v1.json','admission/json-overlay-prior-index-v1.json','scripts/json-overlay-public-v1.mjs'];}
+    'admission/json-overlay-cohort-v1.json','admission/json-overlay-prior-catalog-v1.json','admission/json-overlay-prior-index-v1.json','scripts/json-overlay-public-v1.mjs','scripts/test-json-overlay-product-ci-v1.mjs'];}
   if(variant==='mixed')return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
     'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
     'catalog/frozen-v030-notices-v1.json','scripts/frozen-v030-notices-v1.mjs','scripts/current-license-policy-mixed-v1.mjs',
