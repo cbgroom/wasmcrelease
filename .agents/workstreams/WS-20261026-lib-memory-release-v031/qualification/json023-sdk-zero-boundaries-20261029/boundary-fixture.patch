@@ -1,0 +1,35 @@
+--- initial-fixture.rs	2026-10-29 18:15:03
++++ boundary-fixture.rs	2026-10-29 18:17:34
+@@ -7383,17 +7383,17 @@
+         .publish(&publication.publication_id, None, Duration::ZERO)
+         .await?;
+     let dispatcher = RegistryHostedPluginDispatcher::new(REPO, registry);
+-    for step in 0..7 {
++    for step in 0..15 {
+         let status=client.table_status(sdk::GetTableStatusRequest {repo:REPO.into(), view:sdk::TableView::Worktree {topic_id:Some("main".into())},path:"json_results".into()}).await?;
+         let head=status.revision.context("missing revision")?;
+         let first=if step==2 {"row-0".to_string()} else {format!("row-{step}")};
+         let second=format!("row-{step}-extra");
+         let body=serde_json::to_string(&json!({"execute":step!=4,"transaction":{"table_path":"json_results","expected_revision":head,"transaction_id":Uuid::new_v4().to_string(),"idempotency_key":Uuid::new_v4().to_string(),"operations":[{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":first,"row_json":json!({"id":"requires-guest-edit-0"}).to_string()},{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":second,"row_json":json!({"id":"requires-guest-edit-1"}).to_string()}]}}))?;
+-        let body=if step==0 {
++        let body=if step==0 || step>=7 {
+             let mut value: Value=serde_json::from_str(&body)?;
+             value["padding"]=json!("");
+             let empty=serde_json::to_string(&value)?;
+-            let desired=16*1024*1024;
++            let desired=if step==0 {16*1024*1024} else {[65534,65535,65536,65537,131071,131072,131073,1048576][step-7]};
+             ensure!(empty.len() < desired);
+             value["padding"]=json!("x".repeat(desired-empty.len()));
+             let out=serde_json::to_string(&value)?;
+@@ -7413,9 +7413,9 @@
+         let keys:BTreeSet<_>=read.rows.iter().map(|row|row.row.as_ref().and_then(|v|v["id"].as_str()).unwrap_or("").to_string()).collect();
+         if step==2 {ensure!(keys==BTreeSet::from([first.clone()]),"conflicting row changed");}
+         if expected==2 {ensure!(keys==BTreeSet::from([first.clone(),second.clone()]),"inserted keys differ");}
+-        println!("ATOMIC_SELECTED_JSON step={step} rows={}",read.rows.len());
++        println!("ATOMIC_SELECTED_JSON step={step} bytes={} rows={}",body.len(),read.rows.len());
+     }
+-    println!("REAL_SERVICE_HOSTED_SELECTED_JSON_ATOMIC_OK success=4 conflict=1 disabled=1 invalid_recovery=true");
++    println!("REAL_SERVICE_BOUNDARY_JSON_ATOMIC_OK success=12 conflict=1 disabled=1 invalid_recovery=true");
+     Ok(())
+ }
+ 
