@@ -1,0 +1,18 @@
+1 | import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {createCanonicalHostCompiler} from '../current/canonical-host.mjs';
+2 | const root=new URL('../',import.meta.url),fixture='examples/current/string-support-v2/',read=p=>fs.readFileSync(new URL(p,root)),sha=b=>createHash('sha256').update(b).digest('hex');const profile=JSON.parse(read(fixture+'profile.json'));
+3 | assert.equal(profile.schema,'wasmc.current-string-profile/v2');assert.equal(profile.version,'0.0.31');assert.equal(profile.CoreLib_version,'4.12.0-candidate.1');
+4 | for(const p of [profile.compiler,profile.facade,profile.CoreLib,profile.Root,profile.Root_core,profile.Root_wit,...profile.fixture_files]){const b=read(p.path);assert.equal(b.length,p.bytes,p.path);assert.equal(sha(b),p.sha256,p.path);}
+                                                                                                                                                                           ^
+AssertionError: current-libs/wasmc-text/0.0.2/lib.json
+
+7493 !== 5153
+
+ generatedMessage: false,
+     actual: 7493,
+   expected: 5153,
+   operator: "strictEqual",
+       code: "ERR_ASSERTION"
+
+      at /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/v031-real-composition-2172-T71hSP/scripts/test-current-string-support-v031.mjs:4:168
+
+Bun v1.3.14 (macOS arm64)

@@ -1,0 +1,6 @@
+error: Uncaught (in promise) NotCapable: Requires env access to "TMPDIR", run again with the --allow-env flag
+const temporary=mkdtempSync(join(tmpdir(),'wasmc-compiler-cli-'));
+                                 ^
+    at Object.getEnv [as get] (ext:deno_os/30_os.js:1:1291)
+    at tmpdir (ext:deno_node/os.ts:1:2816)
+    at file:///Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/v031-real-composition-2172-T71hSP/scripts/test-current-compiler.mjs:39:34

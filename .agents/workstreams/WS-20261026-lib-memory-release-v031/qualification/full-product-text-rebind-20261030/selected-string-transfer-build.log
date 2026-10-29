@@ -1,0 +1,207 @@
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:58:711
+   |
+58 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+   = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+   |
+58 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_0(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw0(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+58 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_0(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw0(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:64:711
+   |
+64 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+help: remove these parentheses
+   |
+64 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw1(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+64 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw1(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:70:711
+   |
+70 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+help: remove these parentheses
+   |
+70 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_2(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw2(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+70 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_2(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw2(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:76:480
+   |
+76 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+help: remove these parentheses
+   |
+76 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_3(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw3(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+76 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_3(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw3(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:82:480
+   |
+82 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+help: remove these parentheses
+   |
+82 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_4(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw4(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+82 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_4(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw4(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around block return value
+  --> selected-string-transfer.rs:88:711
+   |
+88 | ...out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+   |                                                        ^                       ^
+   |
+help: remove these parentheses
+   |
+88 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_5(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw5(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+88 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_5(p0:i32,p1:i32,p2:i32,p3:i32)->i32{let args=Scratch::new(16, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);let result=raw5(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+   |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:154:612
+    |
+154 | ... as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),r(false,add(args.p,12),4) as i32,r(false,add(ad...
+    |                                                   ^                               ^
+    |
+help: remove these parentheses
+    |
+154 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_16(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32){let args=Scratch::new(20, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u32 as u64,4);w(false,add(add(args.p,12),4),(p4) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_string(add(args.p,12),add(args.p,12),false,false);let result=raw16(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),r(false,add(args.p,12),4) as i32,r(false,add(add(args.p,12),4),4) as i32);let dst=p5 as u32;range(false,dst,8,4);zero(false,dst,8);c1(result as u32,dst,true,false);post16(result as i32);}
+154 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_16(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32){let args=Scratch::new(20, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u32 as u64,4);w(false,add(add(args.p,12),4),(p4) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_string(add(args.p,12),add(args.p,12),false,false);let result=raw16(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(args.p,12),4) as i32,r(false,add(add(args.p,12),4),4) as i32);let dst=p5 as u32;range(false,dst,8,4);zero(false,dst,8);c1(result as u32,dst,true,false);post16(result as i32);}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:157:280
+    |
+157 | ...(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),r(false,add(p,12),4) as i32,r(false,add(add(p,12)...
+    |                                                      ^                          ^
+    |
+help: remove these parentheses
+    |
+157 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_16(p:u32,d:u32){range(false,p,20,4);range(false,d,8,4);assert!(add(p,20)<=d||add(d,8)<=p);value_call_begin(16,p,d);let result=__wasmc_canonical_bridge_16(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),r(false,add(p,12),4) as i32,r(false,add(add(p,12),4),4) as i32,d as i32);value_ready();}
+157 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_16(p:u32,d:u32){range(false,p,20,4);range(false,d,8,4);assert!(add(p,20)<=d||add(d,8)<=p);value_call_begin(16,p,d);let result=__wasmc_canonical_bridge_16(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,r(false,add(p,8),4) as i32,r(false,add(p,12),4) as i32,r(false,add(add(p,12),4),4) as i32,d as i32);value_ready();}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:184:918
+    |
+184 | ...as i32,r(false,add(add(args.p,16),4),4) as i32,(r(false,add(args.p,24),4) as i32));let dst=p7 as u32;range(false,dst,8,4);zero(f...
+    |                                                   ^                                ^
+    |
+help: remove these parentheses
+    |
+184 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_21(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32,p7:i32){let args=Scratch::new(28, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);w(false,add(args.p,24),(p6) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);c_string(add(args.p,16),add(args.p,16),false,false);c_u32(add(args.p,24),add(args.p,24),false,false);let result=raw21(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32,r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32,(r(false,add(args.p,24),4) as i32));let dst=p7 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post21(result as i32);}
+184 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_21(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32,p7:i32){let args=Scratch::new(28, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u32 as u64,4);w(false,add(add(args.p,8),4),(p3) as u32 as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);w(false,add(args.p,24),(p6) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_string(add(args.p,8),add(args.p,8),false,false);c_string(add(args.p,16),add(args.p,16),false,false);c_u32(add(args.p,24),add(args.p,24),false,false);let result=raw21(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,r(false,add(add(args.p,8),4),4) as i32,r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32,r(false,add(args.p,24),4) as i32);let dst=p7 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post21(result as i32);}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:187:404
+    |
+187 | ...16),4) as i32,r(false,add(add(p,16),4),4) as i32,(r(false,add(p,24),4) as i32),d as i32);value_ready();}
+    |                                                     ^                           ^
+    |
+help: remove these parentheses
+    |
+187 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_21(p:u32,d:u32){range(false,p,28,4);range(false,d,8,4);assert!(add(p,28)<=d||add(d,8)<=p);value_call_begin(21,p,d);let result=__wasmc_canonical_bridge_21(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,r(false,add(p,8),4) as i32,r(false,add(add(p,8),4),4) as i32,r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,(r(false,add(p,24),4) as i32),d as i32);value_ready();}
+187 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_21(p:u32,d:u32){range(false,p,28,4);range(false,d,8,4);assert!(add(p,28)<=d||add(d,8)<=p);value_call_begin(21,p,d);let result=__wasmc_canonical_bridge_21(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,r(false,add(p,8),4) as i32,r(false,add(add(p,8),4),4) as i32,r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,r(false,add(p,24),4) as i32,d as i32);value_ready();}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:208:706
+    |
+208 | ... as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),(r(false,add(args.p,12),4) as i32),r(false,add(...
+    |                                                   ^                               ^
+    |
+help: remove these parentheses
+    |
+208 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_25(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32){let args=Scratch::new(24, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_u32(add(args.p,12),add(args.p,12),false,false);c_string(add(args.p,16),add(args.p,16),false,false);let result=raw25(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),(r(false,add(args.p,12),4) as i32),r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32);let dst=p6 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post25(result as i32);}
+208 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_25(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32){let args=Scratch::new(24, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_u32(add(args.p,12),add(args.p,12),false,false);c_string(add(args.p,16),add(args.p,16),false,false);let result=raw25(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32,(r(false,add(args.p,12),4) as i32),r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32);let dst=p6 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post25(result as i32);}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:208:740
+    |
+208 | ...4),4) as i32,(r(false,add(args.p,8),4) as i32),(r(false,add(args.p,12),4) as i32),r(false,add(args.p,16),4) as i32,r(false,add(a...
+    |                                                   ^                                ^
+    |
+help: remove these parentheses
+    |
+208 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_25(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32){let args=Scratch::new(24, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_u32(add(args.p,12),add(args.p,12),false,false);c_string(add(args.p,16),add(args.p,16),false,false);let result=raw25(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),(r(false,add(args.p,12),4) as i32),r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32);let dst=p6 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post25(result as i32);}
+208 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_25(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32,p5:i32,p6:i32){let args=Scratch::new(24, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);w(false,add(args.p,12),(p3) as u64,4);w(false,add(args.p,16),(p4) as u32 as u64,4);w(false,add(add(args.p,16),4),(p5) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);c_u32(add(args.p,12),add(args.p,12),false,false);c_string(add(args.p,16),add(args.p,16),false,false);let result=raw25(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32),r(false,add(args.p,12),4) as i32,r(false,add(args.p,16),4) as i32,r(false,add(add(args.p,16),4),4) as i32);let dst=p6 as u32;range(false,dst,8,4);zero(false,dst,8);c_string(result as u32,dst,true,false);post25(result as i32);}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:211:280
+    |
+211 | ...(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),(r(false,add(p,12),4) as i32),r(false,add(p,16),4...
+    |                                                      ^                          ^
+    |
+help: remove these parentheses
+    |
+211 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_25(p:u32,d:u32){range(false,p,24,4);range(false,d,8,4);assert!(add(p,24)<=d||add(d,8)<=p);value_call_begin(25,p,d);let result=__wasmc_canonical_bridge_25(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),(r(false,add(p,12),4) as i32),r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,d as i32);value_ready();}
+211 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_25(p:u32,d:u32){range(false,p,24,4);range(false,d,8,4);assert!(add(p,24)<=d||add(d,8)<=p);value_call_begin(25,p,d);let result=__wasmc_canonical_bridge_25(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,r(false,add(p,8),4) as i32,(r(false,add(p,12),4) as i32),r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,d as i32);value_ready();}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:211:309
+    |
+211 | ...d(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),(r(false,add(p,12),4) as i32),r(false,add(p,16),4) as i32,r(false,add(add(p,16)...
+    |                                                     ^                           ^
+    |
+help: remove these parentheses
+    |
+211 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_25(p:u32,d:u32){range(false,p,24,4);range(false,d,8,4);assert!(add(p,24)<=d||add(d,8)<=p);value_call_begin(25,p,d);let result=__wasmc_canonical_bridge_25(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),(r(false,add(p,12),4) as i32),r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,d as i32);value_ready();}
+211 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_25(p:u32,d:u32){range(false,p,24,4);range(false,d,8,4);assert!(add(p,24)<=d||add(d,8)<=p);value_call_begin(25,p,d);let result=__wasmc_canonical_bridge_25(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32),r(false,add(p,12),4) as i32,r(false,add(p,16),4) as i32,r(false,add(add(p,16),4),4) as i32,d as i32);value_ready();}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:214:447
+    |
+214 | ... as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32));let out=Scratch::new(1,1);let bit=(result) as ...
+    |                                                   ^                               ^
+    |
+help: remove these parentheses
+    |
+214 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_26(p0:i32,p1:i32,p2:i32)->i32{let args=Scratch::new(12, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);let result=raw26(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32));let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+214 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_26(p0:i32,p1:i32,p2:i32)->i32{let args=Scratch::new(12, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);let result=raw26(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,r(false,add(args.p,8),4) as i32);let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+    |
+
+warning: unnecessary parentheses around block return value
+   --> selected-string-transfer.rs:214:608
+    |
+214 | ...ut.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+    |                                                       ^                       ^
+    |
+help: remove these parentheses
+    |
+214 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_26(p0:i32,p1:i32,p2:i32)->i32{let args=Scratch::new(12, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);let result=raw26(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32));let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);(r(false,out.p,1) as i32)}
+214 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_canonical_bridge_26(p0:i32,p1:i32,p2:i32)->i32{let args=Scratch::new(12, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);w(false,add(args.p,8),(p2) as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);c_u32(add(args.p,8),add(args.p,8),false,false);let result=raw26(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32,(r(false,add(args.p,8),4) as i32));let out=Scratch::new(1,1);let bit=(result) as u32;assert!(bit<=1);w(false,out.p,bit as u64,1);c_bool(out.p,out.p,false,false);r(false,out.p,1) as i32}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> selected-string-transfer.rs:217:280
+    |
+217 | ...(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32));let bit=(result) as u32;assert!(bit<=1);w(false,...
+    |                                                      ^                          ^
+    |
+help: remove these parentheses
+    |
+217 - #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_26(p:u32,d:u32){range(false,p,12,4);range(false,d,1,1);assert!(add(p,12)<=d||add(d,1)<=p);value_call_begin(26,p,d);let result=__wasmc_canonical_bridge_26(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,(r(false,add(p,8),4) as i32));let bit=(result) as u32;assert!(bit<=1);w(false,d,bit as u64,1);value_ready();}
+217 + #[unsafe(no_mangle)]pub unsafe extern "C" fn __wasmc_value_call_26(p:u32,d:u32){range(false,p,12,4);range(false,d,1,1);assert!(add(p,12)<=d||add(d,1)<=p);value_call_begin(26,p,d);let result=__wasmc_canonical_bridge_26(r(false,add(p,0),4) as i32,r(false,add(add(p,0),4),4) as i32,r(false,add(p,8),4) as i32);let bit=(result) as u32;assert!(bit<=1);w(false,d,bit as u64,1);value_ready();}
+    |
+
+warning: 17 warnings emitted
+
