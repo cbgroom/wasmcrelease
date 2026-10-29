@@ -340,6 +340,24 @@
       "scope": "scripts/release-candidate.mjs",
       "mode": "exclusive",
       "range": "JSON overlay candidate wiring; preserve existing mixed/v4, frozen behavior and separately qualified 16MiB carrier integration"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/ci-suite.mjs",
+      "mode": "exclusive",
+      "range": "integrate existing v031 16MiB compiler carrier and tests; preserve mixed/v4 and old releases"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-release-channel.mjs",
+      "mode": "exclusive",
+      "range": "integrate existing v031 16MiB compiler carrier and tests; preserve mixed/v4 and old releases"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-compiler-byte-boundary-v031.mjs",
+      "mode": "exclusive",
+      "range": "integrate existing v031 16MiB compiler carrier and tests; preserve mixed/v4 and old releases"
     }
   ],
   "native_memory_next": "Latest direct human authorizes all normal Lib-local cap removal. Implement process successor and permit omitted local descriptor limits in generic Host; explicit caller requested limits and overall process memory remain. No security work, effect replay or foreign WIP.",
@@ -361,5 +379,15 @@
     "status": "same-owner release read back; this workstream sole branch writer"
   },
   "json023_million_component": "qualification/json023-million-component-20261029/evidence.json; exact candidate Component 1M fields, 100k edits, typed reads and same-instance recovery; local only",
-  "json_candidate_entrypoint": "qualification/json-candidate-wiring-integrated-20261029/evidence.json: actual JSON candidate private Q0/public projection preflight integrated in branch, creation still requires v031 compiler manifest; mixed and version regressions pass"
+  "json_candidate_entrypoint": "qualification/json-candidate-wiring-integrated-20261029/evidence.json: actual JSON candidate private Q0/public projection preflight integrated in branch, creation still requires v031 compiler manifest; mixed and version regressions pass",
+  "serial_release_carrier": {
+    "source_commit": "44bd1c3c116b259b3a298c34b8c93fc834db895a",
+    "from": "WS-20261029-release-script-scope-v1",
+    "scopes": [
+      "scripts/ci-suite.mjs",
+      "scripts/test-release-channel.mjs",
+      "scripts/test-current-compiler-byte-boundary-v031.mjs"
+    ],
+    "status": "same-owner released and remote read back"
+  }
 }
