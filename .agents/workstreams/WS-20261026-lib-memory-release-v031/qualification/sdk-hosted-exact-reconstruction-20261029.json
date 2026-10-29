@@ -1,0 +1,38 @@
+{
+  "schema": "wasmc.sdk-mcpgit-exact-reconstruction/v1",
+  "status": "reconstructed source qualification; not Source admission, deployed or released",
+  "wasmc_base": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "sdk_provenance": "Fresh git archive plus five recorded patches and JSON fixture; Rust 2024 formatting of runtime sources. Compared 29 runtime source/test/fixture, workspace manifest and lock files against the previously tested private candidate byte-for-byte; zero mismatches. Previously noted host_lane difference was formatting only. SDK dependencies contain no local path dependencies. Other files outside the verified SDK build inputs are not claimed identical.",
+  "sdk_test": "Fresh reconstructed SDK under Rust 1.99.1, offline locked, warm target: 2+26+14 passed, including two-engine deadline/fuel/trap/cancel/callback-text controls.",
+  "mcpgit_base": "7797450d5bd93db7a3cdea8a943b567ac25994d6",
+  "mcpgit_reconstruction": "Fresh exact git archive plus eight recorded candidate/test patches and six fixture files; three test-only manifest overrides point to reconstructed SDK. Full snapshot had no private archive overlay.",
+  "lock_scope": "Initial cargo update also changed resolution for several windows-sys and getrandom dependencies; the first e2e and 20 deadline results use that lock. Second locked run uses a minimal lock patch that only removes the git source line for wasmc-core-runtime and adds its wasmi_core dependency, preserving all other prior lock choices. Cargo offline locked metadata passed.",
+  "mcpgit_test": "On minimal lock, real temporary Service and lab Hosted dispatcher selected JSON Lib automatically; same Rust 2024 Guest handled three distinct valid bodies and invalid-input recovery; missing caller capability returned BadGateway. The pre-existing legacy route deadline test passed 20/20 on this same compiled binary.",
+  "binaries_sha256": {
+    "minlock_end_to_end": "6658627725d1b842209e4ff8af51fa04f11b20c415d6385204169985aa24933d"
+  },
+  "qualification_files_sha256": {
+    "sdk-deadline-reconstruction-files-20261029.json": "434cb1bf846fe34d7d77b39394abce37ef6e9f739fc3d41dded871010cf117bb",
+    "mcpgit-hosted-reconstruction-inputs-20261029.json": "1fa6c7b2aade4a5f7c864ff8b603e76859ad2627713f057f945ad378421d1acf",
+    "sdk-deadline-reconstruct-20261029.py": "053f8b15bffd70a68d515c8821ff99d64bac9fae02217c90f5c0e00b1dfe4fb1",
+    "mcpgit-hosted-reconstruct-20261029.py": "35f145621a80a70fd5df87be5d4b7c19f56862aed292dfd66556f0c57b6613b1",
+    "mcpgit-sdk-path-test-lock-20261029.patch": "2d903ce12122883a95f1141a75654a1a53258750fc8db6eaeee0ea659b585d40"
+  },
+  "logs_sha256": {
+    "sdk-deadline-exact-reconstruction-20261029.log": "eebda8fb5329b6bab27a07574d9e85dc75f4251493ed5572b9c354f509f4f36f",
+    "mcpgit-hosted-exact-reconstruct-20261029.log": "24c3ff8199c1024b12f9b630e84c62be0b887da0a6d10f5b8f487bdea3ac0310",
+    "mcpgit-hosted-exact-root-lock-20261029.log": "5e0626d415f1c8bf4f9b1fb70dbf41513e9e4a2fb88dec18a3db4a1e1ae3618f",
+    "mcpgit-hosted-exact-lab-lock-20261029.log": "e526c62fdc350e2fb1990b40c43ace46f129b66ed1fed96e935f2f82c1f3cbfb",
+    "mcpgit-hosted-exact-e2e-v1-20261029.log": "d87ff98ea7640cecb9d9d36b2e619f279428c453e3a04d690fa66de8f36f5f28",
+    "mcpgit-hosted-exact-deadline-repeat-20261029.log": "402838d54a0ad1420ee84ae8d2c79e3134943f7147f9dbc6381f08bac7b37bce",
+    "mcpgit-hosted-exact-min-lock-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mcpgit-hosted-exact-minlock-e2e-20261029.log": "8dc88f899b737a80373c8e99d0908c4b09403848e4f76da135ef49e3a3e948ef",
+    "mcpgit-hosted-exact-minlock-deadline-20261029.log": "6a35802d654ed4d5d4e258be39b4b7b7a91a311fa383d8597244b55e3f63de03"
+  },
+  "limitations": [
+    "Temporary Service and lab dispatcher, not live production Hosted endpoint or browser",
+    "Candidate patches not admitted to formal WAsmC or MCPGit Source, no merge, deployment, formal release or anonymous download",
+    "only one Core Lib provider; shared memory tracks Wasm linear memory, not host heap, provider fuel, deadlines or cancellation",
+    "20 deadline repetitions are bounded evidence; prior failed runs retained"
+  ]
+}
