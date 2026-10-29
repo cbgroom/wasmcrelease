@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.source-default-target-feature-fix/v1",
+  "base": "exact Source c1306cc8ec4497d2190f7ac72501979e4038bfae after workspace-edition2024 and core-runtime-wide-arity patches",
+  "problem": "Default cargo check --workspace --all-targets compiled the wasmi_vs_wasmtime_baseline example without its two required features and failed with missing main.",
+  "fix": "Declare both engine features as required for that example; no runtime change.",
+  "validation": "Locked offline default-feature workspace all-targets check passes after fix; original default-feature failure retained. Dual-engine all-targets had already passed before this change.",
+  "evidence_sha256": {
+    "source-c130-capacity-edition-all-targets-20261029.log": "a6c77a1456e66099b67ecb6e916dce5aa067da2400c56c4b6ac5dbaf04d7ff3d",
+    "source-c130-capacity-edition-all-targets-v3-20261029.log": "7f491614e165dd319c6dbdc5c771c9f94e33e9afe99ee5e3da0177bea08f73f0",
+    "wasmc-baseline-example-features-20261029.patch": "a99dfe681bdb0211e4e88d5f1e627bff85f32af2a0a59bb6ae7f6a54f3d8550c"
+  },
+  "limits": [
+    "This is an isolated Source candidate; no Source commit or integration.",
+    "Warnings remain. Overall release and production route still incomplete."
+  ]
+}
