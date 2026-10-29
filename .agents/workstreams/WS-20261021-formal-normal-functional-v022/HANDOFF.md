@@ -64,3 +64,5 @@ Next: exact candidate inputs and public pipeline admission, generated carrier/CL
 ## Same-owner scoped serial release (2026-10-29)
 
 Owner 01a129c3-6473-7c62-8856-2cb7a6abca28 releases only exclusive scopes `scripts/release-candidate.mjs` and `scripts/ci-suite.mjs` for the successor WS-20261026-lib-memory-release-v031. This workstream remains in-progress and its other claims, jobs, history and evidence remain unchanged. Future writes to these two files from this workstream require fresh coordination. Known GitHub branch checks on the pre-release head were terminal before this change; this does not assert unrelated job termination or v022 formal publication.
+
+2026-10-29 same-owner scoped serial release: owner 01a129c3-6473-7c62-8856-2cb7a6abca28 releases only v031 version-aware compiler byte ceiling and max_bytes metadata in scripts/current-compiler-integrity.mjs to WS-20261026-lib-memory-release-v031; all v022 behavior and all other scopes remain. No effect on unrelated jobs or publication.
