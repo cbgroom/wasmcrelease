@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {mkdtempSync,mkdirSync,readFileSync,writeFileSync,copyFileSync,rmSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {currentV3ProductInputsForVersion,validateCurrentCompilerBytes} from './release-candidate.mjs';
 import {compilerCarrierCheck} from './ci-suite.mjs';
 const sha=b=>createHash('sha256').update(b).digest('hex');
@@ -30,8 +35,29 @@ for(const runtime of ['node','bun','deno']) {
     assert.ok(test.args.includes(boundaryPath));
   }
 }
+// Run the real integrity checker up to its custody boundary in an isolated
+// fixture. The remaining custody/manifest checks are not simulated here.
+const root=fileURLToPath(new URL('../',import.meta.url)),temp=mkdtempSync(join(tmpdir(),'wasmc-compiler-integrity-cap-'));
+try {
+ mkdirSync(join(temp,'scripts'));mkdirSync(join(temp,'current'));
+ copyFileSync(join(root,'scripts/compiler-source-diff-policy.mjs'),join(temp,'scripts/compiler-source-diff-policy.mjs'));
+ const source=readFileSync(join(root,'scripts/current-compiler-integrity.mjs'),'utf8');
+ const marker='// Canonical admission and the earlier measured build retain separate identities.';
+ assert.equal(source.split(marker).length,2,'integrity prelude boundary');
+ writeFileSync(join(temp,'scripts/prelude.mjs'),source.split(marker)[0]+'\nconsole.log(JSON.stringify({accepted:true,maxCompilerBytes}));\n');
+ for(const [version,wasm,pass,limit] of [
+   ['0.0.30',legacy,true,2097152],['0.0.30',afterLegacy,false,2097152],
+   ['0.0.31',afterLegacy,true,16777216],['0.0.31',max,true,16777216],['0.0.31',over,false,16777216],
+ ]){
+  writeFileSync(join(temp,'current/wasmc_compiler.wasm'),wasm);
+  writeFileSync(join(temp,'current/compiler-release.json'),JSON.stringify({version,compiler:{sha256:sha(wasm)}}));
+  const result=spawnSync('node',[join(temp,'scripts/prelude.mjs')],{encoding:'utf8',timeout:30000,env:{PATH:process.env.PATH}});
+  if(pass){assert.equal(result.status,0,result.stderr);assert.equal(JSON.parse(result.stdout).maxCompilerBytes,limit);}
+  else {assert.notEqual(result.status,0);assert.match(result.stderr,/compiler exceeds version byte budget/);}
+ }
+} finally {rmSync(temp,{recursive:true,force:true});}
 assert.throws(()=>validateCurrentCompilerBytes(max,{bytes:max.length,sha256:'0'.repeat(64)},'0.0.31'),/identity/);
 const imported=Buffer.from([0,97,115,109,1,0,0,0,1,4,1,96,0,0,2,7,1,1,120,1,102,0,0]);
 assert.throws(()=>check(imported,'0.0.31'),/imports forbidden/);
 assert.throws(()=>check(Buffer.from([0,97,115,109]),'0.0.31'));
-console.log(JSON.stringify({accepted:true,legacy_max:legacy.length,legacy_plus_rejected:true,successor_max:max.length,successor_plus_rejected:true,identity_import_and_invalid_module_rejected:true}));
+console.log(JSON.stringify({accepted:true,legacy_max:legacy.length,legacy_plus_rejected:true,successor_max:max.length,successor_plus_rejected:true,identity_import_and_invalid_module_rejected:true,integrity_prelude_version_boundaries:true}));

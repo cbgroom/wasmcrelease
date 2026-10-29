@@ -1,0 +1,20 @@
+50 |    ['0.0.31',afterLegacy,true,16777216],['0.0.31',max,true,16777216],['0.0.31',over,false,16777216],
+51 |  ]){
+52 |   writeFileSync(join(temp,'current/wasmc_compiler.wasm'),wasm);
+53 |   writeFileSync(join(temp,'current/compiler-release.json'),JSON.stringify({version,compiler:{sha256:sha(wasm)}}));
+54 |   const result=spawnSync('node',[join(temp,'scripts/prelude.mjs')],{encoding:'utf8',timeout:30000,env:{}});
+55 |   if(pass){assert.equal(result.status,0,result.stderr);assert.equal(JSON.parse(result.stdout).maxCompilerBytes,limit);}
+                       ^
+AssertionError: Expected values to be strictly equal:
+
+undefined !== 0
+
+ generatedMessage: true,
+     actual: undefined,
+   expected: 0,
+   operator: "strictEqual",
+       code: "ERR_ASSERTION"
+
+      at /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-current-compiler-byte-boundary-v031.mjs:55:19
+
+Bun v1.3.14 (macOS arm64)

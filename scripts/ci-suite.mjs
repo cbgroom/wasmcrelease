@@ -34,7 +34,7 @@ function currentProductControls() {
 export function compilerCarrierCheck(version,runtime='node') {
   const parts=version?.split('.').map(Number);
   return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
-    ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read'])}:null;
+    ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read','--allow-write','--allow-run=node','--allow-env=TMPDIR,TMP,TEMP,NODE_V8_COVERAGE,PATH'])}:null;
 }
 export function canonicalHostCapacityCheck(version,runtime='node') {
   const parts=version?.split('.').map(Number);

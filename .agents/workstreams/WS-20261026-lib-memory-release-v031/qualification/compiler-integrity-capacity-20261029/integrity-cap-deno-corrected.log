@@ -1,0 +1,8 @@
+error: Uncaught (in promise) NotCapable: Requires env access to "NODE_V8_COVERAGE", run again with the --allow-env flag
+  const result=spawnSync('node',[join(temp,'scripts/prelude.mjs')],{encoding:'utf8',timeout:30000,env:{}});
+               ^
+    at Object.getEnv [as get] (ext:deno_os/30_os.js:1:1291)
+    at copyProcessEnvToEnv (ext:deno_node/internal/child_process.ts:1:13313)
+    at normalizeSpawnArguments (ext:deno_node/internal/child_process.ts:1:16873)
+    at spawnSync (ext:deno_node/child_process.ts:1:4395)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-current-compiler-byte-boundary-v031.mjs:54:16
