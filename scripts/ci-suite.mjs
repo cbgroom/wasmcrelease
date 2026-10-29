@@ -29,6 +29,11 @@ export function compilerCarrierCheck(version,runtime='node') {
   return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
     ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read'])}:null;
 }
+export function canonicalHostCapacityCheck(version,runtime='node') {
+  const parts=version?.split('.').map(Number);
+  return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
+    ?{id:'canonical-host-source-capacity',...js(runtime,'scripts/test-canonical-host-capacity-v031.mjs',[],['--allow-read'])}:null;
+}
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
@@ -68,6 +73,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='candidate')return [
     ...[compilerCarrierCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...[canonicalHostCapacityCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
     ...mixedModuleChecks,
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
