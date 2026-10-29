@@ -1,0 +1,62 @@
+{
+  "schema": "wasmc.search-versioned-q1-fix/v1",
+  "status": "candidate test and source fixes; no formal release",
+  "q0_receipt_sha256": "624fe04a6af7200bdd6f8ce9473edc3145f2e7f4cc78237c3db5335faa49e224",
+  "index_sha256": "84061d5aa9f9e6d45953744f5ccfd1bf8a53554b2ee6d9fd4546e1abf9cf5959",
+  "old_search": {
+    "manifest_sha256": "f34566b22589282b64e441ada7136ddbf7f4ff7e814ebf82e46d454e63c8ce2b",
+    "core_sha256": "6019e3cb0fac7bcfd11e9be634e4fa0904aa5c6d081a761fb22aa37443e3c570",
+    "zero": {
+      "tag": "err",
+      "value": "invalid-limit"
+    },
+    "sixty_five": {
+      "tag": "err",
+      "value": "invalid-limit"
+    }
+  },
+  "candidate_search": {
+    "manifest_sha256": "d5bea5a79a3ea52a248e51f6adf738c6d1a933b806580b122cd959bfb3b242e4",
+    "core_sha256": "e4c1df7d2ba150c7d4138ca03a51c39a0c1272ca3bf6118035c9e73380ace4ce",
+    "zero": {
+      "tag": "ok",
+      "value": []
+    },
+    "sixty_five_length": 65
+  },
+  "initial_q1_failed_cases": [
+    "shared-WIT-platforms-not-collapsed",
+    "zero-limit",
+    "large-limit",
+    "long-query",
+    "too-many-tokens",
+    "oversized-index",
+    "expanded-index-budget-before-cloning"
+  ],
+  "fixed_q1_passed_cases": {
+    "node": 27,
+    "bun": 27,
+    "deno": 27
+  },
+  "change": "The committed Q1 tester selects 0.6.0 no-local-cap pagination, query, index and current shared-display WIT expectations while retaining historical Search expectations. Separate Q2 runner and script edits remain pending Q2 execution.",
+  "validation": [
+    "Actual historical 0.5.0 Core returned invalid-limit for zero and 65. The controlled-installed 0.6.0 Core returned empty and exact first 65, using the same independently pinned 332-entry index.",
+    "Node, Bun and Deno each passed all scoped current Search Q1 cases, including 4001 index entries, long query, 65-item page and repeated errors with recovery.",
+    "Native Q2 checker regression passes. Ordinary WAsmC Q2 remains in progress and is not included in this result."
+  ],
+  "limitations": [
+    "0.5.0 direct controls cover page behavior only; full historical Q1 not rerun.",
+    "Not full Q2, source integration, production or release."
+  ],
+  "raw_failure_sha256": "f558b415954d1b479d0c1bb32942861b9e0faf0636fc46c64dc4f4bc66ab5f76",
+  "test_source_sha256": "35da4f081c4020bce3d8c8d9032f3c26f486714f6f5f51da18d6e2ce2bc1585f",
+  "files_sha256": {
+    "search-core-fixed-bun-20261029.log": "12590c51264a4d35db020fbe2cf2017037919213d65fde26f7195de96ffc763e",
+    "search-core-fixed-deno-20261029.log": "04911adfb4742b57d8d31a8ca0cc14df63d687cd7676aa79deaf49b5cdccbd96",
+    "search-core-fixed-node-20261029.log": "affda5e3da7577ff73190c40156b13c4b7e10ee319bde63552c8e6ec7f04c684",
+    "search-core-legacy-20261029.log.gz": "a772c4683100d6c6711c009340c66cb664a2be5f71b484ee1efe51d78b2e8ef0",
+    "search-q2-checker-regression-20261029.log": "c97c516b4f3052734f92487ef054346674110d8994ee46c560dfc3e62bc6ebe8",
+    "search-q2-stale-limit-20261029.log": "cd2599d59463145870129b94d540c04a43aa7289e7a035e9c83427b712ad88ce",
+    "search-q2-stale-limit-20261029.mjs": "9be54141a3a362f1342f1a27ef630fdadb46d3cad55d85d109228927f249584a"
+  }
+}

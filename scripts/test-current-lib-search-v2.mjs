@@ -35,6 +35,7 @@ function check(name, fn) {
   catch (e) { failed = true; cases.push({ name, pass: false, error: e.stack }); }
 }
 const packages = index.entries.filter(e => e.kind === 'package');
+const unrestricted = subject.row.version === '0.6.0';
 check('complete-current-registry-snapshot', () => assert.deepEqual(snapshot(text), ok({
   entry_count: index.entries.length, package_count: packages.length,
   api_count: index.entries.length - packages.length,
@@ -52,7 +53,7 @@ check('implementation-filter', () => assert.deepEqual(search(q('', {package_id:'
 check('native-profile-filter', () => assert.deepEqual(search(q('', {profile:'native'})), ok(index.entries.filter(e => e.profile === 'native').slice(0,64))));
 check('bound-filter-never-promotes-source-only', () => assert.deepEqual(search(q('', {bound_only:true})), ok(index.entries.filter(e => e.delivery).slice(0,64))));
 check('shared-WIT-platforms-not-collapsed', () => {
-  const rows = index.entries.filter(e => e.kind === 'package' && e.wit_route === 'wasmc:system-display@0.0.1');
+  const rows = index.entries.filter(e => e.kind === 'package' && e.wit_route === (unrestricted ? 'wasmc:system-display@0.1.0' : 'wasmc:system-display@0.0.1'));
   assert.equal(rows.length, 2); assert.notEqual(rows[0].package_id, rows[1].package_id);
   assert.deepEqual(new Set(rows.map(e => e.target)), new Set(['android','ios']));
 });
@@ -62,14 +63,14 @@ check('AND-case-insensitive-terms', () => assert.deepEqual(search(q('JSON COMPAC
 check('unicode-input', () => { const fixture = structuredClone(wire);fixture.packages[0].description = '你好🌍';
   assert.deepEqual(search(q('你好🌍'),0,1,JSON.stringify(fixture)),ok([indexEntries(fixture)[0]])); });
 check('large-offset', () => assert.deepEqual(search(q(),0xffffffff),ok([])));
-check('zero-limit', () => assert.deepEqual(search(q(),0,0),err('invalid-limit')));
-check('large-limit', () => assert.deepEqual(search(q(),0,65),err('invalid-limit')));
+check('zero-limit', () => assert.deepEqual(search(q(),0,0),unrestricted ? ok([]) : err('invalid-limit')));
+check('large-limit', () => assert.deepEqual(search(q(),0,65),unrestricted ? ok(index.entries.slice(0,65)) : err('invalid-limit')));
 check('invalid-query-control', () => assert.deepEqual(search(q('\0')),err('invalid-query')));
 check('invalid-profile', () => assert.deepEqual(search(q('',{profile:'fake'})),err('invalid-query')));
-check('long-query', () => assert.deepEqual(search(q('x'.repeat(513))),err('invalid-query')));
-check('too-many-tokens', () => assert.deepEqual(search(q('a '.repeat(17))),err('invalid-query')));
+check('long-query', () => assert.deepEqual(search(q('x'.repeat(513))),unrestricted ? ok([]) : err('invalid-query')));
+check('too-many-tokens', () => assert.deepEqual(search(q('a '.repeat(17))),unrestricted ? ok(index.entries.filter(e => [e.identity,e.wit_route,e.description,e.profile,e.target].join(' ').toLowerCase().includes('a')).slice(0,64)) : err('invalid-query')));
 check('invalid-JSON', () => assert.deepEqual(snapshot('no'),err('invalid-index')));
-check('oversized-index', () => assert.deepEqual(snapshot(' '.repeat(2*1024*1024+1)),err('index-too-large')));
+check('oversized-index', () => assert.deepEqual(snapshot(' '.repeat(2*1024*1024+1)),err(unrestricted ? 'invalid-index' : 'index-too-large')));
 check('wrong-schema', () => assert.deepEqual(snapshot(JSON.stringify({...wire,schema:'LSI1'})),err('invalid-index')));
 check('duplicate-identity', () => assert.deepEqual(snapshot(JSON.stringify({...wire,packages:[wire.packages[0],wire.packages[0]]})),err('invalid-index')));
 check('invalid-API-route', () => {const f=structuredClone(wire);f.packages[0].apis[0].route='../x#call';assert.deepEqual(snapshot(JSON.stringify(f)),err('invalid-index'));});
@@ -81,7 +82,8 @@ check('expanded-index-budget-before-cloning', () => {
   p.delivery={manifest_sha256:'a'.repeat(64),receipt_sha256:'b'.repeat(64),artifact_kind:'wasm-core-component',
     artifact_path:'artifact.wasm',artifact_sha256:'c'.repeat(64),component_sha256:'d'.repeat(64)};
   p.apis=Array.from({length:4000},(_,i)=>({route:'api#op-'+String(i).padStart(4,'0'),description:'budget'}));
-  fixture.packages=[p];assert.deepEqual(snapshot(JSON.stringify(fixture)),err('index-too-large'));
+  fixture.packages=[p];const encoded=JSON.stringify(fixture);
+  assert.deepEqual(snapshot(encoded),unrestricted ? ok({entry_count:4001,package_count:1,api_count:4000,bound_package_count:1,registry_sha256:fixture.registry_sha256,index_sha256:sha(Buffer.from(encoded))}) : err('index-too-large'));
 });
 check('persistent-direct-Lib-error-recovery', () => {
   for(let i=0;i<16;i++){assert.equal(snapshot('bad').tag,'err');assert.equal(snapshot(text).tag,'ok');}
