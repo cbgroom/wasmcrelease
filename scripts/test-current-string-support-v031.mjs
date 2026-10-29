@@ -23,7 +23,7 @@ http['response-canonical-write']=(status,p,n)=>{calls++;if(rejectWrite)return 1;
 instance=new WebAssembly.Instance(module,{'mcpgit:http/v1':http});const pending=()=>{for(const name of ['__wasmc_app_input_pending','__wasmc_value_pending_allocations'])assert.equal(instance.exports[name](),0,name);};let guestCalls=0;
 const run=test=>{body=test.bytes?Uint8Array.from(test.bytes):enc.encode(test.input);path=test.path;const before=calls,count=responses.length;assert.equal(instance.exports.handle(),0,path);assert.equal(calls-before,13);assert.equal(responses.length,count+1);assert.deepEqual(responses.at(-1),{status:200,body:test.expected},path);pending();guestCalls++;};
 const cases=JSON.parse(read(fixture+'cases.json'));assert.equal(cases.length,34);for(let round=0;round<16;round++)for(const c of cases)run(c);const basic=guestCalls;
-const large=[];for(const n of [131072,262144,524288,1048576,1200000]){run({path:'/to_uppercase',input:'a'.repeat(n-7)+'雪🦀',expected:'A'.repeat(n-7)+'雪🦀'});large.push(n);}
+const large=[];for(const n of [131072,262144,524288,1048576,1200000,1500000]){run({path:'/to_uppercase',input:'a'.repeat(n-7)+'雪🦀',expected:'A'.repeat(n-7)+'雪🦀'});large.push(n);}
 run({path:'/to_lowercase',input:'İ'.repeat(76800),expected:'i\u0307'.repeat(76800)});
 // The fixture Host contract explicitly bounds body bytes to 1,500,000.
 body=enc.encode('a'.repeat(1500001));path='/to_uppercase';let count=responses.length;assert.equal(instance.exports.handle(),1);assert.equal(responses.length,count);pending();
