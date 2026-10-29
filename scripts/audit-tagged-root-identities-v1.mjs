@@ -25,7 +25,7 @@ export async function auditTaggedRoots({repo,product,catalogSha,refsPath,refsSha
     for(const prefix of ['standard','lib-releases'])for(const nested of ['', 'root/'])
       aliases.set(`${prefix}/${row.id}/${row.version}/${nested}lib.json`,row.id);
   }
-  let treesWithRoots=0,rootOccurrences=0;const conflicts=[],otherSurface=[];
+  let treesWithRoots=0,rootOccurrences=0;const conflicts=[],otherSurface=[],taggedIds=new Set();
   for(const ref of refs){assert.equal(git('rev-parse','--verify',ref.ref).toString().trim(),ref.oid,'local tag differs from remote listing');
     const tree=git('ls-tree','-r','-z',ref.ref,'--','current-libs','standard','lib-releases').toString().split('\0').filter(Boolean);
     const found=new Map();
@@ -34,13 +34,14 @@ export async function auditTaggedRoots({repo,product,catalogSha,refsPath,refsSha
       for(const [root,entry] of roots){if(path.startsWith(root+'/')){if(!found.has(root))found.set(root,new Map());found.get(root).set(path,m[2]);}}
     }
     if(found.size)treesWithRoots++;
-    for(const [root,files] of found){const expected=roots.get(root);rootOccurrences++;
+    for(const [root,files] of found){const expected=roots.get(root);rootOccurrences++;taggedIds.add(expected.id);
       if(files.size!==expected.files.size||[...files].some(([p,id])=>expected.files.get(p)!==id))conflicts.push({ref:ref.ref,id:expected.id,root});}
   }
   assert.deepEqual(otherSurface,[],'selected identity found in another historical delivery surface');
   assert.deepEqual(conflicts,[],'selected Root differs from a tagged historical Root');
   return {schema:'wasmc.tagged-root-audit/v1',accepted:true,catalog_sha256:catalogSha,tag_listing_sha256:refsSha,
-    tags:refs.length,tags_with_selected_roots:treesWithRoots,root_occurrences:rootOccurrences,conflicts:0,
+    tags:refs.length,tags_with_selected_roots:treesWithRoots,root_occurrences:rootOccurrences,
+    tagged_ids:[...taggedIds].sort(),untagged_ids:catalog.packages.map(r=>r.id).filter(id=>!taggedIds.has(id)).sort(),conflicts:0,
     other_delivery_surface_hits:0,scope:'Only supplied remote tag refs and exact selected Root identities in the three scanned delivery surfaces; local tag refs match supplied listing.',public_admission:false};
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
