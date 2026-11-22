@@ -473,7 +473,7 @@ export const currentV3ProductInputs=Object.freeze([
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
-    ...(usesExpandedCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs','scripts/materialize-canonical-host-v031.mjs','scripts/test-canonical-host-capacity-v031.mjs']:[]),
+    ...(usesSuccessorCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs','scripts/materialize-canonical-host-v031.mjs','scripts/test-canonical-host-capacity-v031.mjs']:[]),
     ...(Number(version.split('.')[2])>=31?['scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
     ...(version==='0.0.31'?['scripts/test-checked-chunk-admission-v031.mjs']:[]),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
@@ -517,15 +517,16 @@ export function currentProductInputsForVersion(version,variant){
     'scripts/test-json-current-differential.mjs'];
 }
 // Historical release carriers retain their original size limit.
-function usesExpandedCompilerCarrier(version) {
+function usesSuccessorCompilerCarrier(version) {
   assert.match(version,/^\d+\.\d+\.\d+$/);
   const [major,minor,patch]=version.split('.').map(Number);
   return major>0||minor>0||patch>=31;
 }
 export function validateCurrentCompilerBytes(raw, compiler, version) {
-  const limit=usesExpandedCompilerCarrier(version) ? 16*1024*1024 : 2*1024*1024;
-  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes||raw.length>limit)
-    throw Error('compiler identity or byte budget drift');
+  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes)
+    throw Error('compiler identity drift');
+  if(!usesSuccessorCompilerCarrier(version)&&raw.length>2*1024*1024)
+    throw Error('compiler exceeds historical byte budget');
   if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
 }
 export function validateCheckedChunkAdmission(admission,compiler,read){

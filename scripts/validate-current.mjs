@@ -19,8 +19,8 @@ assert.match(manifest.version??'',/^0\.0\.\d+$/);
 if(Number(manifest.version.split('.')[2])>=31){
  assert.equal(manifest.schema,'wasmc.current-compiler/v2');assert.equal(manifest.compiler.path,'current/wasmc_compiler.wasm');
  assert.match(manifest.compiler.sha256??'',/^[a-f0-9]{64}$/);assert.equal(hash(wasm),manifest.compiler.sha256);
- assert.equal(wasm.length,manifest.compiler.bytes);assert.equal(manifest.max_bytes,16*1024*1024);
- assert.ok(wasm.length<=manifest.max_bytes,'successor compiler exceeds byte budget');
+ assert.equal(wasm.length,manifest.compiler.bytes);
+ assert.equal(Object.hasOwn(manifest,'max_bytes'),false,'successor manifest has no fixed compiler ceiling');
 }else{
  assert.equal(hash(wasm),'098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817');
  assert.ok(wasm.length<=2097152);

@@ -27,16 +27,23 @@ if(!args.length){
 }
 const module=new WebAssembly.Module(compilerBytes);assert.equal(WebAssembly.Module.imports(module).length,0);
 const {createCanonicalHostCompiler}=await import(pathToFileURL(wrapperPath).href);const compiler=await createCanonicalHostCompiler(compilerBytes);
+let expectedFrame;
 try {
  const result=await compiler.compile(input);assert.equal(result.modules.size,8);
+ expectedFrame=hash(result.frame);
  await assert.rejects(compiler.compile({...input,source:source+' '}),/Source exceeds the hosted byte budget/);
  const over=new Uint8Array(max+1);over.set(paddedActivation);over[max]=32;
  await assert.rejects(compiler.compile({...input,activation:over}),/Compiler input allocation failed/);
  const recovered=await compiler.compile(input);assert.equal(recovered.modules.size,8);assert.equal(hash(result.frame),hash(recovered.frame));
 } finally {compiler.dispose();}
 // Append an ignored valid custom section to exercise the compiler-carrier limit.
-const sectionLength=3*1024*1024;let n=sectionLength,leb=[];do{let b=n&127;n>>>=7;if(n)b|=128;leb.push(b);}while(n);
+const sectionLength=max+1;let n=sectionLength,leb=[];do{let b=n&127;n>>>=7;if(n)b|=128;leb.push(b);}while(n);
 const paddedCompiler=new Uint8Array(compilerBytes.length+1+leb.length+sectionLength);paddedCompiler.set(compilerBytes);paddedCompiler[compilerBytes.length]=0;paddedCompiler.set(leb,compilerBytes.length+1);
-const large=await createCanonicalHostCompiler(paddedCompiler);large.dispose();
-await assert.rejects(createCanonicalHostCompiler(new Uint8Array(max+1)),/Compiler exceeds the public 16 MiB artifact budget/);
-console.log(JSON.stringify({accepted:true,compiler_sha256:hash(compilerBytes),source_bytes:sourceBytes.length,activation_bytes:paddedActivation.length,modules:8,compiler_carrier_bytes:paddedCompiler.length,compiler_over_16m_rejected:true,plus_one_rejected:true,same_instance_recovery:true,scope:'padded existing fixture, not production'}));
+const large=await createCanonicalHostCompiler(paddedCompiler);
+try {
+ const result=await large.compile(input);
+ assert.equal(result.modules.size,8);
+ assert.equal(hash(result.frame),expectedFrame);
+} finally {large.dispose();}
+await assert.rejects(createCanonicalHostCompiler(new Uint8Array(max+1)),WebAssembly.CompileError);
+console.log(JSON.stringify({accepted:true,compiler_sha256:hash(compilerBytes),source_bytes:sourceBytes.length,activation_bytes:paddedActivation.length,modules:8,compiler_carrier_bytes:paddedCompiler.length,compiler_over_16m_accepted:true,plus_one_rejected:true,same_instance_recovery:true,scope:'padded existing fixture, not production'}));
