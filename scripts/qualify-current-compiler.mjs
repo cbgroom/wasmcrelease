@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { platform, arch } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import {currentHostQualificationScript,currentImportDemandQualificationScript,requiresIfBranchScopeQualification,requiresUnusedHostImportsQualification,requiresUnitResultMatchQualification,requiresCanonicalCheckedResultsQualification,currentCheckedQualificationScript,requiresStringStorageQualification,currentStringQualificationScript} from './current-release-version.mjs';
+import {assertCompilerQualification,currentHostQualificationScript,currentImportDemandQualificationScript,requiresIfBranchScopeQualification,requiresUnusedHostImportsQualification,requiresUnitResultMatchQualification,requiresCanonicalCheckedResultsQualification,currentCheckedQualificationScript,requiresStringStorageQualification,currentStringQualificationScript} from './current-release-version.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 if(existsSync(root+'.git'))throw Error('qualification must run from a source-free public archive');
 if(existsSync(root+'src/language')||existsSync(root+'crates/wasmc_wasm_cdylib'))throw Error('private compiler source must not be present');
@@ -51,5 +51,8 @@ const receipt={schema:'wasmc.current-compiler-qualification/v1',accepted:true,
   private_helper_guest_calls:helpers.reduce((n,r)=>n+r.result.guest_calls,0),
   rejection_controls:{exit_code:control.status,result:JSON.parse(control.stdout)},
   nonclaims:['whole-product release','whole42 Lib runtime qualification','Pi model-pair qualification','native SDK requalification','real browser qualification']};
+if (Number(product.version.split('.')[2]) >= 31) {
+  assertCompilerQualification(receipt, product.version, product.compiler.sha256, receipt.product_manifest_sha256);
+}
 writeFileSync(root+'current/qualification.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify({accepted:true,engines:3,api_cli_outputs:180,execution_oracles:runs.length,standard_consumer_calls:23040,actual_rejections:6,compileLib_oracles:9,instantiateLib_oracles:9,managed_Lib_calls:2304,boolean_conditional_calls:booleanConditionalCalls,boolean_numeric_rejections:booleanNumericRejections,product_manifest_sha256:receipt.product_manifest_sha256}));

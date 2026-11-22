@@ -87,7 +87,7 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const c = result(currentHostQualificationScript(version));
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, patch(version)>=31 ? '91209ccc10ac3e2d7864498492164838b2d966f4116cbfa3c6d12befe9333af1' : requiresCheckedChunkQualification(version)
+      assert.equal(c.native_parity, patch(version)>=31 ? 'ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb' : requiresCheckedChunkQualification(version)
         ? '6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb'
         : requiresUnusedHostImportsQualification(version)
         ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'
@@ -107,7 +107,13 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       assert.equal(text.CoreLib_sha256,patch(version)>=31?'8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e':'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
       assert.equal(text.compiled_frames,4);assert.equal(text.modules_per_frame,8);assert.equal(text.Root_APIs,30);
       if(engine==='bun'){assert.equal(text.Guest_calls,0);assert.equal(text.execution_profile,'compiler-frames-only');}
-      else if(patch(version)>=31){assert.equal(text.Guest_calls,583);assert.equal(text.same_instance_recovery,true);assert.equal(text.explicit_host_limit_rejected,true);assert.equal(text.Unicode_case_expansion,true);assert.deepEqual(text.large_input_bytes,[131072,262144,524288,1048576,1200000]);}
+      else if (patch(version) >= 31) {
+        assert.equal(text.Guest_calls, 584);
+        assert.equal(text.same_instance_recovery, true);
+        assert.equal(text.explicit_host_limit_rejected, true);
+        assert.equal(text.Unicode_case_expansion, true);
+        assert.deepEqual(text.large_input_bytes, [131072, 262144, 524288, 1048576, 1200000, 1500000]);
+      }
       else {assert.equal(text.Guest_calls,581);assert.equal(text.same_instance_recovery,true);assert.equal(text.canonical_ingress_work_budget_rejected,true);assert.equal(text.Unicode_case_expansion,true);assert.deepEqual(text.large_input_bytes,[131072,262144,524288]);}
     }
     if (requiresCanonicalCheckedResultsQualification(version)) {
