@@ -1096,3 +1096,22 @@ Task state: started. Repair the successor source-free compiler receipt contract 
 Task state: blocked at canonical private Source admission. The successor receipt validator now requires the exact Native-parity frame ad89b343 and the full String suite with 584 Node/Deno calls through 1,500,000 bytes. The qualifier validates the complete successor receipt before writing it. Fresh source-free staging ran all 30 functional commands successfully; the actual integrity gate refused the staged archive without source-build-custody-v031.json, and the prior qualification file remained byte-identical. The frozen v0.0.30 exact archive independently passes 30 commands and six integrity negatives. The maintainer-run compiler artifact and all 121 recorded Source inputs were checked by digest; the PR #29 review tree agrees byte-for-byte for those inputs, while its 15 master divergences remain. No GitHub Actions result is required from private Source under the new policy. Evidence is qualification/v031-receipt-readiness-20261123.json. Resume after the old SDK scope is released or reassigned, with narrow private Source integration, controlled local build or exact reuse, authorized upload, and public-only consumer qualification.
 
 Task state: started. Carry the locally reproduced c92b70b1c JSON producer into official Source admission after the exact eight-file target merge. Three packaging scripts are claimed for an append-only exact producer/input tuple and matching tests. Preserve prior Source and producer pins, license, entire Root identity and candidate integrity. Verify the new tuple against live canonical Source before treating it as admitted.
+## 2026-11-23 JSON producer Source admission
+
+The eight-file Rust 2024 SDK regeneration slice is integrated into private Source
+master at `b7e93db526bc7637ba155573fa046ab716af406d`. The portable JSON 0.2.4
+producer built from `c92b70b1c7c3db2a10a0ae42f9859624db7caf65` reproduced the
+full selected Root byte for byte. The admission check re-read remote master
+and matched all 123 build inputs, including their Git modes and blobs. Private
+preflight verified 43 selected packages, 823 Root files and 448 public notice
+paths, including rejection of both an incorrect producer/Source pairing and
+an altered source inventory digest. The two historical producer profiles and
+the five prior preflight negative controls also pass.
+
+A separate locked, offline build of canonical master with the existing
+checked-chunk profile produced compiler `e4bbc854`, while the staged compiler
+is `fb1d34e7`. Direct calls to the exported allocator reproduced the existing
+1, 2 and 4 MiB ceilings on master. The staged compiler accepts 16 MiB for the
+same four representative allocation slots. Keep the staged compiler marked
+test-only. Finish the compiler Source integration before generating a whole
+product candidate or changing the public channel.
