@@ -71,6 +71,11 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     assert.equal(managed.provider, patch(version)>=31 ? '4.12.0-candidate.1' : requiresStringStorageQualification(version) ? '4.11.0-candidate.2' : requiresCheckedChunkQualification(version) ? '4.11.0-candidate.1' : requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
     if(requiresCheckedChunkQualification(version))assert.equal(managed.provider_sha256,patch(version)>=31?'8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e':requiresStringStorageQualification(version)?'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd':'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
     assert.equal(managed.instantiateLib_oracles, 3); assert.equal(managed.calls, 768); assert.equal(managed.old_provider_fallback, false);
+    if (patch(version) >= 31) {
+      const lengths = [96, 97, 128, 129, 10000, 7];
+      const expected = {strings: lengths, records: lengths};
+      assert.deepEqual(managed.collection_capacity, {sidecar: expected, embedded: expected, global: expected});
+    }
     if (helpers) {
       assert.equal(managed.boolean_conditional_calls, 1536); assert.equal(managed.boolean_numeric_rejections, 6);
       const h = result(commands[3]);

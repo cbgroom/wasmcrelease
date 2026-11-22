@@ -18,6 +18,9 @@ for (const run of successor.runs) {
   if (run.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs') {
     run.result.provider = '4.12.0-candidate.1';
     run.result.provider_sha256 = '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e';
+    run.result.collection_capacity = Object.fromEntries(['sidecar', 'embedded', 'global'].map(name => [
+      name, {strings: [96, 97, 128, 129, 10000, 7], records: [96, 97, 128, 129, 10000, 7]}
+    ]));
   }
   if (run.args.at(-1) === 'scripts/test-current-string-support.mjs') {
     run.args[run.args.length-1] = 'scripts/test-current-string-support-v031.mjs';
@@ -30,6 +33,15 @@ for (const run of successor.runs) {
 }
 const checkSuccessor = value => assertCompilerQualification(value, '0.0.31', compiler.compiler.sha256, hash(read('current/compiler-release.json')));
 assert.equal(checkSuccessor(successor), true);
+for (const update of [
+  managed => delete managed.collection_capacity,
+  managed => managed.collection_capacity.embedded.records.pop()
+]) {
+  const incomplete = structuredClone(successor);
+  const managed = incomplete.runs.find(r => r.engine === 'node' && r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs');
+  update(managed.result);
+  assert.throws(() => checkSuccessor(incomplete));
+}
 const badSuccessor = structuredClone(successor);
 badSuccessor.runs.find(r=>r.engine==='node' && r.args.at(-1)==='scripts/test-current-string-support-v031.mjs').result.large_input_bytes.pop();
 assert.throws(()=>checkSuccessor(badSuccessor));
