@@ -1115,3 +1115,12 @@ is `fb1d34e7`. Direct calls to the exported allocator reproduced the existing
 same four representative allocation slots. Keep the staged compiler marked
 test-only. Finish the compiler Source integration before generating a whole
 product candidate or changing the public channel.
+
+Formal candidate creation now passes the JSON operator and stops at the
+compiler manifest, which has `source_commit: null` in the test-only stage.
+The same 16 MiB canonical Host fixture fails at input allocation with the
+master build and passes with the staged compiler. An independent diagnostic
+producer build from compiler Source `51ddc3c2c790d25186e4441274edb8d2bd665f20`
+reproduces the complete licensed JSON 0.2.4 Root byte for byte. This preserves
+the established Root payload as an input for the next official Source
+qualification. That producer still requires its own canonical Source receipt.
