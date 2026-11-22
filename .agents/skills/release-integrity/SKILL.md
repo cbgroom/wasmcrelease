@@ -15,7 +15,13 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 ## Rules
 
 - Inspect the exact public tag and mutable branch independently.
-- Never rebuild private compiler/provider bytes here.
+- Build and verify private compiler and CoreLib inputs on maintainer-controlled
+  compute. Receive the approved source-free artifacts and release-safe build
+  receipts by upload. Verify the exact admitted Source revision, build evidence,
+  and artifact SHA-256 digests against the delivery inputs.
+- GitHub Actions is the public repository's qualification lane. Use it to build
+  public-source deliverables and test the exact staged consumer artifacts.
+  Private Source qualification uses the maintainer-run build and test receipts.
 - Future public Lib implementations are different: once authored under the
   `libspec/` Refresh V2 contract, they are intentionally rebuilt from public
   WIT + Rust delta + thin adapter source through `scripts/lib-refresh-v2.mjs`
