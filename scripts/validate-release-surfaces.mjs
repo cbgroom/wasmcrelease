@@ -67,7 +67,7 @@ const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
   ['linux-aarch64','ubuntu-24.04-arm',true,'required'],
   ['macos-x86_64','macos-15-intel',false,'legacy-optional'],
-  ['macos-aarch64','macos-14',true,'required'],
+  ['macos-aarch64','macos-15',true,'required'],
   ['windows-x86_64','windows-2025',true,'required'],
   ['windows-aarch64','windows-11-arm',true,'required']
 ];

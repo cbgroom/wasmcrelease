@@ -37,3 +37,8 @@ Base64 API names and exact current pins. Frozen prompts, case meanings,
 budgets and pair requirements remain in force. Both actual catalog behavior
 and 19 local candidate checks are green on this product. Continue the public
 receipts, exact final rehearsal and formal release stages.
+
+The macOS ARM job in run 45106500378 ended before assigning a runner.
+The candidate uses the macos-15 runner already exercised by this repository,
+with aarch64-apple-darwin unchanged. The final manifest and all 19 local
+candidate checks were reopened against this exact product.

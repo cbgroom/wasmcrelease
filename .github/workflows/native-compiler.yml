@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.verify_existing_run && '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-14","target":"aarch64-apple-darwin"}]' || inputs.windows_only && '[{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]' || '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-14","target":"aarch64-apple-darwin"},{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]') }}
+        include: ${{ fromJSON(inputs.verify_existing_run && '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-15","target":"aarch64-apple-darwin"}]' || inputs.windows_only && '[{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]' || '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-15","target":"aarch64-apple-darwin"},{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]') }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
     timeout-minutes: 35
@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.verify_existing_run && '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-14","target":"aarch64-apple-darwin"}]' || inputs.windows_only && '[{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]' || '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-14","target":"aarch64-apple-darwin"},{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]') }}
+        include: ${{ fromJSON(inputs.verify_existing_run && '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-15","target":"aarch64-apple-darwin"}]' || inputs.windows_only && '[{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]' || '[{"os":"ubuntu-24.04","target":"x86_64-unknown-linux-gnu"},{"os":"ubuntu-24.04-arm","target":"aarch64-unknown-linux-gnu"},{"os":"macos-15-intel","target":"x86_64-apple-darwin"},{"os":"macos-15","target":"aarch64-apple-darwin"},{"os":"windows-2025","target":"x86_64-pc-windows-msvc"},{"os":"windows-11-arm","target":"aarch64-pc-windows-msvc"}]') }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
     timeout-minutes: 15
