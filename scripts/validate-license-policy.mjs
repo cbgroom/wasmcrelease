@@ -6,7 +6,8 @@ import {collectStandaloneReleaseNotices} from './standalone-release-notices-v1.m
 import {isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
 import {collectCurrentDeclaredThirdPartyNotices} from './current-license-policy-v3.mjs';
 import {collectCurrentDeclaredThirdPartyNoticesV4} from './current-license-policy-v4.mjs';
-import {checkedCurrentCatalog,currentProductPaths,hash} from './current-lib-release-v3.mjs';
+import {checkedCurrentCatalog,currentProductPaths,currentProductReader,hash,pinnedCurrentCatalog} from './current-lib-release-v3.mjs';
+import {verifyPublicJsonOverlayPinned} from './json-overlay-public-v1.mjs';
 import {collectFrozenV030Notices} from './frozen-v030-notices-v1.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -100,7 +101,52 @@ const cohortBytes=await readDeclared(selected.cohort.path);
 assert.equal(cohortBytes.length,selected.cohort.bytes);assert.equal(hash(cohortBytes),selected.cohort.sha256);
 const cohortSchema=JSON.parse(cohortBytes).schema;
 let declaredNotices;
-if(cohortSchema==='wasmc.mixed-current-cohort/v1') {
+if(['wasmc.json-overlay-cohort/v1','wasmc.json-derived-overlay-cohort/v1'].includes(cohortSchema)) {
+  const {catalog,sha256}=pinnedCurrentCatalog(catalogBytes);
+  const readProduct=currentProductReader(root);
+  verifyPublicJsonOverlayPinned(catalogBytes,sha256,readProduct,currentProductPaths(root));
+  const rootLicense=await readDeclared('LICENSE');
+  const licensePin={path:'LICENSE',bytes:rootLicense.length,sha256:hash(rootLicense)};
+  const noticeManifest=await readDeclared('licenses/dependency-notices-v3.json');
+  assert.equal(hash(noticeManifest),'cdc27945bedaf6efe19ecf284384904dae0f1fc137fb989f2fec12bb65cda06b');
+  const common=JSON.parse(noticeManifest);
+  assert.equal(common.schema,'wasmc.release-notices-input/v1');
+  declaredNotices=new Map();
+  const addNotice=async (relative,pin)=>{
+    assert.match(pin.path,/^licenses\/DEPENDENCY-NOTICES-[0-9]{3}\.txt$/);
+    const bytes=await readDeclared(relative);
+    assert.equal(bytes.length,pin.bytes);
+    assert.equal(hash(bytes),pin.sha256);
+    assert.ok(!declaredNotices.has(relative));
+    declaredNotices.set(relative,{bytes:pin.bytes,sha256:pin.sha256,catalog_sha256:sha256});
+  };
+  for(const pin of common.files)await addNotice(pin.path,pin);
+  for(const row of catalog.packages) {
+    const manifest=JSON.parse(readProduct(row.root+'/lib.json'));
+    assert.equal(manifest.license.schema,'wasmc.lib-license/v1');
+    assert.equal(manifest.license.identifier,policy.license);
+    assert.deepEqual(manifest.license.files[0],licensePin);
+    assert.deepEqual(readProduct(row.root+'/LICENSE'),rootLicense);
+    const files=new Map(row.files.map(entry=>[entry.path,entry]));
+    for(const pin of manifest.license.files.slice(1)) {
+      const relative=row.root+'/'+pin.path;
+      const bound=files.get(relative);
+      assert.equal(bound?.bytes,pin.bytes);
+      assert.equal(bound?.sha256,pin.sha256);
+      await addNotice(relative,pin);
+    }
+    for(const sdk of [manifest.bindings?.rust_core,manifest.bindings?.rust_component].filter(Boolean)) {
+      const cargo=readProduct(row.root+'/'+sdk.cargo_toml.path).toString('utf8');
+      assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);
+      assert.doesNotMatch(cargo,/^license\s*=/m);
+    }
+  }
+  const actual=(await walk(root)).map(relative=>relative.replaceAll(path.sep,'/'));
+  for(const [relative,pin] of await collectFrozenV030Notices(readDeclared,actual)) {
+    assert.ok(!declaredNotices.has(relative));
+    declaredNotices.set(relative,pin);
+  }
+} else if(cohortSchema==='wasmc.mixed-current-cohort/v1') {
   const {collectMixedDeclaredNotices}=await import('./current-license-policy-mixed-v1.mjs');
   const noticePolicy=JSON.parse(await read('catalog/current-mixed-license-policy-v1.json'));
   declaredNotices=await collectMixedDeclaredNotices(catalogBytes,noticePolicy,readDeclared,currentProductPaths(root));
