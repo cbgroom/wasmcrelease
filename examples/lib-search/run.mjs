@@ -1,25 +1,25 @@
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import {resolve} from 'node:path';
-import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from '../../scripts/current-lib-release-v3.mjs';
+import {currentProductReader,pinnedCurrentCatalog} from '../../scripts/current-lib-release-v3.mjs';
 import {CurrentSearchCaller} from '../../scripts/current-lib-search-v3.mjs';
+import {buildClosure} from '../../scripts/lib-route-closure.mjs';
+
 const root=fileURLToPath(new URL('../../',import.meta.url)),read=currentProductReader(root);
-const bytes=read('catalog/libs-current-v2.json'),pin='1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286';
-const catalog=checkedCurrentCatalog(bytes,pin),cohort=JSON.parse(read(catalog.cohort.path));
-assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
-const paths=[...currentProductPaths(root),...currentProductPaths(root,cohort.input_prefix),
-  ...catalog.packages.flatMap(item=>currentProductPaths(root,item.source.spec.path.slice(0,-'/lib.json'.length))),
-  ...cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
-    [...currentProductPaths(root,source.root.locator),...currentProductPaths(root,source.source_packet.root)])];
-const closure=verifyCurrentRelease(bytes,pin,read,paths);
+const closure=buildClosure();
+const {catalog}=pinnedCurrentCatalog(read(closure.catalog.path));
 const selected=catalog.packages.find(r=>r.id==='wasmc-lib-search');
 const caller=new CurrentSearchCaller(read(catalog.index.path),read(selected.root+'/artifact.wasm'),read(selected.root+'/core-abi.json'));
 const query={text:'base64',package_id:'wasmc-std',profile:null,bound_only:true};
 const hits=caller.search(query,0,64);assert.equal(hits.tag,'ok');assert.ok(hits.value.length>=2);
 for(let round=0;round<256;round++)for(const hit of hits.value)assert.deepEqual(caller.lookup(hit.identity),{tag:'ok',value:hit});
 assert.deepEqual(caller.lookup('missing'),{tag:'ok',value:null});
-assert.throws(()=>caller.search(query,0,65));assert.throws(()=>caller.search(query,-1,1));
+const all={text:'',package_id:null,profile:null,bound_only:false};
+const first=caller.search(all,0,65);assert.equal(first.tag,'ok');assert.equal(first.value.length,65);
+assert.deepEqual(caller.search(all,0,0),{tag:'ok',value:[]});
+const complete=caller.search(all,0,0xffffffff);assert.equal(complete.tag,'ok');
+assert.equal(complete.value.length,closure.search_index.entries);
+assert.deepEqual(first.value,complete.value.slice(0,65));
+assert.throws(()=>caller.search(query,-1,1));
 const invalid=new CurrentSearchCaller(new TextEncoder().encode('{}'),read(selected.root+'/artifact.wasm'),read(selected.root+'/core-abi.json'));
 assert.deepEqual(invalid.snapshot(),{tag:'err',value:'invalid-index'});
-console.log(JSON.stringify({accepted:true,scope:'current compiled Core Search and exact complete Root/index identity',version:'0.5.0',snapshot:caller.snapshot(),closure,hits:hits.value,rounds:256,negative_cases:4,public_release_admission:false}));
+console.log(JSON.stringify({accepted:true,scope:'current compiled Core Search and exact complete Root/index identity',version:selected.version,snapshot:caller.snapshot(),closure,hits:hits.value,rounds:256,page_limits:[0,65,0xffffffff],negative_cases:3,public_release_admission:false}));
