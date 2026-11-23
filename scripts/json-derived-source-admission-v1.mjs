@@ -13,6 +13,10 @@ const sourcePins = {
     producer: 'a56a49677e7fab7eb477610078ebce8eb99416cfa21472c06a16aff5edcbb470',
     inventory: '3bab1a5cf78d7497a5d8a646ca128aad0da3c396160670723f73b254054d1f06',
   },
+  '51ddc3c2c790d25186e4441274edb8d2bd665f20': {
+    producer: 'd92f4700253e5855226ccf8234749045533f759fa4d28fa00c46901a655c37de',
+    inventory: '1324a0a9e68db0fdd448108f8fbe2f87c54a413db8891b77b0785b0dad91a167',
+  },
 };
 const paths=['Cargo.toml','Cargo.lock','src','crates','examples/wasmc_lib_tool_v0_document.wasmc','docs/wasmc-lib-tool-v0-document.wit'];
 function git(repo,...args){return execFileSync('git',['-C',repo,...args],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024});}

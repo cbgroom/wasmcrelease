@@ -22,11 +22,19 @@ bad(a=>{a.compiler.sha256='0'.repeat(64);},/input digest/);
 bad(a=>{a.native_plan.path='examples/other';},/input path/);
 bad(a=>{a.canonical_provider.bytes++;},/input bytes/);
 bad(a=>{a.native_sealed_modules=7;});
-const draft=JSON.parse(readFileSync(new URL('../admission/checked-chunk-v031.json',import.meta.url)));
-assert.equal(draft.accepted,false);assert.equal(draft.canonical_source,null);
-assert.throws(()=>validateCheckedChunkAdmission(draft,compiler,read),/not complete/);
+const readProduct=path=>readFileSync(new URL('../'+path,import.meta.url));
+const product=JSON.parse(readProduct('current/compiler-release.json'));
+const actualAdmission=JSON.parse(readProduct('admission/checked-chunk-v031.json'));
+const successor=product.version===compiler.version&&product.test_only!==true;
+if(successor){
+  assert.equal(validateCheckedChunkAdmission(actualAdmission,product,readProduct),true);
+}else{
+  assert.equal(actualAdmission.accepted,false);
+  assert.equal(actualAdmission.canonical_source,null);
+  assert.throws(()=>validateCheckedChunkAdmission(actualAdmission,compiler,read),/not complete/);
+}
 assert(currentProductInputsForVersion('0.0.31','json-derived').includes('scripts/test-checked-chunk-admission-v031.mjs'));
 assert(!currentProductInputsForVersion('0.0.30','v3').includes('scripts/test-checked-chunk-admission-v031.mjs'));
 assert.equal(checkedChunkAdmissionCheck('0.0.30'),null);assert.equal(checkedChunkAdmissionCheck('0.0.32'),null);assert.equal(checkedChunkAdmissionCheck('0.0.31').id,'checked-chunk-admission-contract');
 assert(!currentProductInputsForVersion('0.0.32','v3').includes('scripts/test-checked-chunk-admission-v031.mjs'));
-console.log(JSON.stringify({accepted:true,synthetic_admission:true,negative_controls:9,actual_draft_admitted:false,formal_release:false}));
+console.log(JSON.stringify({accepted:true,synthetic_admission:true,negative_controls:successor?8:9,actual_admission:successor,formal_release:false}));

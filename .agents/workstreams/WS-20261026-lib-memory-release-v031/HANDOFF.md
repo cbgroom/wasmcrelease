@@ -1124,3 +1124,13 @@ producer build from compiler Source `51ddc3c2c790d25186e4441274edb8d2bd665f20`
 reproduces the complete licensed JSON 0.2.4 Root byte for byte. This preserves
 the established Root payload as an input for the next official Source
 qualification. That producer still requires its own canonical Source receipt.
+
+The exact capacity delta is now qualified in private Source. A locked build
+at the original clean checkout reproduced compiler fb1d34e7 byte for byte.
+Local L1, SDK and document checks, the 14-invocation native JSON decision and
+atomic test Host, and the portable 16 MiB Host case passed. A separately
+materialized public wrapper also accepts a valid 18,813,458-byte compiler
+carrier. The frozen v0.0.30 wrapper is the read-only input to that recipe.
+The newly replayed producer passed preflight for all 43 selected packages.
+Recheck its exact 123 Git inputs against canonical Source before candidate
+creation and bind formal compiler custody to the integrated commit.

@@ -6,7 +6,8 @@ import {tmpdir} from 'node:os';
 import {qualifyJsonDerivedCandidate} from './json-derived-candidate-admission-v1.mjs';
 import {verifyJsonDerivedSource,validateJsonDerivedSourceAdmission} from './json-derived-source-admission-v1.mjs';
 import {sha} from './lib-refresh-cache-v2.mjs';
-const [privateRoot,publicRoot,producerPath,oldProducerPath,witPath,apiProducerPath,sdkProducerPath,sourceRepo]=process.argv.slice(2).map(p=>resolve(p));
+const [privateRoot,publicRoot,producerPath,oldProducerPath,witPath,apiProducerPath,sdkProducerPath,sourceRepo]=process.argv.slice(2,10).map(p=>resolve(p));
+const sdkBuildSource=process.argv[10] ?? 'c92b70b1c7c3db2a10a0ae42f9859624db7caf65';
 const args={privateRoot,publicRoot,producerPath,producerSha:'d727656f714398439b63d7716f768fce3580476242989b05ad263ecb9365bc67',witPath,witSha:'40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65',catalogSha:'ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192',oldSha:'355bcc7cf6e006616f9e7938b9c5222d922ef76590e27db633e88c64036816c2',receiptSha:'6b827fc92e3de5b73fe55e7f5112404737bbdc5a2fcba295a6a35849bbc7fb28',commit:'f0166ba76b8613f6decd1ab7c362ca8a9cd90031',version:'0.0.31'};
 const pass=await qualifyJsonDerivedCandidate(args);assert.equal(pass.accepted,true);assert.equal(pass.private_derived_verified,true);assert.equal(pass.producer_source_admitted,false);assert.equal(pass.formal_release,false);assert.equal(pass.packages,43);assert.equal(pass.root_files,823);assert.equal(pass.public_notice_paths,448);
 assert.ok(pass.public_input_paths.every(p=>!p.startsWith('proof/')&&!p.startsWith('.agents/')&&!p.includes('producer')));
@@ -14,12 +15,11 @@ const apiPass=await qualifyJsonDerivedCandidate({...args,producerPath:apiProduce
 assert.equal(Boolean(sdkProducerPath),Boolean(sourceRepo),'supply both the SDK producer and canonical Source repository');
 let sdkSourceAdmitted=false;
 if (sdkProducerPath) {
-  const producerSha='a56a49677e7fab7eb477610078ebce8eb99416cfa21472c06a16aff5edcbb470';
-  const buildSource='c92b70b1c7c3db2a10a0ae42f9859624db7caf65';
+  const producerSha=sha(await readFile(sdkProducerPath));
   const sdk=await qualifyJsonDerivedCandidate({...args,producerPath:sdkProducerPath,producerSha});
   assert.equal(sdk.accepted,true);
   assert.deepEqual(sdk.public_input_paths,pass.public_input_paths);
-  const custody=verifyJsonDerivedSource({sourceRepo,buildSource,producerSha256:producerSha});
+  const custody=verifyJsonDerivedSource({sourceRepo,buildSource:sdkBuildSource,producerSha256:producerSha});
   assert.throws(()=>validateJsonDerivedSourceAdmission({...custody,producer_sha256:args.producerSha}));
   assert.throws(()=>validateJsonDerivedSourceAdmission({...custody,source_inventory_sha256:'0'.repeat(64)}));
   sdkSourceAdmitted=true;

@@ -13,7 +13,7 @@ const cfg=JSON.parse(configBytes);
 const profile=cfg.core?.target_profile ?? 'current';
 assert.ok(['current','portable-v0'].includes(profile),'unsupported composition profile');
 const producerSha=sha(await readFile(producer));
-const allowedProducers=profile==='portable-v0'?['d727656f714398439b63d7716f768fce3580476242989b05ad263ecb9365bc67','1813308d058e38b511e7ff0011507631be2a828c4d2b5a77e7669f31cf3b25af','a56a49677e7fab7eb477610078ebce8eb99416cfa21472c06a16aff5edcbb470']:['e639b4a81a1c02d67345d71a3f1874ae2ee7c389a2aeb98aca88230a73d07fe3'];
+const allowedProducers=profile==='portable-v0'?['d727656f714398439b63d7716f768fce3580476242989b05ad263ecb9365bc67','1813308d058e38b511e7ff0011507631be2a828c4d2b5a77e7669f31cf3b25af','a56a49677e7fab7eb477610078ebce8eb99416cfa21472c06a16aff5edcbb470','d92f4700253e5855226ccf8234749045533f759fa4d28fa00c46901a655c37de']:['e639b4a81a1c02d67345d71a3f1874ae2ee7c389a2aeb98aca88230a73d07fe3'];
 assert.ok(allowedProducers.includes(producerSha),'unqualified composition producer');
 const toolSha='40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65';
 const facadeSha='ba10a21009e5516044f318b70bac84d31cfb3c3438ea51892b6b462424297d18';
