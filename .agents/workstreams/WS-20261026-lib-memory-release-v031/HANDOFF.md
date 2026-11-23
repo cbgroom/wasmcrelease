@@ -1185,3 +1185,13 @@ exact controlled Pi pair and formal publisher/readback can close the task.
 Final runtime and candidate verification is run 45110114054. The earlier
 successful Pi structural cohort for 158e6e1b has no publication authority
 for this subsequent documentation correction.
+
+v0.0.31 is the official GitHub Latest release:
+https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.31
+The immutable tag resolves to `d4e5eed30ca2cf60250aaf0b61eb8bf6481c34b0`.
+The controlled GLM and DeepSeek pair passed all 12 independently reviewed
+cases on that exact tree. Anonymous retrieval verified all 20 release assets
+and the public default version. The extracted archive passed current Lib,
+compiler, inventory and Runtime validation; both Std mirrors installed all
+26 files and executed Base64. The downloaded macOS ARM64 CLI returned 42.
+GitHub Raw and jsDelivr both returned the exact tagged compiler hash.
