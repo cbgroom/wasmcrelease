@@ -1,12 +1,12 @@
 {
   "schema": "wasmc-public-release/v2",
   "name": "wasmc",
-  "version": "0.0.30",
-  "tag": "v0.0.30",
+  "version": "0.0.31",
+  "tag": "v0.0.31",
   "stage": "prod",
-  "lib_source_authority": "81966eaef368769a569bfac17db9e8c3416ba9ad",
-  "staged_product_manifest": "channels/candidates/0.0.30.json",
-  "staged_qualification": "channels/dev.json",
+  "lib_source_authority": "f0166ba76b8613f6decd1ab7c362ca8a9cd90031",
+  "staged_product_manifest": "channels/candidates/0.0.31.json",
+  "staged_qualification": "channels/main.json",
   "source_available": false,
   "compiler_source_available": false,
   "core_runtime_sdk_source_available": true,
@@ -18,14 +18,13 @@
     "production_use": false,
     "immutable_prior_tags_preserved": true
   },
-  "source_commit": "59f3b6ec90b547871ef95f709dd36a77507d4df8",
-  "source_tree": "08d9ef8e0ef600544eae3ccb35a8f35b681b0fec",
-  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.30",
+  "source_commit": "05696756c6a5252e62ab18a0fdfce34e63c37658",
+  "source_tree": "6d8c7895401102b0a10fab44c04e32f0c57ba048",
+  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.31",
   "capabilities": [
     "package-manager-free Runtime compiler bootstrap on Node/Deno/Bun adapters",
     "compiler-owned structured diagnostics for Runtime repair loops",
     "standard Core Wasm compiler for JavaScript and raw Wasm hosts",
-    "finite recordless String/List/Map managed planning through the current Runtime compiler",
     "ordinary-source u64 parameters, locals, returns, arithmetic, comparisons and shifts with exact Wasm i64 semantics",
     "WIT-shaped record/tuple/enum/option/result/variant scalar-lane lowering",
     "WIT-authoritative Lib Core and Component packages",
@@ -41,10 +40,6 @@
     "incubating persistent Client and Gateway runtime above the fixed Lib-defined Host boundary",
     "content-addressed dynamic serial and general-DAG Lib composition with atomic replacement, rollback and restart recovery",
     "snapshot checkpoint restore, exact cross-schema state migration and sticky-state restart disposition",
-    "one canonical master compiler and matching CoreLib4.11.0-candidate.1, Std1.4.1 and LibSearch0.5.0",
-    "42 complete current Lib Roots with 247 exported WIT API routes and 289 compiled Search index entries",
-    "current73-API Std dual consumer qualification and position-aware ordinary-source semantics",
-    "whole-product Native compiler packages for six desktop targets with exact actual build/input custody",
     "integrated ordinary-call, record-value, scalar-comparison, invalid adapter-return cleanup and copied-byte correctness repairs",
     "generic private scalar helper calls with forward declarations, recursion, control flow and typed invalid-source recovery",
     "ordinary Source JSON/bytes calls through the canonical SDK with exact caller plan and memory bindings",
@@ -53,7 +48,10 @@
     "Checked chunk canonical SDK transport emitted directly by the Wasm carrier; matching current Coreb06, complete15asset map and fixed10M original4128B/two-engine qualification.",
     "Generic existing checked unit Result matches support terminal and continuing control flow, malformed status cleanup and same-instance recovery without a new Host ABI.",
     "Existing typed checked u32/unit Result composition with managed error Variants through the generic canonical SDK, exact argument windows and malformed-return cleanup; matched checked-profile assets, multi-memory App.",
-    "Existing Rust Text30 APIs discoverable in current43; fallible growable CoreLib string and byte storage, unchanged compiler and51exportABI."
+    "Growable CoreLib String, bytes, List and Map storage with no per-collection entry ceiling. Allocations remain subject to runtime memory.",
+    "43 selected Lib Roots, 289 exported WIT API routes and 332 compiled search index identities, including Std 1.5.2, JSON 0.2.4 and LibSearch 0.6.0.",
+    "Rust 2024 Host SDK with WAsmC ordinary-call JSON and copied-byte memory bindings.",
+    "Whole-product Native CLI qualified on the five supported desktop targets."
   ],
   "nonclaims": [
     "private compiler source",
@@ -68,8 +66,7 @@
     "general exactly-once external effects, external-effect rollback, clustered Gateway consensus or fleet scheduling",
     "public Client/Gateway service deployment or mobile/physical-device qualification",
     "Node18 execution of current Std requiring function-references and tail-call",
-    "execution or device qualification of fourteen native-source packages",
-    "Map/Core4.11 publication; this remains a separately versioned successor"
+    "execution or device qualification of seventeen native-source packages"
   ],
   "compatibility": {
     "byte_frozen": false,
@@ -79,12 +76,12 @@
     "package": "wasmc:runtime@0.1.0-runtime-v0",
     "path": "runtime/wasmc-runtime-v0",
     "registry": "runtime/registry-v0",
-    "compiler_bytes": 2055961,
-    "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-    "product_candidate_commit": "f4736bed7fbb2d756731c5aee16b55fd5c77ffe1",
+    "compiler_bytes": 2036236,
+    "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+    "product_candidate_commit": "f7dc2aeaca0fad8579f5eec620c09f563e6f3f28",
     "product_candidate_repository": "cbgroom/wasmcrelease",
-    "evidence_commit": "f4736bed7fbb2d756731c5aee16b55fd5c77ffe1",
-    "source_free_archive_sha256": "7246acd94895686e8cd09495ffdb072d77af73fd5e10144670a509206240d5ef",
+    "evidence_commit": "f7dc2aeaca0fad8579f5eec620c09f563e6f3f28",
+    "source_free_archive_sha256": "dd17098412ebeb2df9e5314f4af7c617571c2960a812f38de4aa318809667f2a",
     "host_providers": [
       "node",
       "bun",
@@ -95,12 +92,12 @@
     "python_active_tree_allowed": false,
     "archive_scope": "Exact source-free Runtime subset archive; 15 actual Runtime steps; formal whole-public archive is independently verified after publication"
   },
-  "release_date": "2026-10-26",
+  "release_date": "2026-11-23",
   "artifact_inventory": {
     "path": "manifest.json",
     "integrity": "SHA256SUMS",
-    "artifacts": 2352
+    "artifacts": 1647
   },
-  "product_candidate_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
-  "evidence_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e"
+  "product_candidate_commit": "98d813cc020bae00f34a302e44512a4f36e4404d",
+  "evidence_commit": "98d813cc020bae00f34a302e44512a4f36e4404d"
 }
