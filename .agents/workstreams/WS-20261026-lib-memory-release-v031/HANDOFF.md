@@ -1149,3 +1149,23 @@ Resume the exact-commit public gates 45105977289 (normal consumers),
 45105977167 (LibSearch), and 45105976999 (Native CLI). Create the final
 rehearsal only after qualifying those receipts and retaining any first
 failures. v0.0.30 remains the published default.
+
+The public candidate is now `45e6cf319e9634cd68e6dabf1ecd77ea011c795d`
+with product digest
+`3811a8d24c270fcfc790fe7d55f4de62a18f3e6df230011ce3007cce6785b707`.
+The final four-file revision replaces the three stale v030 Runtime Host
+receipts and the candidate manifest. Node, Bun and Deno each executed five
+commands on the same source-free v031 Runtime archive
+`dd17098412ebeb2df9e5314f4af7c617571c2960a812f38de4aa318809667f2a`.
+All three accepted the shipped compiler and produced the 44-byte fixture
+with result 42 and the branch oracle results 14 and 26.
+
+GitHub run 45107970615 passed all 12 final-runtime cells plus the candidate
+integrity cell. Full normal run 45106824758 supplies compatibility and Rust
+evidence once its exact aggregate has finished. LibSearch run 45106824578
+passed all 10 JavaScript cells and the actual Rust cell. Native run
+45107673272 uses macOS 15 for the required ARM64 target; earlier runs
+45105976999 and 45106500378 remain evidence of the pre-runner cancellation
+on macOS 14. Complete the exact input bridges and verify all required Native
+download-consumer jobs before the final unpushed Pi pair rehearsal. The
+official default remains v0.0.30.
