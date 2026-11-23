@@ -33,7 +33,7 @@ row's `root`, then its pinned `lib.json`, Skill and WIT. Relative artifact paths
 belong to that Root. Do not infer old hit fields or reconstruct an SDK path.
 
 All query tokens must match with ASCII case folding and stable identity order.
-Use explicit `--offset N --limit N` pagination, at most64/page. Package/profile
+Use explicit `--offset N --limit N` pagination. The default page size is 64. Package/profile
 and bound-only filters are explicit. No match describes this finite index.
 Use shorter concrete words or read the exact target WIT before writing missing
 bounded glue. Search does not choose versions or grant semver fallback.

@@ -24,3 +24,10 @@ repair uses ESM imports and binds the build and runtime CLI to the measured
 compiler and existing release gate. These failures remain in runs 45105977167
 and 45105976999. The new exact product passes the 19-case local candidate
 suite and Node 22 checks with CommonJS loading of ESM disabled.
+
+LibSearch 0.6.0 accepts a requested page of 65 and bounds a wide request by
+the number of matches. The Component SDK runs 1,112 verified calls across
+all 332 identities, including the larger-page and full-index cases. Preserve
+the earlier stale capped-oracle failure in run 45105977167. The newly
+installed JSON 0.2.4 Root passed 14 Guest invocations in the local atomic
+Host fixture. Package selection docs now point at the exact current Roots.

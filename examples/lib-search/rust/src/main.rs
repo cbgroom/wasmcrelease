@@ -46,7 +46,12 @@ fn main() {
         for hit in hits { assert_eq!(catalog.call_lookup(&mut store, &index, &hit.identity).unwrap().unwrap().unwrap().identity, hit.identity); calls += 1; }
     }
     assert!(catalog.call_lookup(&mut store, &index, "missing").unwrap().unwrap().is_none());
-    assert!(matches!(catalog.call_search(&mut store, &index, &query, 0, 65).unwrap(), Err(SearchError::InvalidLimit)));
+    let empty = catalog.call_search(&mut store, &index, &query, 0, 0).unwrap().unwrap();
+    assert!(empty.is_empty());
+    let larger_page = catalog.call_search(&mut store, &index, &query, 0, 65).unwrap().unwrap();
+    assert!(larger_page.into_iter().map(|hit| hit.identity).eq(identities[..65].iter().cloned()));
+    let complete = catalog.call_search(&mut store, &index, &query, 0, u32::MAX).unwrap().unwrap();
+    assert!(complete.into_iter().map(|hit| hit.identity).eq(identities.iter().cloned()));
     assert!(matches!(catalog.call_snapshot(&mut store, "{}").unwrap(), Err(SearchError::InvalidIndex)));
-    println!("{{\"accepted\":true,\"generated_sdk\":true,\"packages\":43,\"entries\":332,\"component_calls\":{}}}", calls + 3);
+    println!("{{\"accepted\":true,\"generated_sdk\":true,\"packages\":43,\"entries\":332,\"component_calls\":{},\"larger_page_and_full_index\":true}}", calls + 5);
 }

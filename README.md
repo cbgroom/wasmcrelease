@@ -41,26 +41,26 @@ establish downloaded-consumer execution.
 
 Follow [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md).
 The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
-Its43 package routes and277 API routes give320 exact search entries.
+Its 43 package routes and 289 API routes give 332 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --limit 8
 node examples/base64/run.mjs
 ```
 
 Search discovers candidates; resolve verifies the exact catalog, manifest and
 Root inventory. Installation uses a separately pinned lock and no-clobber
 destination. Read each Root's Skill, WIT and declared profile before using it.
-Fourteen native-source rows are source-only. They do not imply executable or
+Seventeen native-source rows are source-only. They do not imply executable or
 physical-device qualification.
 
-[Std1.4.1](standard/wasmc-std/1.4.1/) retains73 operations and nine resources
-with complete generated Core and Component Rust SDKs. Its Core import requires
-CoreLib4.11.0-candidate.2 (ABI namespace4.9.0). [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
-bounded full-index lookup and search. The matching Provider is
+[Std 1.5.2](current-libs/wasmc-std/1.5.2/) includes generated Core and
+Component Rust SDKs. Its Core import uses CoreLib 4.12.0-candidate.1 with ABI
+namespace 4.9.0. [LibSearch 0.6.0](current-libs/wasmc-lib-search/0.6.0/) provides
+full-index lookup and paginated search. The matching CoreLib is
 `current/lib_core.wasm`.
 
-The complete [JSON0.0.6 Root](standard/wasmc-json/0.0.6/) includes typed
+The complete [JSON 0.2.4 Root](current-libs/wasmc-json/0.2.4/) includes typed
 JSON document operations and UTF-8 byte conversion. Ordinary WAsmC applications
 use the generic [Canonical Host SDK example](examples/canonical-host/) to bind
 the selected Lib and application Host contracts. The SDK owns the generated

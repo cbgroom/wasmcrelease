@@ -2,13 +2,13 @@
 
 Read [the exact current catalog](README.md). Resolve the selected Root using
 its independent catalog, manifest and Root inventory pins. The following lock
-is bound to Std1.4.1 at public artifact commit
-`0e91db5e63ab5750cb621add5ad48a5581aedfa1`:
+is bound to Std 1.5.2 at public artifact commit
+`f0166ba76b8613f6decd1ab7c362ca8a9cd90031`:
 
 ```sh
 wasmc_install_demo=$(mktemp -d)
-node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92 > "$wasmc_install_demo/lock.json"
-node scripts/wasmc-lib.mjs install "$wasmc_install_demo/lock.json" "$wasmc_install_demo/lib" --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --lock-sha256 8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9 --mirror github
+node scripts/wasmc-lib.mjs resolve wasmc-std 1.5.2 --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --manifest-sha256 229df2e763411febc2f3fd275666265833a53f6f9f3c03e44b9d6b0cd9411338 --root-inventory-sha256 86ea6bc3c5f7f49b3656e79cd1db9c23440235b673f0595309d05375556fea1d > "$wasmc_install_demo/lock.json"
+node scripts/wasmc-lib.mjs install "$wasmc_install_demo/lock.json" "$wasmc_install_demo/lib" --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --lock-sha256 bdcce45fef79c1cd7bd7e146b7f3d00353c4f1dee3a8fad9f9364f5471b34734 --mirror github
 node examples/base64/run.mjs --installed "$wasmc_install_demo/lib"
 ```
 
@@ -19,9 +19,9 @@ mutable URL or custom endpoint. Every Root file is checked before exclusive
 publication; an occupied destination is rejected, including an empty directory.
 The installer publishes a symlink to its retained complete staging directory.
 
-The selected package is under `current-libs/wasmc-std/1.4.1` inside the destination.
+The selected package is under `current-libs/wasmc-std/1.5.2` inside the destination.
 It includes WIT, Core/Component artifacts, generated SDKs, metadata, LICENSE and
-original dependency notices. The independent Provider4.9.1 companion remains in
+original dependency notices. The independent CoreLib 4.12.0-candidate.1 companion remains in
 the verified tooling/product at `current/lib_core.wasm`; it is not part of this
 single-Root install. The Base64 oracle reads the installed Root and verifies its
 complete inventory before executing against that separately pinned Provider.
