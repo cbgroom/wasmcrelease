@@ -7,10 +7,10 @@ metadata:
 
 # Library-first discovery
 
-Use the v0.0.24 product's `catalog/libs-current-v2.json`, independently pinned
-below. It binds43 complete current package Roots, including14 native-source
-packages. LibSearch0.5.0 executes lookup and bounded search over43 package and
-277 API routes. A search result establishes discovery; channel authorities
+Use the v0.0.31 product’s `catalog/libs-current-v2.json`, independently pinned
+below. It binds 43 complete current package Roots, including 17 native-source
+packages. LibSearch 0.6.0 executes lookup and paginated search over 43 package and
+289 API routes. A search result establishes discovery; channel authorities
 establish release. Native-source delivery does not establish executable or
 physical-device support.
 

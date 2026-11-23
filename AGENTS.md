@@ -42,14 +42,14 @@ permission does not grant compiler-source publication permission.
 
 ## v0.0.31 product capability contract
 
-The product uses one portable Core Wasm compiler, CoreLib4.11.0-candidate.2, Std1.4.1,
-LibSearch0.5.0 and43 current Lib identities. `current/compiler-release.json`
+The product uses one portable Core Wasm compiler, CoreLib 4.12.0-candidate.1, Std 1.5.2,
+LibSearch 0.6.0 and 43 current Lib identities. `current/compiler-release.json`
 binds the compiler carriers and source build; validate them with
 `node scripts/current-compiler-integrity.mjs --require-qualification`.
 `catalog/libs-current-v2.json` binds complete current Roots. Its independent
-SHA256 is `e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871`. The43 package routes and277 exported API routes form
-320 index entries. Search runs the actual compiled Core implementation.
-Fourteen native-source rows remain source-only and do not establish executable
+SHA256 is `ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192`. The 43 package routes and 289 exported API routes form
+332 index entries. Search runs the actual compiled Core implementation.
+Seventeen native-source rows remain source-only and do not establish executable
 Native or device support. Installation grants no Host authority.
 
 Ordinary source supports `u32`, `u64`, signed integer values, documented control
@@ -59,22 +59,24 @@ Map is not a direct public Map value result. Copy ordered entries only when thei
 value semantics meet the application contract. Never expose raw handles, private
 lanes, Store identities, lifecycle helpers or transfer plans in application source.
 
-The complete73-API Std contract has generated Core and Component Rust SDKs:
-[Std1.4.1](standard/wasmc-std/1.4.1/) and
-[LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/).
-`current/lib_core.wasm` is the matching4.11.0-candidate.2 CoreLib. Core and Component
+The complete 73-API Std contract has generated Core and Component Rust SDKs:
+[Std 1.5.2](current-libs/wasmc-std/1.5.2/) and
+[LibSearch 0.6.0](current-libs/wasmc-lib-search/0.6.0/).
+`current/lib_core.wasm` is the matching 4.12.0-candidate.1 CoreLib. Core and Component
 execution are separate profiles. Verify the selected Root's declared imports
 and use its manifest-owned SDK paths; do not reconstruct paths or versions.
 
-For JSON/bytes, select [JSON0.0.6](standard/wasmc-json/0.0.6/) and follow
+For JSON/bytes, select [JSON 0.2.4](current-libs/wasmc-json/0.2.4/) and follow
 [the Canonical Host SDK example](examples/canonical-host/). The generic SDK
 owns caller generation, transfer plans and memory bindings. Keep JSON parsing,
 UTF-8 conversion and application decisions in the Guest/Lib; Host adapters
 perform only the explicitly supplied effects. For static HTTP or read-only JSON, use
 `examples/canonical-host/app/static.wasmc` or `app/json-read.wasmc`; these omit
 unused Table/error imports through the same SDK packaging path.
-The [historical JSON0.0.5 Root](standard/wasmc-json/0.0.5/) retains its original
-manifest and notices; current discovery selects JSON0.0.6.
+Historical Roots retain their original manifests and notices:
+[JSON 0.0.5](standard/wasmc-json/0.0.5/), [JSON 0.0.6](standard/wasmc-json/0.0.6/),
+[Std 1.4.1](standard/wasmc-std/1.4.1/) and
+[LibSearch 0.5.0](standard/wasmc-lib-search/0.5.0/).
 
 For checked scalar/unit Host composition, use [the canonical checked Result fixture](examples/current/canonical-checked-results-v1/). It uses existing typed Result bindings and the separately selected published JSON0.0.7 Root. Its complete App requires a multi-memory engine; Bun1.3.14 validates compiler frames only.
 
@@ -104,7 +106,7 @@ cancellation and resource cleanup. Keep native-source, emulator and physical
 
 ```sh
 node scripts/current-compiler-integrity.mjs --require-qualification
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --limit 8
 node examples/base64/run.mjs
 ```
 

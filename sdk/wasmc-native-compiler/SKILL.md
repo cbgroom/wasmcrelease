@@ -9,9 +9,9 @@ parent_skill: wasmc-sdk-discovery
 Use this when the task is command-line compilation/execution rather than
 embedding the Rust runtime as an SDK.
 
-The current component map marks the source integration surface `published`.
-Its downloaded cross-platform native packages remain CI/development artifacts,
-not immutable release assets; do not invent a binary download from that status.
+Read `release.json` and `channels/prod.json` for the exact published version.
+Download your platform package from the matching [GitHub Release](https://github.com/cbgroom/wasmcrelease/releases)
+and check it against `NATIVE-SHA256SUMS`. GitHub Actions artifacts carry qualification evidence.
 
 ## Current commands
 

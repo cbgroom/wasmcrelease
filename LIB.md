@@ -9,7 +9,7 @@ shape. WIT has no native Map. When a public contract needs a copied snapshot,
 return an explicit `list<Entry<K,V>>` or use a declared resource; direct public
 Map is rejected rather than silently serialized.
 
-The v0.0.30 current facade embeds the same verified compiler as the Runtime
+The v0.0.31 facade embeds the same verified compiler as the Runtime
 package. Use the facade directly for supported ordinary managed source:
 
 ```js
@@ -23,13 +23,13 @@ finite managed roots; caller-pinned JSON plans are not application source.
 
 Begin reusable-compute discovery with
 [the Library-first Skill](skills/wasmc-lib-discovery/SKILL.md) and the exact
-[current catalog](catalog/libs-current-v2.json). It describes43 complete Roots,
-277 exported API routes and320 index entries. Read the selected Root's own
+[current catalog](catalog/libs-current-v2.json). It describes 43 complete Roots,
+289 exported API routes and 332 index entries. Read the selected Root's own
 `SKILL.md`, `lib.wit` and `lib.json`; use its declared SDK paths and verify its
 full manifest/inventory before installation. Core, Component and native-source
-profiles have separate contracts. Fourteen native-source identities remain
-source-only. The73-API Std1.4.1 contract is available at
-[its complete Root](standard/wasmc-std/1.4.1/).
+profiles have separate contracts. Seventeen native-source identities remain
+source-only. The 73-API Std 1.5.2 contract is available at
+[its complete Root](current-libs/wasmc-std/1.5.2/).
 
 System Telemetry offers a generated Component resource SDK. Its ordinary source
 resource-method route remains unsupported. A declared Host import requests an

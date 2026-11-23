@@ -18,9 +18,9 @@ selected artifact's declared imports.
 
 Read [the consumer reference](../wasmc-developer/references/lib.md) and
 [LIB.md](../../LIB.md). The standard package is
-[Std1.4.1](../../standard/wasmc-std/1.4.1/SKILL.md).
+[Std 1.5.2](../../current-libs/wasmc-std/1.5.2/SKILL.md).
 Run [its Base64 oracle](../../examples/base64/run.mjs) or
 [the ordinary-source paired example](../../examples/current/standard.mjs).
-Core and Component execution require separate profile evidence. The14
+Core and Component execution require separate profile evidence. The 17
 native-source rows do not imply executable or device acceptance. Imports request
 Host effects; selection and installation grant no effect authority.
