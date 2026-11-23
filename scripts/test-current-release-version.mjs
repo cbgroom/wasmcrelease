@@ -89,7 +89,7 @@ for (const version of ['0.0.023', '0.0.23-dev.1', '../23', '0.1.0', '0.0.9007199
   assert.throws(() => usesCurrentProductV3(version)); rejected++;
 }
 const mutations = [
-  x => x.runs.find(r => r.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs').result.native_parity = 'c68796a617b5fd41447b8b9e0cec087407c755faac11404ae8c13d74a55f483c',
+  x => x.runs.find(r => r.args.at(-1) === currentHostQualificationScript(compiler.version)).result.native_parity = '0'.repeat(64),
   x => x.runs.find(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs').result.provider = '4.9.0',
   x => x.runs.pop(),
   x => x.runs.splice(x.runs.findIndex(r => r.args.at(-1) === 'scripts/test-current-private-helpers.mjs'), 1),
@@ -116,12 +116,17 @@ const mutations = [
   x => x.boolean_conditional_calls--
 ];
 if(requiresUnitResultMatchQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.live_handles=1);}
-if(requiresCanonicalCheckedResultsQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-canonical-checked-results.mjs').result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-canonical-checked-results.mjs').result.pending_counters_zero=0);}
-if(requiresStringStorageQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-current-string-support.mjs').result.Guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-current-string-support.mjs').result.CoreLib_sha256='0'.repeat(64));}
+if(requiresCanonicalCheckedResultsQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)===currentCheckedQualificationScript(compiler.version)).result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)===currentCheckedQualificationScript(compiler.version)).result.pending_counters_zero=0);}
+if(requiresStringStorageQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)===currentStringQualificationScript(compiler.version)).result.Guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)===currentStringQualificationScript(compiler.version)).result.CoreLib_sha256='0'.repeat(64));}
 for (const mutate of mutations) {const changed = structuredClone(q); mutate(changed); assert.throws(() => check(changed)); rejected++;}
 // Schema compatibility fixture, never written as historical execution evidence.
 const legacy = structuredClone(q); legacy.version = '0.0.22';
-legacy.runs = legacy.runs.filter(r => !['scripts/test-current-string-support.mjs', 'scripts/test-canonical-checked-results.mjs', 'scripts/test-unit-result-match.mjs', 'scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs', 'scripts/test-if-branch-scope.mjs', 'scripts/test-canonical-host-import-demand.mjs'].includes(r.args.at(-1)));
+const successorOnlyTests = new Set([
+  currentStringQualificationScript(compiler.version), currentCheckedQualificationScript(compiler.version),
+  currentHostQualificationScript(compiler.version), currentImportDemandQualificationScript(compiler.version),
+  'scripts/test-unit-result-match.mjs', 'scripts/test-current-private-helpers.mjs', 'scripts/test-if-branch-scope.mjs'
+]);
+legacy.runs = legacy.runs.filter(r => !successorOnlyTests.has(r.args.at(-1)));
 for (const r of legacy.runs.filter(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs')) r.result.provider = '4.9.0';
 assert.equal(assertCompilerQualification(legacy, '0.0.22', compiler.compiler.sha256, hash(read('current/compiler-release.json'))), true);
 console.log(JSON.stringify({accepted:true, actual_current_receipt:true, legacy_schema_fixture:true, rejections:rejected, whole_product_admission:false}));

@@ -15,6 +15,18 @@ const declarations=map=>[...map].map(([name,tokens])=>[name,tokens.map(t=>t.star
 const decode = bytes => new TextDecoder('utf-8',{fatal:true}).decode(bytes);
 const fail = message => {throw Error('current product: '+message);};
 const exactKeys = (value,keys) => assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed current schema');
+const catalogReleasePins = new Map([
+  ['0.0.30', 'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871'],
+  ['0.0.31', 'ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192']
+]);
+
+export function pinnedCurrentCatalog(bytes) {
+  const {version} = JSON.parse(decode(bytes));
+  const sha256 = catalogReleasePins.get(version);
+  assert.ok(sha256, 'no independent current catalog pin for this release');
+  return {catalog: checkedCurrentCatalog(bytes, sha256), sha256};
+}
+
 export function checkedCurrentCatalog(bytes, expectedSha256) {
   assert.ok(digest(expectedSha256));assert.equal(hash(bytes),expectedSha256,'catalog independent pin');
   const catalog=JSON.parse(decode(bytes));

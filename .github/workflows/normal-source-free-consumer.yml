@@ -105,7 +105,7 @@ jobs:
     env:
       CARGO_BUILD_JOBS: 2
       CARGO_TARGET_DIR: ${{ github.workspace }}/target/ci-rust
-      WASMC_SEARCH_LIB_ROOT: ${{ github.workspace }}/standard/wasmc-lib-search/0.5.0
+      WASMC_SEARCH_LIB_ROOT: ${{ github.workspace }}/current-libs/wasmc-lib-search/0.6.0
       WASMC_SEARCH_INDEX_PATH: ${{ github.workspace }}/catalog/current-index-v2.json
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

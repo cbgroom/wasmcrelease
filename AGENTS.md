@@ -1,6 +1,6 @@
 # WAsmC public Agent entrypoint
 
-This file is frozen inside the v0.0.30
+This file is frozen inside the v0.0.31
 product set; product presence is not lifecycle authority. Start with
 `agent-quickstart.json`. For release orientation, read the validated compact
 `agent-release-orientation.json` and run its named check. Open the full artifact inventory
@@ -40,7 +40,7 @@ Compiler implementation source is private. Reviewed compiler Wasm and public
 Host/runtime/SDK/CLI integration glue may be distributed. Compiler modification
 permission does not grant compiler-source publication permission.
 
-## v0.0.30 product capability contract
+## v0.0.31 product capability contract
 
 The product uses one portable Core Wasm compiler, CoreLib4.11.0-candidate.2, Std1.4.1,
 LibSearch0.5.0 and43 current Lib identities. `current/compiler-release.json`

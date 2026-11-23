@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {validateCandidate,validateTransition,currentStageMetadataPaths,validateCurrentStageMetadataPartition,currentCIProductInputs,validateCurrentCIProductInputs,currentV3ProductInputsForVersion} from './release-candidate.mjs';
+import {validateCandidate,validateTransition,currentStageMetadataPaths,validateCurrentStageMetadataPartition,currentCIProductInputs,validateCurrentCIProductInputs,currentProductInputsForVersion} from './release-candidate.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const bytes=Buffer.from('product'),rows=[{path:'current/product.wasm',bytes:bytes.length,sha256:hash(bytes)}];
 const routeClosure={schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:'admission/route.json',sha256:'1'.repeat(64)},catalog:{path:'catalog/libs.json',sha256:'2'.repeat(64)},search_index:{path:'examples/index.lsi',sha256:'3'.repeat(64)},release_packages:1,package_routes:1,api_routes:1,candidate_extras:0,exact:true,candidate_extra_grants_release:false};
@@ -44,9 +44,19 @@ for(const mutate of [
 const ciRows=currentCIProductInputs.map(path=>({path,bytes:bytes.length,sha256:hash(bytes)}));
 assert.equal(validateCurrentCIProductInputs({product_files:ciRows},()=>bytes),true);
 const {suiteCases}=await import('./ci-suite.mjs');
-const currentSuiteVersion=JSON.parse((await import('node:fs')).readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url))).version;
+const {readFileSync}=await import('node:fs');
+const readProductJson=path=>JSON.parse(readFileSync(new URL('../'+path,import.meta.url)));
+const currentCatalog=readProductJson('catalog/libs-current-v2.json');
+const cohortSchema=readProductJson(currentCatalog.cohort.path).schema;
+const variantBySchema=new Map([
+  ['wasmc.json-derived-overlay-cohort/v1','json-derived'],
+  ['wasmc.json-overlay-cohort/v1','json-overlay'],
+  ['wasmc.mixed-current-cohort/v1','mixed'],
+  ['wasmc.public-current-refresh-cohort/v2','v4'],
+]);
+const suiteInputs=currentProductInputsForVersion(currentCatalog.version,variantBySchema.get(cohortSchema)??'v3');
 for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
-  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion(currentSuiteVersion).includes(arg),'CI executable omitted: '+arg);
+  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(suiteInputs.includes(arg),'CI executable omitted: '+arg);
 }
 for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml','scripts/run-pi-learning-model-v1.mjs','scripts/aggregate-native-cli-perf.mjs','scripts/qualify-current-compiler.mjs','scripts/fixtures/ios-wss-cert.pem','scripts/fixtures/ios-wss-key.pem','docs/DYNAMIC_LIB_GRAPH_MODEL.md','host/drivers/tcp/rust/Cargo.toml','scripts/lib-refresh-runner-v2.mjs']){
   assert.ok(currentCIProductInputs.includes(path));

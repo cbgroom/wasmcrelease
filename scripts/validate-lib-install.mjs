@@ -3,14 +3,18 @@ import {spawnSync} from 'node:child_process';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
-import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
+import {hash,pinnedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 const catalogBytes=readFileSync(join(repositoryRoot,'catalog/libs-current-v2.json'));
-const catalogSha256='e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871';
-const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-std');
+const {catalog,sha256:catalogSha256}=pinnedCurrentCatalog(catalogBytes);
+const row=catalog.packages.find(r=>r.id==='wasmc-std');
 const lock=resolveCurrentPackage(catalogBytes,catalogSha256,{id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},currentProductReader(repositoryRoot));
 const lockBytes=Buffer.from(JSON.stringify(lock,null,2)+'\n');
-if(hash(lockBytes)!=='f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b')throw Error('independent approved Std lock drift');
+const lockPins=new Map([
+  ['0.0.30','f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b'],
+  ['0.0.31','bdcce45fef79c1cd7bd7e146b7f3d00353c4f1dee3a8fad9f9364f5471b34734']
+]);
+if(hash(lockBytes)!==lockPins.get(catalog.version))throw Error('independent approved Std lock drift');
 const mirror=process.argv[2]??'github',fixture=mkdtempSync(join(tmpdir(),'wasmc-current-live-install-'));
 const host=globalThis.Bun?'bun':globalThis.Deno?'deno':'node';
 const run=(script,args,permissions)=>{

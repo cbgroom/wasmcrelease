@@ -7,14 +7,18 @@ import {buildClosure} from './lib-route-closure.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const closure=buildClosure(),surfaces=read('release-surfaces.json'),catalog=read(closure.catalog.path);
-const admission=read('admission/current-product-v3.json'),composed=admission.schema==='wasmc.current-composition-release-closure/v1';
-const imported=new Set(composed?read(catalog.cohort.path).source_lineage.admitted_original_sources.map(row=>row.source.id):[]);
+const cohort=read(catalog.cohort.path);
+const derived=cohort.schema==='wasmc.json-derived-overlay-cohort/v1';
+const admission=derived?null:read('admission/current-product-v3.json');
+const composed=admission?.schema==='wasmc.current-composition-release-closure/v1';
+const imported=new Set(composed?cohort.source_lineage.admitted_original_sources.map(row=>row.source.id):derived?['wasmc-json']:[]);
 const version=catalog.version,release=read('release.json'),prod=read('channels/prod.json');
 const released=release.version===version&&prod.version===version&&prod.stage==='prod'&&release.tag===prod.tag;
 const rows=closure.release_bindings.map(row=>({...row,
   qualification:{Root_Q0:!imported.has(row.id),
     ...(composed?{qualification_kind:imported.has(row.id)?'verified-original-producer-source-composition':'inherited-original-full-Q0',
       original_producer_source_verified:imported.has(row.id),source_lineage_sha256:admission.source_lineage_sha256,fresh_full_q0:false}:{}),
+    ...(derived?{qualification_kind:imported.has(row.id)?'independently-reproduced-json-derived-root':'inherited-qualified-root',fresh_full_q0:false}:{}),
     runtime_claim:row.delivery_kind==='native-source'?'source-only; no execution or device qualification':'separate exact runtime receipts required'},
   states:{qualified:true,admitted:released,released,discoverable:released,installable:released},
   lifecycle_authority:'release.json and channels/prod.json',

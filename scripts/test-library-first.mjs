@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
+import {pinnedCurrentCatalog} from './current-lib-release-v3.mjs';
 const root=path.resolve(import.meta.dirname,'..');
 const skill='skills/wasmc-lib-discovery/SKILL.md';
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
@@ -22,15 +23,14 @@ const text=read(skill);
 for(const m of text.matchAll(/\]\(([^)]+)\)/g))checkedPath(path.relative(root,path.resolve(root,path.dirname(skill),m[1])));
 const commands=text.match(/```sh\n([\s\S]*?)\n```/)[1].split('\n');
 assert.equal(commands.length,2);
-const catalogPin='e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871';
-const catalog=JSON.parse(read('catalog/libs-current-v2.json'));
-assert.equal((await import('node:crypto')).createHash('sha256').update(read('catalog/libs-current-v2.json')).digest('hex'),catalogPin);
+const {catalog,sha256:catalogPin}=pinnedCurrentCatalog(fs.readFileSync(path.join(root,'catalog/libs-current-v2.json')));
+const std=catalog.packages.find(row=>row.id==='wasmc-std');
 let hits=0;
 for(const command of commands) {
   const m=command.match(/^node scripts\/wasmc-lib\.mjs search "([a-z0-9 ]+)" --catalog-sha256 ([0-9a-f]{64}) --limit ([1-8])$/);
   assert.ok(m,'unsafe or unsupported teaching command');assert.equal(m[2],catalogPin);
   const result=JSON.parse(execFileSync(process.execPath,['scripts/wasmc-lib.mjs','search',m[1],'--catalog-sha256',m[2],'--limit',m[3]],{cwd:root,timeout:10000,encoding:'utf8'}));
-  assert.equal(result.schema,'wasmc.public-current-lib-search/v3');
+  assert.equal(result.schema,catalog.version==='0.0.31'?'wasmc.public-current-lib-search/json-overlay-v1':'wasmc.public-current-lib-search/v3');
   assert.equal(result.catalog_sha256,catalogPin);assert.equal(result.selection_authority,false);
   assert.equal(result.result.tag,'ok');const selected=result.result.value;
   assert.ok(selected.length>0&&selected.length<=Number(m[3]));
@@ -48,7 +48,7 @@ for(const command of commands) {
     }
     hits++;
   }
-  if(m[1]==='base64 decode')assert.deepEqual(selected.map(h=>h.wit_route),['wasmc:std@1.4.1/base64#try-decode-standard']);
+  if(m[1]==='base64 decode')assert.deepEqual(selected.map(h=>h.wit_route),[`wasmc:std@${std.version}/base64#try-decode-standard`]);
 }
 let negatives=0;
 for(const from of ['AGENTS.md','skills/wasmc-developer/SKILL.md']) {

@@ -19,14 +19,14 @@ physical-device support.
 Run from the verified immutable product or tooling root:
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871 --limit 8
-node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192 --limit 8
 ```
 
 The first query returns identity
-`wasmc-std@1.4.1/base64#try-decode-standard` and WIT route
-`wasmc:std@1.4.1/base64#try-decode-standard`. The response has schema
-`wasmc.public-current-lib-search/v3` and `result.tag=ok`; results are in
+`wasmc-std@1.5.2/base64#try-decode-standard` and WIT route
+`wasmc:std@1.5.2/base64#try-decode-standard`. The response has schema
+`wasmc.public-current-lib-search/json-overlay-v1` and `result.tag=ok`; results are in
 `result.value`. Each hit contains identity, package_id, version, profile,
 source_path, wit_route and exact delivery pins. Read the corresponding catalog
 row's `root`, then its pinned `lib.json`, Skill and WIT. Relative artifact paths
@@ -54,11 +54,11 @@ bounded glue. Search does not choose versions or grant semver fallback.
    Use the documented current commands; immutable older catalogs are historical
    authorities for their own artifacts.
 3. Check the Root's delivery kind, runtime profile and every actual import.
-   Std1.4.1 Core requires the exact Provider4.9.1 module (ABI namespace4.9.0). Installation supplies no
+   Std 1.5.2 Core uses the pinned CoreLib provider (ABI namespace 4.9.0). Installation supplies no
    Host permission. Core, Component, native-source and device evidence differ.
 4. For Base64 run [the actual behavior oracle](../../examples/base64/run.mjs).
    It checks encode/decode, invalid input and explicit resource cleanup on the
-   pinned Std1.4.1/Core4.9 bytes. Its default invocation uses the packaged Root
+   pinned Std 1.5.2 and CoreLib bytes. Its default invocation uses the packaged Root
    and reports `installed_root_verified=false`; it proves no installation.
    The documented `--installed` form verifies the actual installed directory
    separately. Report the exact package and WIT APIs, resolver verification and

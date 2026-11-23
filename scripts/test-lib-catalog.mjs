@@ -3,11 +3,13 @@ import {readFileSync,mkdtempSync,symlinkSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
+import {hash,checkedCurrentCatalog,pinnedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const bytes=readFileSync(join(root,'catalog/libs-current-v2.json'));
-const pin='e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871';
-const catalog=checkedCurrentCatalog(bytes,pin),read=currentProductReader(root);
+const {catalog,sha256:pin}=pinnedCurrentCatalog(bytes);
+const read=currentProductReader(root);
+const nativePackages=catalog.packages.filter(row=>row.delivery.kind==='native-source').length;
+assert.equal(nativePackages,catalog.version==='0.0.31'?17:14);
 const request=r=>({id:r.id,version:r.version,manifest_sha256:r.manifest_sha256,root_inventory_sha256:r.root_inventory_sha256});
 assert.equal(catalog.packages.length,43);
 for(const row of catalog.packages){
@@ -30,4 +32,4 @@ reject(()=>resolveCurrentPackage(bytes,pin,req,p=>p.endsWith('/artifact.wasm')?n
 const fixture=mkdtempSync(join(tmpdir(),'wasmc-current-catalog-'));
 try{symlinkSync(join(root,'README.md'),join(fixture,'escape'));reject(()=>currentProductReader(fixture)('escape'));}
 finally{rmSync(fixture,{recursive:true});}
-console.log(JSON.stringify({accepted:true,current_packages:43,native_source_packages:14,negative_tests:10,selection:'unique exact complete-Root lock',network_access:false}));
+console.log(JSON.stringify({accepted:true,current_packages:43,native_source_packages:nativePackages,negative_tests:10,selection:'unique exact complete-Root lock',network_access:false}));

@@ -1,9 +1,9 @@
-# Current LibSearch 0.5.0 consumer
+# Current LibSearch 0.6.0 consumer
 
 Read the exact [current catalog](../../catalog/README.md). The index is explicit
-[catalog data](../../catalog/current-index-v2.json), with 43 packages, 277 exported
-APIs and 320 entries. The executable Search Root is
-[LibSearch 0.5.0](../../standard/wasmc-lib-search/0.5.0/). The public metadata pins
+[catalog data](../../catalog/current-index-v2.json), with 43 packages, 289 exported
+APIs and 332 entries. The executable Search Root is
+[LibSearch 0.6.0](../../current-libs/wasmc-lib-search/0.6.0/). The public metadata pins
 the complete Root and its manifest-owned Core and Component SDK paths.
 
 Run `node examples/lib-search/run.mjs` for the complete Root/index closure and
@@ -13,11 +13,11 @@ Wasmtime dependency. Both consume the same exact index; they verify snapshots,
 lookup/search and post-return cleanup separately.
 
 ```sh
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.5.0" WASMC_SEARCH_INDEX_PATH="$PWD/catalog/current-index-v2.json" cargo +1.96.0 test --locked --manifest-path examples/lib-search/rust/Cargo.toml
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.5.0" WASMC_SEARCH_INDEX_PATH="$PWD/catalog/current-index-v2.json" cargo +1.96.0 run --locked --manifest-path examples/lib-search/rust/Cargo.toml
+WASMC_SEARCH_LIB_ROOT="$PWD/current-libs/wasmc-lib-search/0.6.0" WASMC_SEARCH_INDEX_PATH="$PWD/catalog/current-index-v2.json" cargo +1.96.0 test --locked --manifest-path examples/lib-search/rust/Cargo.toml
+WASMC_SEARCH_LIB_ROOT="$PWD/current-libs/wasmc-lib-search/0.6.0" WASMC_SEARCH_INDEX_PATH="$PWD/catalog/current-index-v2.json" cargo +1.96.0 run --locked --manifest-path examples/lib-search/rust/Cargo.toml
 ```
 
 Index discovery is not release admission, installation or Host authority.
-Fourteen native-source entries remain source-only. Historical LSI fixtures are
+Seventeen native-source entries remain source-only. Historical LSI fixtures are
 retained for their immutable historical products; current commands do not use
 them.

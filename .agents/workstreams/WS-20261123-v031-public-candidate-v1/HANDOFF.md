@@ -10,3 +10,10 @@ producer preflight and source comparison are part of candidate creation.
 Run the public consumer gates against this exact product commit before
 formal publication. The published v0.0.30 tags and public discovery pointer
 are still authoritative. Keep unrelated prior files and claims intact.
+
+The first public runs 45104598958 and 45104598466 are retained. They exposed
+consumer pins for an older catalog, Std, LibSearch, or candidate lifecycle.
+The repaired source-free snapshot binds product set 9bb5b535de63f0ea950fe1efead3da92bd78ddedb8b2ed7ac472e3f88dd7c561.
+All 19 local candidate checks pass, and both public mirrors freshly installed
+the selected 26-file Std 1.5.2 Root and passed 256 Base64 rounds. Re-run the
+public workflows on the new exact product commit. Formal publication is pending.

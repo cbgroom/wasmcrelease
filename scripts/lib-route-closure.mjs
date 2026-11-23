@@ -5,7 +5,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseCatalog } from './lib-catalog.mjs';
-import {verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {verifyCurrentRelease,currentProductReader,currentProductPaths,pinnedCurrentCatalog} from './current-lib-release-v3.mjs';
+import {verifyPublicJsonOverlayPinned} from './json-overlay-public-v1.mjs';
 import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
@@ -163,11 +164,21 @@ export function buildHistoricalClosure(receiptPath=defaultReceipt,overrides={}){
 // The current default binds the full current catalog, Q0 Root inventory and
 // selected-world WIT routes. Historical candidate verification is explicit.
 export function buildClosure() {
-  const admissionPath='admission/current-product-v3.json';
-  const admission=json(admissionPath),catalogPath='catalog/libs-current-v2.json';
+  const catalogPath='catalog/libs-current-v2.json';
   const catalogBytes=read(catalogPath),catalog=JSON.parse(catalogBytes);
-  const closure=verifyCurrentRelease(catalogBytes,admission.catalog_sha256,currentProductReader(root),currentProductPaths(root));
-  assert.deepEqual(closure,admission,'current independent closure admission changed');
+  const readProduct=currentProductReader(root),paths=currentProductPaths(root);
+  const overlay=catalog.version==='0.0.31';
+  const admissionPath=overlay?catalog.cohort.path:'admission/current-product-v3.json';
+  const pin=overlay?pinnedCurrentCatalog(catalogBytes).sha256:json(admissionPath).catalog_sha256;
+  let closure;
+  if(overlay){
+    const verified=verifyPublicJsonOverlayPinned(catalogBytes,pin,readProduct,paths);
+    closure={package_routes:verified.packages,entries:verified.index_entries,
+      api_routes:verified.index_entries-verified.packages};
+  }else{
+    closure=verifyCurrentRelease(catalogBytes,pin,readProduct,paths);
+    assert.deepEqual(closure,json(admissionPath),'current independent closure admission changed');
+  }
   const index=json(catalog.index.path);
   const models=new Map(catalog.packages.map(r=>{const m=witModel(read(r.root+'/lib.wit'));return [m.identity,m];}));
   const bindings=catalog.packages.map(r=>{
@@ -182,8 +193,8 @@ export function buildClosure() {
   });
   return {schema:'wasmc.lib-route-closure/v3',authority_receipt:{path:admissionPath,sha256:sha(read(admissionPath))},
     release:{version:catalog.version,tag:'v'+catalog.version,lifecycle_authority:'release.json and channels/dev.json, channels/main.json, channels/prod.json'},
-    catalog:{path:catalogPath,sha256:admission.catalog_sha256,role:'current-product-catalog',package_routes:closure.package_routes},
-    search_index:{path:catalog.index.path,sha256:catalog.index.sha256,active_identity:'wasmc:lib-search@0.5.0',entries:closure.entries,package_routes:closure.package_routes,api_routes:closure.api_routes},
+    catalog:{path:catalogPath,sha256:pin,role:'current-product-catalog',package_routes:closure.package_routes},
+    search_index:{path:catalog.index.path,sha256:catalog.index.sha256,active_identity:bindings.find(row=>row.id==='wasmc-lib-search').identity,entries:closure.entries,package_routes:closure.package_routes,api_routes:closure.api_routes},
     release_bindings:bindings,candidate_extras:[],blocking_conditions:[],
     claims:{release_catalog_exact:true,release_package_routes_exact:true,release_api_routes_exact:true,
       api_parents_closed:true,formal_release_ready:false,automatic_version_selection:false,

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { pinnedCurrentCatalog } from './current-lib-release-v3.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const quickstart = JSON.parse(readFileSync(new URL('../agent-quickstart.json', import.meta.url), 'utf8'));
@@ -23,12 +24,14 @@ assert.equal(quickstart.routes['license-policy'].authority_file,'license-policy.
 assert.equal(quickstart.routes['license-policy'].check_command,'node scripts/validate-license-policy.mjs');
 assert.match(quickstart.routes['license-policy'].decision,/non-commercial research only/);
 const hash = path => createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex');
+const {catalog}=pinnedCurrentCatalog(readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url)));
+const std=catalog.packages.find(row=>row.id==='wasmc-std');
 assert.equal(hash('current/wasmc_compiler.wasm'), quickstart.routes['release-orientation'].compiler.sha256);
-assert.equal(hash('standard/wasmc-std/1.4.1/artifact.wasm'), quickstart.routes['library-first-selection'].artifact_sha256);
+assert.equal(hash(std.root+'/artifact.wasm'), quickstart.routes['library-first-selection'].artifact_sha256);
 assert.equal(hash('catalog/libs-current-v2.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-current-v2.json');
 assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
-assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
+assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,hash('current/lib_core.wasm'));
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
 assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not reproduce command arguments/);
@@ -46,7 +49,7 @@ const resolved=spawnSync(process.execPath,resolveArgs,{cwd:root,encoding:'utf8'}
 assert.equal(resolved.status,0,resolved.stderr);
 const lock=JSON.parse(resolved.stdout);
 assert.equal(lock.schema,'wasmc.public-lib-lock/v2');
-assert.equal(lock.id,'wasmc-std');assert.equal(lock.version,'1.4.1');
+assert.equal(lock.id,'wasmc-std');assert.equal(lock.version,std.version);
 assert.equal(lock.catalog_sha256,quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(lock.manifest_sha256,quickstart.routes['library-first-selection'].exact_report.manifest_sha256);
 assert.equal(lock.root_inventory_sha256,quickstart.routes['library-first-selection'].exact_report.root_inventory_sha256);
@@ -94,11 +97,11 @@ assert.equal(routeReadiness.valid_resolution_count,routeReadinessAuthority.valid
 assert.equal(routeReadiness.only_valid_closure,routeReadinessAuthority.only_valid_closure);
 assert.equal(typeof routeReadiness.product.formal_release_ready,'boolean');
 assert.equal(routeReadiness.product.package_routes,43);
-assert.equal(routeReadiness.product.api_routes,277);
+assert.equal(routeReadiness.product.api_routes,catalog.version==='0.0.31'?289:277);
 assert.equal(routeReadiness.product.formal_release_ready,routeReadiness.product.blocking_conditions.length===0);
 assert.equal(routeReadiness.product.candidate_extras,0);
 assert.ok(Array.isArray(routeReadiness.product.blocking_conditions));
-assert.equal(routeReadiness.active_search.identity,'wasmc:lib-search@0.5.0');
+assert.equal(routeReadiness.active_search.identity,`wasmc:lib-search@${catalog.packages.find(row=>row.id==='wasmc-lib-search').version}`);
 assert.equal(routeReadiness.valid_resolution_count,1);
 assert.match(routeReadiness.only_valid_closure,/read the channel authorities/);
 assert(routeReadiness.forbidden_shortcuts.some(row=>row.includes('treat admission as release')));
