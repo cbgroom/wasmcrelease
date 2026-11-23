@@ -8,6 +8,15 @@ import { requiresPrivateHelperQualification } from './current-release-version.mj
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const predecessorPath = 'agent-evaluation/fresh-agent-learning-v2.json';
 const predecessorSha256 = '31de0e1094291d4e936f456f98f946b0c0623c024753a361abc02d5180e1c91d';
+const v031Std = {
+  version: '1.5.2',
+  catalogSha256: 'ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192',
+  manifest_sha256: '229df2e763411febc2f3fd275666265833a53f6f9f3c03e44b9d6b0cd9411338',
+  root_inventory_sha256: '86ea6bc3c5f7f49b3656e79cd1db9c23440235b673f0595309d05375556fea1d',
+  wit_sha256: 'ffc3dfdce7da92df33118f0af5d4cb819228a0b4f4420743610f6031f64029e9',
+  artifactSha256: 'f9eb082ac6bfeb0434453aef185341d5d809d0465f32ee6a7cefe89ae8457f69',
+  companionSha256: '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e'
+};
 export const protocolRelativePath = version => requiresPrivateHelperQualification(version)
   ? 'agent-evaluation/fresh-agent-learning-v3.json' : predecessorPath;
 const currentVersion = JSON.parse(readFileSync(new URL('../current/compiler-release.json', import.meta.url))).version;
@@ -28,6 +37,14 @@ export function loadBoundProtocol(read) {
     assert.equal(binding.compiler_sha256, hash(read('current/wasmc_compiler.wasm')));
     assert.equal(binding.facade_sha256, hash(read('current/wasmc.mjs')));
     assert.equal(binding.catalog_sha256, hash(read('catalog/libs-current-v2.json')));
+    if (binding.version === '0.0.31') {
+      assert.equal(binding.catalog_sha256, v031Std.catalogSha256);
+      const catalog = JSON.parse(read('catalog/libs-current-v2.json'));
+      const std = catalog.packages.find(row => row.id === 'wasmc-std');
+      for (const key of ['version','manifest_sha256','root_inventory_sha256','wit_sha256']) assert.equal(std?.[key],v031Std[key]);
+      assert.equal(std.delivery.artifact.sha256,v031Std.artifactSha256);
+      assert.equal(hash(read('current/lib_core.wasm')),v031Std.companionSha256);
+    }
     assert.equal(hash(bytes), protocolDigest(protocol), 'canonical protocol bytes required');
   }
   return {path, sha256:hash(bytes), protocol};
@@ -35,6 +52,32 @@ export function loadBoundProtocol(read) {
 
 export function readProtocol(path = protocolPath) {
   return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+export function bindReleaseProtocol(binding) {
+  const priorBytes = readFileSync(new URL('../' + predecessorPath, import.meta.url));
+  assert.equal(hash(priorBytes), predecessorSha256, 'frozen predecessor protocol drift');
+  const expected = JSON.parse(priorBytes);
+  expected.schema = 'wasmc.fresh-agent-learning/v3';
+  expected.release_binding = structuredClone(binding);
+  const identities = new Map([
+    ['v0.0.22', 'v' + binding.version],
+    ['620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658',binding.compiler_sha256],
+    ['cdeb9f96d86a8718b8918ea39c1ee3eca486cfa5ae5a101e2da10f69053be447',binding.facade_sha256],
+    ['76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43',binding.catalog_sha256]
+  ]);
+  for (const row of expected.cases) for (const key of ['required_literals','allowed_sha256']) {
+    if (row.answer_contract?.[key]) row.answer_contract[key] = row.answer_contract[key].map(value => identities.get(value) ?? value);
+  }
+  if (binding.version === '0.0.31') {
+    const {answer_contract: answer} = expected.cases.find(row => row.id === 'library-first-selection');
+    for (const key of ['required_literals','allowed_identity_tokens']) {
+      answer[key] = answer[key].map(value => value.replace('wasmc:std@1.4.1', 'wasmc:std@'+v031Std.version));
+    }
+    answer.allowed_sha256 = [binding.catalog_sha256,v031Std.manifest_sha256,v031Std.root_inventory_sha256,
+      v031Std.wit_sha256,v031Std.artifactSha256,v031Std.companionSha256];
+  }
+  return expected;
 }
 
 export function validateProtocol(protocol) {
@@ -45,20 +88,7 @@ export function validateProtocol(protocol) {
     assert.equal(protocolRelativePath(binding.version), 'agent-evaluation/fresh-agent-learning-v3.json');
     for (const key of ['catalog_sha256','compiler_sha256','facade_sha256']) assert.match(binding[key], /^[0-9a-f]{64}$/);
     assert.equal(binding.predecessor_protocol, predecessorPath); assert.equal(binding.predecessor_sha256, predecessorSha256);
-    const priorBytes = readFileSync(new URL('../' + predecessorPath, import.meta.url));
-    assert.equal(hash(priorBytes), predecessorSha256, 'frozen predecessor protocol drift');
-    const expected = JSON.parse(priorBytes);
-    expected.schema = protocol.schema; expected.release_binding = structuredClone(binding);
-    const identities = new Map([
-      ['v0.0.22', 'v' + binding.version],
-      ['620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658',binding.compiler_sha256],
-      ['cdeb9f96d86a8718b8918ea39c1ee3eca486cfa5ae5a101e2da10f69053be447',binding.facade_sha256],
-      ['76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43',binding.catalog_sha256]
-    ]);
-    for (const row of expected.cases) for (const key of ['required_literals','allowed_sha256']) {
-      if (row.answer_contract?.[key]) row.answer_contract[key] = row.answer_contract[key].map(value => identities.get(value) ?? value);
-    }
-    assert.deepEqual(protocol, expected, 'v3 changes only release identities; frozen prompts, oracles and budgets required');
+    assert.deepEqual(protocol,bindReleaseProtocol(binding),'v3 changes only release identities; frozen prompts, oracles and budgets required');
   }
   assert.match(protocol.objective, /fresh Pi Agent/);
   assert.match(protocol.session_preamble, /First read AGENTS\.md/);

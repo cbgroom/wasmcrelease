@@ -31,3 +31,9 @@ all 332 identities, including the larger-page and full-index cases. Preserve
 the earlier stale capped-oracle failure in run 45105977167. The newly
 installed JSON 0.2.4 Root passed 14 Guest invocations in the local atomic
 Host fixture. Package selection docs now point at the exact current Roots.
+
+The final Agent protocol binds the demonstrated Std 1.5.2 package, two
+Base64 API names and exact current pins. Frozen prompts, case meanings,
+budgets and pair requirements remain in force. Both actual catalog behavior
+and 19 local candidate checks are green on this product. Continue the public
+receipts, exact final rehearsal and formal release stages.

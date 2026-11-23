@@ -1,25 +1,21 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { validateCandidateTree, validateQualification, validateReleaseRehearsal } from './pi-pre-release-gate-v1.mjs';
-import { readProtocol, protocolDigest, protocolRelativePath } from './fresh-agent-learning-v1.mjs';
+import { bindReleaseProtocol, readProtocol, protocolDigest, protocolRelativePath } from './fresh-agent-learning-v1.mjs';
 import {readFileSync} from 'node:fs';
 
 // The public workstream intentionally retains a frozen v23 protocol alongside
 // future compiler carriers. Bind a legal v3 fixture in memory; never refresh
 // the actual frozen protocol or pretend this is live final-candidate evidence.
-const protocol = readProtocol();
+let protocol = readProtocol();
 if(protocol.release_binding){
-  const prior=structuredClone(protocol.release_binding),compiler=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url)));
+  const compiler=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url)));
   const sha=value=>createHash('sha256').update(value).digest('hex');
   // The synthetic single-model control exercises the existing v0.0.30 policy.
   const fixtureVersion=Number(compiler.version.split('.')[2])>=31?'0.0.30':compiler.version;
-  Object.assign(protocol.release_binding,{version:fixtureVersion,compiler_sha256:compiler.compiler.sha256,
+  protocol=bindReleaseProtocol({...protocol.release_binding,version:fixtureVersion,compiler_sha256:compiler.compiler.sha256,
     facade_sha256:sha(readFileSync(new URL('../current/wasmc.mjs',import.meta.url))),
     catalog_sha256:sha(readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url)))});
-  const identities=new Map([['v'+prior.version,'v'+fixtureVersion],
-    ...['compiler_sha256','facade_sha256','catalog_sha256'].map(key=>[prior[key],protocol.release_binding[key]])]);
-  for(const row of protocol.cases)for(const key of ['required_literals','allowed_sha256'])
-    if(row.answer_contract?.[key])row.answer_contract[key]=row.answer_contract[key].map(value=>identities.get(value)??value);
 }
 const commit = '1'.repeat(40);
 const tree = 'b'.repeat(40);
