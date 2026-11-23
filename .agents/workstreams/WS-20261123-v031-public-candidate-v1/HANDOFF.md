@@ -43,7 +43,7 @@ The candidate uses the macos-15 runner already exercised by this repository,
 with aarch64-apple-darwin unchanged. The final manifest and all 19 local
 candidate checks were reopened against this exact product.
 
-v0.0.31 is formally published at the immutable tag on .
+v0.0.31 is formally published at the immutable tag on `d4e5eed30ca2cf60250aaf0b61eb8bf6481c34b0`.
 The final complete two-model cohort, independent review and anonymous
 download readback are under publication/. The official latest release,
 default package index, exact archive and both Std installation mirrors
