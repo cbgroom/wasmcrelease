@@ -51,6 +51,15 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 - Documentation on mutable `main` may describe work in progress only when it is
   labeled as such; released capability must be checked against the immutable tag.
 
+## Release execution
+
+For a formal release or a stalled publication, use the
+[release critical path](references/release-critical-path.md). Preflight the
+real consumer commands and production lifecycle projection while preparing
+the candidate. Reuse verified evidence for unchanged inputs, recover failed
+checks at the smallest supported scope, and confirm publication through
+anonymous downloads and installed execution.
+
 ## Validation judgment
 
 ### Current-source preflight for the next product
