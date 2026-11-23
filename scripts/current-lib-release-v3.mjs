@@ -22,10 +22,10 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
   assert.equal(catalog.schema,'wasmc.public-lib-catalog/v2');
   assert.match(catalog.version,/^\d+\.\d+\.\d+$/);
   assert.ok(commit(catalog.package_authority_commit));
-  assert.ok(Array.isArray(catalog.packages)&&catalog.packages.length>0&&catalog.packages.length<=64);
+  assert.ok(Array.isArray(catalog.packages)&&catalog.packages.length>0);
   for(const pin of [catalog.registry,catalog.index,catalog.cohort]){
     exactKeys(pin,['path','bytes','sha256']);assert.ok(safe(pin.path)&&digest(pin.sha256));
-    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=2097152);
+    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
   }
   let previous='';
   for(const row of catalog.packages){
@@ -39,7 +39,7 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
     assert.ok(typeof row.target==='string'&&row.target.length>0&&row.target.length<=128);assert.match(row.wit_world,/^[a-z][a-z0-9-]*$/);exactKeys(row.source,['spec','wit']);
     for(const [key,pin]of Object.entries(row.source)){
       exactKeys(pin,['path','bytes','sha256']);assert.equal(pin.path,'libspec/'+row.id+'/'+(key==='wit'?'lib.wit':'lib.json'));
-      assert.ok(digest(pin.sha256)&&Number.isInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=2097152);
+      assert.ok(digest(pin.sha256)&&Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
     }
     assert.ok(Array.isArray(row.views)&&row.views.length>0&&row.views.length<=3);
     assert.deepEqual(row.views,sorted(new Set(row.views)));
@@ -47,13 +47,13 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
     assert.ok(['wasm-core-component','native-binary','native-module','native-source'].includes(row.delivery.kind));
     assert.equal(row.delivery.device_qualified,false);
     assert.equal(row.profile==='native',row.delivery.kind!=='wasm-core-component');
-    const seen=new Set();assert.ok(Array.isArray(row.files)&&row.files.length>0&&row.files.length<=256);
+    const seen=new Set();assert.ok(Array.isArray(row.files)&&row.files.length>0);
     let last='';
     for(const file of row.files){
       exactKeys(file,['path','bytes','sha256']);
       assert.ok(safe(file.path)&&file.path.startsWith(row.root+'/')&&file.path>last&&!seen.has(file.path));
       last=file.path;seen.add(file.path);assert.ok(digest(file.sha256));
-      assert.ok(Number.isSafeInteger(file.bytes)&&file.bytes>0&&file.bytes<=16777216);
+      assert.ok(Number.isSafeInteger(file.bytes)&&file.bytes>0);
     }
     for(const name of ['lib.json','lib.wit','LICENSE'])assert.ok(seen.has(row.root+'/'+name),'complete package: '+name);
   }
@@ -64,16 +64,23 @@ function pinned(pin,read) {
   assert.ok(bytes instanceof Uint8Array);assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
   return bytes;
 }
+// The published v3 contract remains fixed; successor validation is opt-in.
 export function verifyCurrentRelease(catalogBytes,catalogSha256,read,productPaths=null) {
+  return verifyReleaseWithNoticeBudget(catalogBytes,catalogSha256,read,productPaths,262144,2097152,'v3');
+}
+export function verifyCurrentReleaseV4(catalogBytes,catalogSha256,read,productPaths=null) {
+  return verifyReleaseWithNoticeBudget(catalogBytes,catalogSha256,read,productPaths,16777216,16777216,'v4');
+}
+function verifyReleaseWithNoticeBudget(catalogBytes,catalogSha256,read,productPaths,perFileBudget,totalBudget,version) {
   const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256);
   const registry=JSON.parse(decode(pinned(catalog.registry,read)));
   assert.equal(registry.schema,'wasmc.lib-refresh-registry/v2');
   const ids=sorted(registry.libs.map(row=>row.id));assert.equal(new Set(ids).size,ids.length);
   assert.deepEqual(catalog.packages.map(row=>row.id),ids,'whole current registry');
   const cohort=JSON.parse(decode(pinned(catalog.cohort,read)));
-  if(cohort.schema==='wasmc.public-current-composition-cohort/v1')
+  if(cohort.schema==='wasmc.public-current-composition-cohort/v1' && version==='v3')
     return verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,productPaths,{checkedCurrentCatalog,verifyCurrentRelease});
-  assert.equal(cohort.schema,'wasmc.public-current-refresh-cohort/v1');
+  assert.equal(cohort.schema,version==='v4'?'wasmc.public-current-refresh-cohort/v2':'wasmc.public-current-refresh-cohort/v1');
   assert.equal(cohort.q0_accepted,true);assert.ok(digest(cohort.refresh_receipt_sha256)&&digest(cohort.producer_sha256));
   assert.equal(cohort.public_admission,false);assert.deepEqual(cohort.selected,ids);
   assert.deepEqual(cohort.rows.map(row=>row.id),ids);
@@ -119,10 +126,10 @@ export function verifyCurrentRelease(catalogBytes,catalogSha256,read,productPath
   let noticePrevious='',noticeTotal=rootLicense.length;
   for(const pin of noticeInput.files){
     assert.match(pin.path,/^licenses\/[A-Za-z0-9_.-]{1,128}$/);assert.ok(pin.path>noticePrevious);noticePrevious=pin.path;
-    assert.ok(pin.bytes>0&&pin.bytes<=262144);pinned(pin,read);noticeTotal+=pin.bytes;
+    assert.ok(pin.bytes>0&&pin.bytes<=perFileBudget);pinned(pin,read);noticeTotal+=pin.bytes;
     assert.equal(cohort.source_inputs[pin.path],pin.sha256,'Q0 notice file source pin');
   }
-  assert.ok(noticeTotal<=2097152);
+  assert.ok(noticeTotal<=totalBudget);
 
   assert.equal(cohort.release_license_sha256,licenseSha);assert.equal(index.source_fingerprint,cohort.source_fingerprint);
   for(const row of catalog.packages){
@@ -208,7 +215,7 @@ export function verifyCurrentRelease(catalogBytes,catalogSha256,read,productPath
     assert.equal(page.tag,'ok');pages.push(...page.value);
   }
   assert.deepEqual(pages,entries);
-  return {schema:'wasmc.current-release-closure/v3',catalog_sha256:catalogSha256,
+  return {schema:'wasmc.current-release-closure/'+version,catalog_sha256:catalogSha256,
     registry_sha256:catalog.registry.sha256,index_sha256:catalog.index.sha256,
     cohort_sha256:catalog.cohort.sha256,refresh_receipt_sha256:cohort.refresh_receipt_sha256,
     producer_sha256:cohort.producer_sha256,release_packages:ids.length,api_routes:apis,
@@ -244,20 +251,28 @@ export function searchCurrentRelease(catalogBytes,catalogSha256,read,selection,o
     selection_authority:false,offset,limit,result:caller.search(selection,offset,limit)};
 }
 
+export function searchCurrentReleaseV4(catalogBytes,catalogSha256,read,selection,offset=0,limit=64,productPaths=null){
+  verifyCurrentReleaseV4(catalogBytes,catalogSha256,read,productPaths);
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-lib-search');
+  const caller=new CurrentSearchCaller(pinned(catalog.index,read),read(row.root+'/artifact.wasm'),read(row.root+'/core-abi.json'));
+  return {schema:'wasmc.public-current-lib-search/v4',catalog_sha256:catalogSha256,index_sha256:catalog.index.sha256,
+    selection_authority:false,offset,limit,result:caller.search(selection,offset,limit)};
+}
+
 export function currentProductReader(root){
   root=resolve(root);const info=lstatSync(root);assert.ok(info.isDirectory()&&!info.isSymbolicLink(),'regular product root');
   return path=>{
     assert.ok(safe(path),'safe product path');let current=root;
     for(const part of path.split('/')){current=join(current,part);assert.ok(!lstatSync(current).isSymbolicLink(),'linked product input');}
-    const s=lstatSync(current);assert.ok(s.isFile()&&s.size>0&&s.size<=16777216,'bounded regular product input');return readFileSync(current);
+    const s=lstatSync(current);assert.ok(s.isFile()&&s.size>0,'regular product input');return readFileSync(current);
   };
 }
 export function currentProductPaths(root,prefix='current-libs'){
-  root=resolve(root);assert.ok(safe(prefix));let count=0;
+  root=resolve(root);assert.ok(safe(prefix));
   const walk=path=>{
     const info=lstatSync(join(root,path));assert.ok(!info.isSymbolicLink(),'linked product inventory');
     if(info.isDirectory())return readdirSync(join(root,path)).sort().flatMap(n=>walk(path+'/'+n));
-    assert.ok(info.isFile()&&++count<=10000,'bounded regular product inventory');return[path];
+    assert.ok(info.isFile(),'regular product inventory');return[path];
   };
   return walk(prefix).sort();
 }

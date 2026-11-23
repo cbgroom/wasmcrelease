@@ -15,11 +15,11 @@ const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys
 const safe=p=>typeof p==='string'&&p&&!p.startsWith('/')&&!p.includes('\\')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..');
 const parse=bytes=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
 const jsonBytes=value=>Buffer.from(JSON.stringify(value,null,2)+'\n');
-const checkPin=pin=>{exact(pin,['path','bytes','sha256']);assert.ok(safe(pin.path));assert.match(pin.sha256,/^[0-9a-f]{64}$/);assert.ok(Number.isInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=16777216);};
+const checkPin=pin=>{exact(pin,['path','bytes','sha256']);assert.ok(safe(pin.path));assert.match(pin.sha256,/^[0-9a-f]{64}$/);assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);};
 const readPin=(pin,read)=>{checkPin(pin);const b=read(pin.path);assert.ok(b instanceof Uint8Array);assert.equal(b.length,pin.bytes);assert.equal(sha(b),pin.sha256);return b;};
 const pinFor=(path,b)=>({path,bytes:b.length,sha256:sha(b)});
 function graphReader(cohort,read,productPaths){
-  assert.equal(cohort.input_prefix,prefix);assert.ok(Array.isArray(cohort.input_files)&&cohort.input_files.length>0&&cohort.input_files.length<=10000);
+  assert.equal(cohort.input_prefix,prefix);assert.ok(Array.isArray(cohort.input_files)&&cohort.input_files.length>0);
   const pins=new Map();let previous='';
   for(const pin of cohort.input_files){checkPin(pin);assert.ok(pin.path>previous);previous=pin.path;pins.set(pin.path,pin);readPin({...pin,path:prefix+'/'+pin.path},read);}
   if(productPaths?.some(p=>p.startsWith(prefix+'/')))assert.deepEqual(sorted(productPaths.filter(p=>p.startsWith(prefix+'/'))),cohort.input_files.map(p=>prefix+'/'+p.path));
@@ -38,15 +38,15 @@ function expectedIndex(input,catalog,lineage,composition,options){
   }
   for(const admitted of lineage.admitted_original_sources){
     const s=admitted.source,root=composition.rows.find(row=>row.id===s.id),manifest=parse(input.read(root.root+'/lib.json'));
-    const model=witModel(input.read(s.wit.path)),routes=selectedWitRoutes(model,s.world,new Map([[model.identity,model]]));
+    const model=witModel(input.read(s.wit.path)),routes=selectedWitRoutes(model,s.world,new Map([[model.identity,model],...model.dependencies]));
     for(const pin of s.source_packet.files)selected[pin.path]=pin.sha256;
     const p=packages.findIndex(row=>row.package_id===s.id);
-    const projected={package_id:s.id,version:s.version,profile:s.profile,target:manifest.build.target,
+    const projected={package_id:s.id,version:s.version,profile:s.profile,target:s.profile==='native'?manifest.native.target:manifest.build.target,
       source_path:'libspec/'+s.id+'/lib.wit',wit_sha256:s.wit.sha256,
-      delivery:{manifest_sha256:s.root.manifest_sha256,receipt_sha256:digest(composition),artifact_kind:'wasm-core-component',
-        artifact_path:manifest.artifact.path,artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
+      delivery:{manifest_sha256:s.root.manifest_sha256,receipt_sha256:digest(composition),artifact_kind:s.profile==='native'?(!manifest.artifact?'native-source':manifest.native.kind==='node-boundary'?'native-module':'native-binary'):'wasm-core-component',
+        artifact_path:manifest.artifact?.path??null,artifact_sha256:manifest.artifact?.sha256??null,component_sha256:manifest.component?.sha256??null},
       wit_route:model.identity,description:s.description,
-      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>api.api===route.split('#')[1]))}))};
+      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>{const name=route.split('#')[1];if(s.profile==='resource'&&manifest.bindings.rust_core)return api.api===route.slice(model.identity.length+1).replace('#','-');return api.api===(name.startsWith('[constructor]')?'constructor':name.startsWith('[method]')?name.slice(name.indexOf('.')+1):name);} ))}))};
     if(p<0)packages.push(projected);else packages[p]=projected;
   }
   packages.sort((a,b)=>(a.package_id+'@'+a.version)<(b.package_id+'@'+b.version)?-1:1);
@@ -95,9 +95,9 @@ export function verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,pro
       currentFiles.push(row.source.spec.path,row.source.wit.path);
       assert.equal(row.manifest_sha256,source.source.root.manifest_sha256);assert.equal(row.root_inventory_sha256,source.source.root.inventory_sha256);
       const manifest=parse(input.read(composed.root+'/lib.json'));
-      assert.equal(row.wit_sha256,manifest.wit.sha256);assert.equal(row.wit_world,manifest.wit.world);
-      assert.equal(row.target,manifest.build.target);assert.deepEqual(row.views,Object.keys(manifest.bindings).sort());
-      assert.deepEqual(row.delivery,{kind:'wasm-core-component',artifact:manifest.artifact,component:manifest.component,native_status:null,device_qualified:false});
+      assert.equal(row.wit_sha256,manifest.wit.sha256);assert.equal(row.wit_world,row.profile==='native'?source.source.world:manifest.wit.world);
+      assert.equal(row.target,row.profile==='native'?manifest.native.target:manifest.build.target);assert.deepEqual(row.views,Object.keys(manifest.bindings).sort());
+      assert.deepEqual(row.delivery,row.profile==='native'?{kind:!manifest.artifact?'native-source':manifest.native.kind==='node-boundary'?'native-module':'native-binary',artifact:manifest.artifact,component:null,native_status:manifest.native.status,device_qualified:manifest.native.device_qualified}:{kind:'wasm-core-component',artifact:manifest.artifact,component:manifest.component,native_status:null,device_qualified:false});
     }
     assert.equal(row.root_inventory_sha256,digest(composed.files),'original whole Root authority');
     assert.deepEqual(row.files,Object.entries(composed.files).map(([path,pin])=>({path:row.root+'/'+path,...pin})),'complete Root files');
@@ -147,10 +147,10 @@ export async function assembleComposedCurrentProduct(repo,{compositionOptions,ve
     else{
       const specPath='libspec/'+row.id+'/lib.json',witPath='libspec/'+row.id+'/lib.wit',specBytes=jsonBytes(admitted.source),witBytes=read(admitted.source.wit.path);
       await put(specPath,specBytes);await put(witPath,witBytes);const m=parse(read(row.root+'/lib.json'));
-      packages.push({id:row.id,version:row.version,profile:row.profile,target:m.build.target,root:target,
-        manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256,wit_sha256:m.wit.sha256,wit_world:m.wit.world,
+      packages.push({id:row.id,version:row.version,profile:row.profile,target:row.profile==='native'?m.native.target:m.build.target,root:target,
+        manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256,wit_sha256:m.wit.sha256,wit_world:row.profile==='native'?admitted.source.world:m.wit.world,
         source:{spec:pinFor(specPath,specBytes),wit:pinFor(witPath,witBytes)},views:Object.keys(m.bindings).sort(),
-        delivery:{kind:'wasm-core-component',artifact:m.artifact,component:m.component,native_status:null,device_qualified:false},
+        delivery:row.profile==='native'?{kind:!m.artifact?'native-source':m.native.kind==='node-boundary'?'native-module':'native-binary',artifact:m.artifact,component:null,native_status:m.native.status,device_qualified:m.native.device_qualified}:{kind:'wasm-core-component',artifact:m.artifact,component:m.component,native_status:null,device_qualified:false},
         files:Object.entries(row.files).map(([path,pin])=>({path:target+'/'+path,...pin}))});
     }
   }

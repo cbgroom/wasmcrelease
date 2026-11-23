@@ -1,0 +1,12 @@
+package conformance:checked;
+interface api {
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let payload:string = document::compact_or_bytes(req.body,"{}");
+  let body:list<u8> = utf8::encode(payload);
+  return {status:200,body:body};
+ }
+} world app {export api;}

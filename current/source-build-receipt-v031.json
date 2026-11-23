@@ -1,0 +1,44 @@
+{
+  "schema": "wasmc.compiler-source-build/v1",
+  "Source": "538c45ed48586ab0b462d59a8f3cb6acf2a6376e",
+  "tree": "8009d4e0bf54cfed0b2b1baf9c0c9561b6846e76",
+  "method": "Locked offline local warm build at the original compiler location in an isolated target",
+  "target": "wasm32-unknown-unknown",
+  "command_projection": {
+    "argv": [
+      "cargo",
+      "build",
+      "--locked",
+      "--offline",
+      "--release",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--manifest-path",
+      "crates/wasmc_wasm_cdylib/Cargo.toml"
+    ],
+    "environment": {
+      "WASMC_SDK_PROFILE": "checked-chunk-transfer-v1",
+      "CARGO_TARGET_DIR": "<isolated warm cache>",
+      "RUSTC_WRAPPER": ""
+    }
+  },
+  "rustc_vV": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "cargo_vV": "cargo 1.99.1 (5f94df478 2026-08-27)\nrelease: 1.99.1\ncommit-hash: 5f94df4789f005f9a352888e8355ffc645b7ed0e\ncommit-date: 2026-08-27\nhost: aarch64-apple-darwin\nlibgit2: 1.9.6 (sys:0.21.0 vendored)\nlibcurl: 8.7.1 (sys:0.4.90+curl-8.21.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.6.3 9 Jun 2026\nos: Mac OS 26.6.2 [64-bit]\n",
+  "source_clean_at_build": true,
+  "tracked_build_inputs_clean": true,
+  "tracked_source_and_git_before_after_equal": true,
+  "tracked_source_input_count": 121,
+  "input_manifest_sha256": "7260968fea07d4d4c1b0c2abb32f0f21df979f8622b6600581f710c3358cc9a0",
+  "compiled_local_crates": [
+    "Compiling wasmc_wasm_cdylib v0.1.0"
+  ],
+  "warm_build_log_sha256": "b35c23c0041364ed167fd05fc9b7744297a5e1278592b6e9e834413375333760",
+  "lock_sha256": "8308ac2c488f1b843a8d991cd69b3922c78c1a74454bd5081961e7d6e7045ba8",
+  "operative_Cargo_lock_path": "crates/wasmc_wasm_cdylib/Cargo.lock",
+  "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+  "compiler_bytes": 2036236,
+  "exit": 0,
+  "private_implementation_source_included": false,
+  "canonical_source_integrated": false,
+  "formal_release": false
+}

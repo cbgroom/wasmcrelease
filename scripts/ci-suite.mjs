@@ -6,10 +6,52 @@ import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const js=(runtime,script,args=[],permissions=[])=>({command:runtime,args:runtime==='deno'?['run',...permissions,script,...args]:[script,...args]});
+function currentProductControls() {
+  const catalogBytes=readFileSync(join(root,'catalog/libs-current-v2.json')),catalog=JSON.parse(catalogBytes);
+  const cohort=readFileSync(join(root,catalog.cohort.path));
+  if(cohort.length!==catalog.cohort.bytes||createHash('sha256').update(cohort).digest('hex')!==catalog.cohort.sha256)throw Error('CI current cohort identity drift');
+  const schema=JSON.parse(cohort).schema;
+  if(['wasmc.json-overlay-cohort/v1','wasmc.json-derived-overlay-cohort/v1'].includes(schema)){
+    if(!/^\d+\.\d+\.\d+$/.test(catalog.version??''))throw Error('CI JSON overlay version rejected');
+    const candidate=JSON.parse(readFileSync(join(root,`channels/candidates/${catalog.version}.json`)));
+    const digest=createHash('sha256').update(catalogBytes).digest('hex');
+    if(candidate.schema!=='wasmc.release-product-candidate/v3'||candidate.version!==catalog.version||candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||candidate.current_catalog.sha256!==digest)throw Error('CI JSON overlay candidate catalog identity drift');
+    return {product:'scripts/test-json-overlay-product-ci-v1.mjs',license:'scripts/test-json-overlay-product-ci-v1.mjs',catalog:digest,jsonOverlay:true,jsonDerived:schema==='wasmc.json-derived-overlay-cohort/v1'};
+  }
+  if(schema==='wasmc.mixed-current-cohort/v1'){
+    const policy=JSON.parse(readFileSync(join(root,'catalog/current-mixed-license-policy-v1.json')));
+    if(policy.schema!=='wasmc.current-license-policy/mixed-v1'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI mixed catalog identity drift');
+    return {product:'scripts/test-current-product-mixed-v1.mjs',license:'scripts/test-current-license-policy-mixed-v1.mjs',catalog:policy.catalog_sha256};
+  }
+  if(schema!=='wasmc.public-current-refresh-cohort/v2')return {
+    product:'scripts/test-current-product-v3.mjs',license:'scripts/test-current-license-policy-v3.mjs',
+    catalog:'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871'};
+  const policy=JSON.parse(readFileSync(join(root,'catalog/current-v4-license-policy.json')));
+  if(policy.schema!=='wasmc.current-license-policy/v2'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI v4 catalog identity drift');
+  return {product:'scripts/test-current-product-v4.mjs',license:'scripts/test-current-license-policy-v4.mjs',catalog:policy.catalog_sha256};
+}
+
+export function compilerCarrierCheck(version,runtime='node') {
+  const parts=version?.split('.').map(Number);
+  return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
+    ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read','--allow-write','--allow-run=node','--allow-env=TMPDIR,TMP,TEMP,NODE_V8_COVERAGE,PATH'])}:null;
+}
+export function canonicalHostCapacityCheck(version,runtime='node') {
+  const parts=version?.split('.').map(Number);
+  return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
+    ?{id:'canonical-host-source-capacity',...js(runtime,'scripts/test-canonical-host-capacity-v031.mjs',[],['--allow-read'])}:null;
+}
+export function checkedChunkAdmissionCheck(version,runtime='node') {
+  return version==='0.0.31'
+    ?{id:'checked-chunk-admission-contract',...js(runtime,'scripts/test-checked-chunk-admission-v031.mjs',[],['--allow-read'])}:null;
+}
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
   const fixturePermissions=['--allow-read','--allow-write','--allow-env=TMPDIR,TMP,TEMP'];
+  const current=['integrity','candidate'].includes(family)?currentProductControls():null;
+  const mixedModuleChecks=current?.product==='scripts/test-current-product-mixed-v1.mjs'
+    ?[item('product-module-import-closure','scripts/test-product-module-imports-v1.mjs')]:[];
   if(family==='compatibility')return [
     item('core-feature-probes-and-negatives','scripts/test-core-compatibility.mjs'),
     item('catalog-exact-resolution','scripts/test-lib-catalog.mjs',[],fixturePermissions),
@@ -17,6 +59,9 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('compiler-expression-only','scripts/validate-current.mjs',['--compile-only'],['--allow-read','--allow-write','--allow-run','--allow-env'])
   ];
   if(family==='integrity')return [
+    ...mixedModuleChecks,
+    ...[checkedChunkAdmissionCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...(current.jsonDerived?[item('json-derived-ci-routing','scripts/test-ci-json-derived-routing-v1.mjs',[],fixturePermissions)]:[]),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('current-lib-search-complete-index-regression','examples/lib-search/run.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
@@ -29,8 +74,8 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('current-release-version-and-qualification-contract','scripts/test-current-release-version.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+    item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
+    item(current.jsonOverlay?'json-overlay-declared-notice-bytes':'current-original-license-reopen-negatives',current.license,current.jsonOverlay?['--product','.', '--catalog-sha256',current.catalog,'--mode','notices']:[]),
     item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
@@ -40,9 +85,14 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
+    ...[compilerCarrierCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...[canonicalHostCapacityCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...[checkedChunkAdmissionCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...mixedModuleChecks,
+    ...(current.jsonDerived?[item('json-derived-ci-routing','scripts/test-ci-json-derived-routing-v1.mjs',[],fixturePermissions)]:[]),
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+    item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
+    item(current.jsonOverlay?'json-overlay-declared-notice-bytes':'current-original-license-reopen-negatives',current.license,current.jsonOverlay?['--product','.', '--catalog-sha256',current.catalog,'--mode','notices']:[]),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),

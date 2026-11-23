@@ -1,0 +1,53 @@
+{
+  "schema": "wasmc.canonical-checked-chunk-admission/v1",
+  "version": "0.0.31",
+  "accepted": true,
+  "scope": "Canonical Source custody, checked-chunk portable frame and independent native eight-module parity.",
+  "canonical_source": "05696756c6a5252e62ab18a0fdfce34e63c37658",
+  "build_source": "538c45ed48586ab0b462d59a8f3cb6acf2a6376e",
+  "tested_native_source": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "compiler": {
+    "path": "current/wasmc_compiler.wasm",
+    "bytes": 2036236,
+    "sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c"
+  },
+  "canonical_provider": {
+    "path": "current/lib_core.wasm",
+    "bytes": 84594,
+    "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e"
+  },
+  "profile_map": {
+    "path": "examples/current/canonical-host-v031/checked-chunk-profile.json",
+    "bytes": 4461,
+    "sha256": "15918125596eacda6e325f8f43c3017ac02a9316462621fa0ed22ebe3e861450"
+  },
+  "native_plan": {
+    "path": "examples/current/canonical-host-v031/producer-assets/caller-plan.json",
+    "bytes": 23923,
+    "sha256": "9fb00af23fa0fc0ec9fd93086bb9a9da18e1f4c89224ad4844313cf64491d46f"
+  },
+  "frame_expected": {
+    "path": "examples/current/canonical-host-v031/expected-frame.json",
+    "bytes": 2317,
+    "sha256": "c7ee788a29ad64ca890d34ff8d6b52e6ee8a410637e14e678916b17291cab9e1"
+  },
+  "native_sealed_modules": 8,
+  "qualification": {
+    "native_frame_and_modules_match": true,
+    "host_sdk_frames": [
+      "node",
+      "bun",
+      "deno"
+    ],
+    "checked_result_guest_calls": {
+      "node": 800,
+      "deno": 800,
+      "bun": 0
+    },
+    "bun_limitation": "compiler frames only; multi-memory Guest unsupported",
+    "real_host_effects": false
+  },
+  "pending": [
+    "public consumer CI and formal publication"
+  ]
+}

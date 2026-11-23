@@ -6,7 +6,7 @@ import * as single from '../current/wasmc.mjs';
 (0,eval)(readFileSync(new URL('../current/wasmc.global.js',import.meta.url),'utf8'));
 const authority=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url),'utf8'));
 const checked=Number(authority.version.split('.')[2])>=27;
-const providerVersion=Number(authority.version.split('.')[2])>=30?'4.11.0-candidate.2':checked?'4.11.0-candidate.1':'4.9.1';
+const providerVersion=Number(authority.version.split('.')[2])>=31?'4.12.0-candidate.1':Number(authority.version.split('.')[2])>=30?'4.11.0-candidate.2':checked?'4.11.0-candidate.1':'4.9.1';
 const providerPin=authority.artifacts.find(x=>x.path==='current/lib_core.wasm').sha256;
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const source='package local:current_lib_api; interface api {run: func() -> u32 {let mut values: list<u32> = list.new(); values.push(7); return values.len();}} world app {export api;}';
@@ -37,4 +37,50 @@ for(const api of [sidecar,single,globalThis.Wasmc]){
  ]){await assert.rejects(api.compileLib(changed));booleanTypeNegatives++;}
 }
 
-console.log(JSON.stringify({accepted:true,provider:providerVersion,provider_sha256:providerPin,abi_namespace:'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0',compileLib_oracles:oracles,instantiateLib_oracles:oracles,calls,boolean_conditional_calls:booleanCalls,boolean_numeric_rejections:booleanTypeNegatives,old_provider_fallback:false}));
+const capacity = {};
+if (Number(authority.version.split('.')[2]) >= 31) {
+  const lengths = [96, 97, 128, 129, 10000, 7];
+  const collectionSource = `
+package local:collection_capacity;
+interface api {
+  record entry { position:u32, name:string }
+  strings: func(count:u32) -> u32 {
+    let mut values:list<string> = list.new();
+    while (values.len() < count) { values.push("雪🦀"); }
+    return values.len();
+  }
+  records: func(count:u32) -> u32 {
+    let mut rows:list<entry> = list.new();
+    while (rows.len() < count) { rows.push({position:rows.len(), name:"雪🦀"}); }
+    let mut index:u32 = 0;
+    while (index < rows.len()) {
+      if (rows.get(index).position != index || rows.get(index).name != "雪🦀") { return 0; }
+      index = index + 1;
+    }
+    return rows.len();
+  }
+}
+world app { export api; }
+`;
+  const results = {};
+  for (const [name, api] of Object.entries({sidecar, embedded: single, global: globalThis.Wasmc})) {
+    const compiled = await api.compileLib(collectionSource);
+    assert.equal(digest(compiled.libWasm), providerPin);
+    const app = await api.instantiateLib(collectionSource);
+    results[name] = {};
+    for (const kind of ['strings', 'records']) {
+      results[name][kind] = lengths.map(length => {
+        const result = app.exports[kind](length);
+        if (Array.isArray(result)) {
+          assert.deepEqual(result, [length, 0], name + ' ' + kind);
+          return result[0];
+        }
+        assert.equal(result, length, name + ' ' + kind);
+        return result;
+      });
+    }
+  }
+  capacity.collection_capacity = results;
+}
+
+console.log(JSON.stringify({accepted:true,provider:providerVersion,provider_sha256:providerPin,abi_namespace:'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0',compileLib_oracles:oracles,instantiateLib_oracles:oracles,calls,boolean_conditional_calls:booleanCalls,boolean_numeric_rejections:booleanTypeNegatives,old_provider_fallback:false,...capacity}));

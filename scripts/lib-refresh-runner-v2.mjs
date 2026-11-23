@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rename } from 'node:fs/promises';
 import { homedir, tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
-import { acquireWriter, attachReleaseLicense, atomicJson, command, digest, exists, inside, inventory as fileInventory, json, sha, verifyCache, verifyRoot, writeChanged } from './lib-refresh-cache-v2.mjs';
+import { MAX_LICENSE_SNAPSHOT_BYTES, acquireWriter, attachReleaseLicense, atomicJson, command, digest, exists, inside, inventory as fileInventory, json, sha, verifyCache, verifyRoot, writeChanged } from './lib-refresh-cache-v2.mjs';
 import { buildNative } from './lib-refresh-native-v2.mjs';
 import { upstreamSourceInputs } from './lib-refresh-upstream-source-v2.mjs';
 import { resourceCoreInputs, stageResourceCore } from './lib-refresh-resource-core-v2.mjs';
@@ -104,8 +104,8 @@ export async function refresh(argv, render) {
     const releaseNotices=[];
     if(args.releaseNotices) {
       assert.ok(releaseLicense&&isAbsolute(args.releaseNotices));assert.match(args.releaseNoticesSha256,/^[0-9a-f]{64}$/);
-      const regular=async p=>{const st=await lstat(p);assert.ok(st.isFile()&&!st.isSymbolicLink()&&st.size>0&&st.size<=1048576,'regular bounded notice input');};
-      await regular(args.releaseNotices);
+      const regular=async (p,limit)=>{const st=await lstat(p);assert.ok(st.isFile()&&!st.isSymbolicLink()&&st.size>0&&st.size<=limit,'regular bounded notice input');};
+      await regular(args.releaseNotices, 1048576);
       const noticeInput=await load(args.releaseNotices);assert.equal(sha(noticeInput),args.releaseNoticesSha256,'release notices input drift');
       const declared=JSON.parse(noticeInput);assert.equal(declared.schema,'wasmc.release-notices-input/v1');
       assert.ok(Array.isArray(declared.files)&&declared.files.length>0&&declared.files.length<=31);
@@ -113,12 +113,12 @@ export async function refresh(argv, render) {
       for(const pin of declared.files) {
         assert.deepEqual(Object.keys(pin).sort(),['bytes','path','sha256']);
         assert.match(pin.path,/^licenses\/[A-Za-z0-9_.-]{1,128}$/);assert.ok(pin.path>previous);previous=pin.path;
-        const p=join(dirname(args.releaseNotices),pin.path.slice('licenses/'.length));await regular(p);
-        const content=await load(p);assert.equal(content.length,pin.bytes);assert.ok(pin.bytes<=262144);
+        const p=join(dirname(args.releaseNotices),pin.path.slice('licenses/'.length));await regular(p, MAX_LICENSE_SNAPSHOT_BYTES);
+        const content=await load(p);assert.equal(content.length,pin.bytes);assert.ok(pin.bytes<=MAX_LICENSE_SNAPSHOT_BYTES);
         assert.equal(sha(content),pin.sha256);new TextDecoder('utf-8',{fatal:true}).decode(content);
         total+=content.length;releaseNotices.push({path:pin.path,content,sha256:pin.sha256});
       }
-      assert.ok(total<=2097152);
+      assert.ok(total<=MAX_LICENSE_SNAPSHOT_BYTES);
     }
     const upstreamInputs = await upstreamSourceInputs(args, policy, producerSha, load);
     for (const [name, info] of Object.entries(policy.shared_modules ?? {})) {
@@ -244,6 +244,13 @@ export async function refresh(argv, render) {
       }
       if (releaseLicense) await attachReleaseLicense(packageRoot, releaseLicense, args.releaseLicenseSha256,releaseNotices);
       const verified = await verifyRoot(packageRoot, id, spec.version, spec.profile, Boolean(spec.core_resource));
+      // A larger metadata bundle must also be accepted by the selected WAsmC
+      // verifier before a Rust package can be sealed as a successful refresh.
+      if (releaseLicense && spec.profile !== 'native') {
+        await command(args.producer, ['lib', 'verify', packageRoot],
+          { cwd: repo, env, logs: join(runRoot, 'logs', id + '-license-verify'),
+            timeout: 120000, signal: controller.signal });
+      }
       if (spec.profile === 'host') {
         assert.ok(Array.isArray(spec.host_imports) && spec.host_imports.length > 0,
           id + ': explicit Host import contract required');

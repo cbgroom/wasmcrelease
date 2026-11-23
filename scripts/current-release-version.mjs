@@ -12,12 +12,16 @@ function patch(version) {
 export const usesCurrentProductV3 = version => patch(version) >= 21;
 export const requiresPrivateHelperQualification = version => patch(version) >= 23;
 export const requiresCanonicalHostQualification = version => patch(version) >= 24;
+export const currentHostQualificationScript = version => patch(version) >= 31 ? 'scripts/test-canonical-host-sdk-v031.mjs' : 'scripts/test-canonical-host-sdk.mjs';
+export const currentImportDemandQualificationScript = version => patch(version) >= 31 ? 'scripts/test-canonical-host-import-demand-v031.mjs' : 'scripts/test-canonical-host-import-demand.mjs';
 export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
 export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
 export const requiresCheckedChunkQualification = version => patch(version) >= 27;
 export const requiresUnitResultMatchQualification = version => patch(version) >= 28;
 export const requiresCanonicalCheckedResultsQualification = version => patch(version) >= 29;
+export const currentCheckedQualificationScript = version => patch(version) >= 31 ? 'scripts/test-canonical-checked-results-v031.mjs' : 'scripts/test-canonical-checked-results.mjs';
 export const requiresStringStorageQualification = version => patch(version) >= 30;
+export const currentStringQualificationScript = version => patch(version) >= 31 ? 'scripts/test-current-string-support-v031.mjs' : 'scripts/test-current-string-support.mjs';
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -36,12 +40,12 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
   const helpers = requiresPrivateHelperQualification(version);
   const commands = ['scripts/test-current-compiler.mjs', 'examples/current/standard.mjs',
     'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
-    ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
+    ...(requiresCanonicalHostQualification(version) ? [currentHostQualificationScript(version)] : []),
     ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : []),
-    ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : []),
+    ...(requiresUnusedHostImportsQualification(version) ? [currentImportDemandQualificationScript(version)] : []),
     ...(requiresUnitResultMatchQualification(version) ? ['scripts/test-unit-result-match.mjs'] : []),
-    ...(requiresCanonicalCheckedResultsQualification(version) ? ['scripts/test-canonical-checked-results.mjs'] : []),
-    ...(requiresStringStorageQualification(version) ? ['scripts/test-current-string-support.mjs'] : [])];
+    ...(requiresCanonicalCheckedResultsQualification(version) ? [currentCheckedQualificationScript(version)] : []),
+    ...(requiresStringStorageQualification(version) ? [currentStringQualificationScript(version)] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);
@@ -64,9 +68,14 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     const std = result(commands[1]);
     assert.equal(std.standard_lib, 'wasmc:std@1.4.1'); assert.equal(std.functions, 73); assert.equal(std.consumer_calls, 7680);
     const managed = result(commands[2]);
-    assert.equal(managed.provider, requiresStringStorageQualification(version) ? '4.11.0-candidate.2' : requiresCheckedChunkQualification(version) ? '4.11.0-candidate.1' : requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
-    if(requiresCheckedChunkQualification(version))assert.equal(managed.provider_sha256,requiresStringStorageQualification(version)?'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd':'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
+    assert.equal(managed.provider, patch(version)>=31 ? '4.12.0-candidate.1' : requiresStringStorageQualification(version) ? '4.11.0-candidate.2' : requiresCheckedChunkQualification(version) ? '4.11.0-candidate.1' : requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
+    if(requiresCheckedChunkQualification(version))assert.equal(managed.provider_sha256,patch(version)>=31?'8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e':requiresStringStorageQualification(version)?'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd':'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
     assert.equal(managed.instantiateLib_oracles, 3); assert.equal(managed.calls, 768); assert.equal(managed.old_provider_fallback, false);
+    if (patch(version) >= 31) {
+      const lengths = [96, 97, 128, 129, 10000, 7];
+      const expected = {strings: lengths, records: lengths};
+      assert.deepEqual(managed.collection_capacity, {sidecar: expected, embedded: expected, global: expected});
+    }
     if (helpers) {
       assert.equal(managed.boolean_conditional_calls, 1536); assert.equal(managed.boolean_numeric_rejections, 6);
       const h = result(commands[3]);
@@ -75,10 +84,10 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
         healthy_after_rejections:true, imports:0, real_MCP_acceptance:false})) assert.equal(h[key], value, key);
     }
     if (requiresCanonicalHostQualification(version)) {
-      const c = result('scripts/test-canonical-host-sdk.mjs');
+      const c = result(currentHostQualificationScript(version));
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, requiresCheckedChunkQualification(version)
+      assert.equal(c.native_parity, patch(version)>=31 ? 'ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb' : requiresCheckedChunkQualification(version)
         ? '6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb'
         : requiresUnusedHostImportsQualification(version)
         ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'
@@ -88,20 +97,27 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       assert.equal(c.real_Host_invocation, false);
     }
     if (requiresUnusedHostImportsQualification(version)) {
-      const demand = result('scripts/test-canonical-host-import-demand.mjs');
+      const demand = result(currentImportDemandQualificationScript(version));
       assert.equal(demand.compiler_sha256, compilerSha256);
       for (const [key,value] of Object.entries({cases:3,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false})) assert.equal(demand[key],value,key);
     }
     if (requiresStringStorageQualification(version)) {
-      const text = result('scripts/test-current-string-support.mjs');
+      const text = result(currentStringQualificationScript(version));
       assert.equal(text.compiler_sha256,compilerSha256);
-      assert.equal(text.CoreLib_sha256,'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
+      assert.equal(text.CoreLib_sha256,patch(version)>=31?'8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e':'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
       assert.equal(text.compiled_frames,4);assert.equal(text.modules_per_frame,8);assert.equal(text.Root_APIs,30);
       if(engine==='bun'){assert.equal(text.Guest_calls,0);assert.equal(text.execution_profile,'compiler-frames-only');}
+      else if (patch(version) >= 31) {
+        assert.equal(text.Guest_calls, 584);
+        assert.equal(text.same_instance_recovery, true);
+        assert.equal(text.explicit_host_limit_rejected, true);
+        assert.equal(text.Unicode_case_expansion, true);
+        assert.deepEqual(text.large_input_bytes, [131072, 262144, 524288, 1048576, 1200000, 1500000]);
+      }
       else {assert.equal(text.Guest_calls,581);assert.equal(text.same_instance_recovery,true);assert.equal(text.canonical_ingress_work_budget_rejected,true);assert.equal(text.Unicode_case_expansion,true);assert.deepEqual(text.large_input_bytes,[131072,262144,524288]);}
     }
     if (requiresCanonicalCheckedResultsQualification(version)) {
-      const checked = result('scripts/test-canonical-checked-results.mjs');
+      const checked = result(currentCheckedQualificationScript(version));
       assert.equal(checked.compiler_sha256,compilerSha256);
       if(engine==='bun'&&checked.app_engine_admitted===false){assert.equal(checked.guest_calls,0);assert.equal(checked.execution_profile,'compiler-frames-only');assert.equal(checked.unsupported_feature,'multi-memory');assert.equal(checked.compiled_frames,4);assert.equal(checked.http_only_imports,13);assert.equal(checked.old_cold_tuple_rejected,true);assert.equal(checked.modules_per_frame,8);assert.equal(checked.real_Host_effects,false);}else {
       assert.equal(checked.app_engine_admitted,true);

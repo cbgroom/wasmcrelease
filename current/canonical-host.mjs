@@ -64,7 +64,6 @@ export async function decodeCanonicalHostFrame(frameBytes) {
 }
 export async function createCanonicalHostCompiler(compilerBytes) {
   const bytes = copy(compilerBytes, 'compiler');
-  if (bytes.length > 2097152) throw new Error('Compiler exceeds the public 2 MiB artifact budget');
   const module = await WebAssembly.compile(bytes);
   if (WebAssembly.Module.imports(module).length !== 0) throw new Error('Compiler must be import-free');
   const api = new WebAssembly.Instance(module, {}).exports;
@@ -87,7 +86,7 @@ export async function createCanonicalHostCompiler(compilerBytes) {
       try {
         if (typeof source !== 'string') throw new TypeError('source must be a string');
         const input = encoder.encode(source);
-        if (!input.length || input.length > 1024 * 1024) throw new Error('Source exceeds the hosted byte budget');
+        if (!input.length || input.length > 16 * 1024 * 1024) throw new Error('Source exceeds the hosted byte budget');
         const e = tuple(entry, 'entry'), o = tuple(operations, 'operations');
         const extension = [copy(activation, 'activation'), copy(libCore, 'libCore'),
           copy(libWit, 'libWit'), copy(template, 'template'), ...o, await digestTuple(o)];

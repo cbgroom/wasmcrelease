@@ -1,12 +1,12 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-csv",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "profile": "value",
   "crate": "wasmc_csv_refresh_v2",
   "artifact_name": "wasmc_csv_refresh_v2",
   "world": "csv",
-  "description": "CSV parsing into the shared neutral Data snapshot model.",
+  "description": "Arrow CSV parsing with capacity governed by aggregate runtime memory.",
   "dependencies": [
     "arrow-csv",
     "arrow-schema"
@@ -20,7 +20,7 @@
   "apis": [
     {
       "api": "parse",
-      "delta": "Parse bounded CSV bytes into typed batches using explicit caller schema and batching options.",
+      "delta": "Parse CSV into typed batches using the caller schema and batching options.",
       "ecosystem": "Arrow CSV 60",
       "host_authorities": [],
       "implementation": "lib",

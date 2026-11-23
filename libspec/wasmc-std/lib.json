@@ -1,12 +1,12 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-std",
-  "version": "1.4.1",
+  "version": "1.5.2",
   "profile": "resource",
-  "crate": "wasmc_std_refresh_v2",
-  "artifact_name": "wasmc_std_refresh_v2",
+  "crate": "wasmc_std_memory_v031",
+  "artifact_name": "wasmc_std_memory_v031",
   "world": "standard-lib",
-  "description": "Typed standard resources, collections, encoding, signed integer text and structured records with explicit ownership.",
+  "description": "Typed standard resources, collections, encoding, signed integer text and structured records with explicit ownership. All collection, byte, label and key capacities follow aggregate runtime memory.",
   "dependencies": [
     "base64",
     "hex",
@@ -17,20 +17,20 @@
   "core_resource": {
     "target_profile": "portable-v0",
     "provider": {
-      "id": "wasmc.lib_managed_object_heap",
       "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+      "id": "wasmc.lib_managed_object_heap",
       "version": "4.9.0"
     },
     "exports": [
       {
-        "module": "aggregate-caller",
+        "module": "std-composite",
         "name": "std_init"
       }
     ]
   },
   "apis": [
     {
-      "api": "string-clear",
+      "api": "base64-try-decode-standard",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -39,7 +39,7 @@
       "support": "supported"
     },
     {
-      "api": "string-contains",
+      "api": "base64-try-encode-standard",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -48,7 +48,7 @@
       "support": "supported"
     },
     {
-      "api": "string-ends-with",
+      "api": "bytes-byte-at",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -57,7 +57,7 @@
       "support": "supported"
     },
     {
-      "api": "string-is-empty",
+      "api": "bytes-clear",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -66,7 +66,7 @@
       "support": "supported"
     },
     {
-      "api": "string-len",
+      "api": "bytes-contains",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -75,7 +75,7 @@
       "support": "supported"
     },
     {
-      "api": "string-new",
+      "api": "bytes-count-byte",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -84,7 +84,7 @@
       "support": "supported"
     },
     {
-      "api": "string-push-str",
+      "api": "bytes-eq",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -93,7 +93,106 @@
       "support": "supported"
     },
     {
-      "api": "string-starts-with",
+      "api": "bytes-len",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-new",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-push",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-set",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "hex-try-decode",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "hex-try-encode-lower",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "integer-text-parse-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "integer-text-try-format-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-count-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-fold-add-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-into-iter-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-next-s32",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -282,7 +381,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-is-none",
+      "api": "string-clear",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -291,7 +390,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-is-some",
+      "api": "string-contains",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -300,7 +399,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-unwrap-or",
+      "api": "string-ends-with",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -309,7 +408,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-is-err",
+      "api": "string-is-empty",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -318,7 +417,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-is-ok",
+      "api": "string-len",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -327,7 +426,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-unwrap-or",
+      "api": "string-new",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -336,7 +435,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-count-s32",
+      "api": "string-push-str",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -345,7 +444,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-fold-add-s32",
+      "api": "string-starts-with",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -354,7 +453,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-into-iter-s32",
+      "api": "structured-collection-get",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -363,7 +462,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-next-s32",
+      "api": "structured-collection-len",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -372,7 +471,7 @@
       "support": "supported"
     },
     {
-      "api": "bytes-byte-at",
+      "api": "structured-collection-parse-readings",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -381,124 +480,7 @@
       "support": "supported"
     },
     {
-      "api": "bytes-clear",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-contains",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-count-byte",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-eq",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-len",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-new",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-push",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-set",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "base64-try-decode-standard",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "base64-try-encode-standard",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "hex-try-decode",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "hex-try-encode-lower",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "integer-text-parse-s32",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "integer-text-try-format-s32",
+      "api": "structured-collection-try-write-readings",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -517,6 +499,60 @@
     },
     {
       "api": "structured-data-try-write-reading",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-contains-key",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-get",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-insert",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-len",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-parse-map",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-try-write-map",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -597,7 +633,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-get",
+      "api": "sum-option-is-none",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -606,7 +642,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-len",
+      "api": "sum-option-is-some",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -615,7 +651,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-parse-readings",
+      "api": "sum-option-unwrap-or",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -624,7 +660,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-try-write-readings",
+      "api": "sum-result-is-err",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -633,7 +669,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-map-contains-key",
+      "api": "sum-result-is-ok",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -642,43 +678,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-map-get",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-insert",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-len",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-parse-map",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-try-write-map",
+      "api": "sum-result-unwrap-or",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],

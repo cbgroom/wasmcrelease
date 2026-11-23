@@ -85,7 +85,7 @@ export async function installLib({catalogBytes,catalogAuthority=catalogAuthoriti
 
 export async function installCurrentLib({catalogBytes,catalogSha256,lockBytes,lockSha256,destination,mirror='github'},fetcher=globalThis.fetch) {
   const {checkedCurrentCatalog,resolveCurrentPackage}=await import('./current-lib-release-v3.mjs');
-  if (!(lockBytes instanceof Uint8Array)||lockBytes.length>262144||!/^[a-f0-9]{64}$/.test(lockSha256??'')||sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
+  if (!(lockBytes instanceof Uint8Array)||!/^[a-f0-9]{64}$/.test(lockSha256??'')||sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
   let lock;try{lock=JSON.parse(lockBytes);}catch{fail('install.lock_invalid');}
   if(lock?.schema!=='wasmc.public-lib-lock/v2')fail('install.lock_invalid');
   const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256);
@@ -93,7 +93,6 @@ export async function installCurrentLib({catalogBytes,catalogSha256,lockBytes,lo
   const row=catalog.packages.find(r=>r.id===lock.id&&r.version===lock.version);
   if(!row||row.manifest_sha256!==lock.manifest_sha256||row.root_inventory_sha256!==lock.root_inventory_sha256)fail('install.package_identity_mismatch');
   const files=row.files;
-  if(files.reduce((sum,f)=>sum+f.bytes,0)>134217728)fail('install.budget_exceeded');
   if(typeof destination!=='string'||!destination)fail('install.destination_invalid');
   const requested=resolve(destination),parent=await realpath(dirname(requested)),target=join(parent,basename(requested));
   try{await lstat(target);fail('install.destination_exists');}catch(e){if(e.code!=='ENOENT')throw e;}

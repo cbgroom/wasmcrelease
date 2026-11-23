@@ -2,20 +2,47 @@
 import assert from 'node:assert/strict';
 import {currentCompatibilityPath,requiresPrivateHelperQualification,requiresIfBranchScopeQualification,requiresCheckedChunkQualification} from './current-release-version.mjs';
 import {loadBoundProtocol} from './fresh-agent-learning-v1.mjs';
-import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
+import {readFileSync,writeFileSync,readdirSync,lstatSync,mkdtempSync,rmSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {fileURLToPath} from 'node:url';
-import {resolve,relative,dirname} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {resolve,relative,dirname,posix,join,isAbsolute} from 'node:path';
+import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
-import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {createRequire} from 'node:module';
+import {checkedCurrentCatalog,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
 import {historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
+import {validateJsonDerivedSourceAdmission} from './json-derived-source-admission-v1.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
+const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
+export function relativeModuleImports(path,bytes){
+  const targets=[];
+  for(const match of bytes.toString('utf8').matchAll(/(?:from\s*|import\s*\(\s*|import\s*|require\s*\(\s*)['"](\.[^'"]+)['"]/g)){
+    const target=posix.normalize(posix.join(posix.dirname(path),match[1]));
+    if(!safe(target))throw Error('module import path outside product');
+    targets.push(target);
+  }
+  return targets;
+}
+export function validateProductModuleImports(rows,read,entrypoints=['scripts/wasmc-lib.mjs','scripts/release-candidate.mjs']){
+  const paths=new Set(rows.map(row=>row.path));
+  const queue=[...entrypoints],visited=new Set();
+  while(queue.length){
+    const path=queue.pop();if(visited.has(path))continue;
+    if(!paths.has(path))throw Error(`product module entry missing: ${path}`);
+    visited.add(path);
+    for(const target of relativeModuleImports(path,read(path))){
+      if(!paths.has(target))throw Error(`product module import missing: ${path} -> ${target}`);
+      if(target.endsWith('.mjs')||target.endsWith('.js'))queue.push(target);
+    }
+  }
+  return true;
+}
 const legacyV1ProductSets=Object.freeze({
   '0.0.10':'dd01d2fef9a4010e0bf4ed50f2fbf790a2771c92e4a4252bd6889441bc2059d8',
   '0.0.11':'101a8a3783d52fc3d06e15731b20ec5fbe5a2bdbd7d9e964876f76ce44e33662',
@@ -259,6 +286,8 @@ export function validateCandidate(candidate,read) {
     const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;
   }
   if(candidate.product_set_sha256!==hash(JSON.stringify(rows)))throw Error('product set identity rejected');
+  if(candidate.schema==='wasmc.release-product-candidate/v3'&&/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(candidate.version))
+    validateProductModuleImports(rows,read);
   if(candidate.schema==='wasmc.release-product-candidate/v2'){
     const closure=candidate.lib_route_closure;
     if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
@@ -444,11 +473,87 @@ export const currentV3ProductInputs=Object.freeze([
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
+    ...(usesSuccessorCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs','scripts/materialize-canonical-host-v031.mjs','scripts/test-canonical-host-capacity-v031.mjs']:[]),
+    ...(Number(version.split('.')[2])>=31?['scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
+    ...(version==='0.0.31'?['scripts/test-checked-chunk-admission-v031.mjs']:[]),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
     ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
     ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
+}
+export function currentProductVariant(catalogBytes,catalogSha256,read){
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256), bytes=read(catalog.cohort.path);
+  assert.equal(bytes.length,catalog.cohort.bytes,'candidate cohort bytes');
+  assert.equal(hash(bytes),catalog.cohort.sha256,'candidate cohort independent identity');
+  const schema=JSON.parse(bytes).schema;
+  if(schema==='wasmc.mixed-current-cohort/v1')return 'mixed';
+  if(schema==='wasmc.json-overlay-cohort/v1')return 'json-overlay';
+  if(schema==='wasmc.json-derived-overlay-cohort/v1')return 'json-derived';
+  if(schema==='wasmc.public-current-refresh-cohort/v2')return 'v4';
+  assert.ok(['wasmc.public-current-refresh-cohort/v1','wasmc.public-current-composition-cohort/v1'].includes(schema),'unknown candidate cohort schema');
+  return 'v3';
+}
+export function currentProductInputsForVersion(version,variant){
+  const base=currentV3ProductInputsForVersion(version);
+  if(variant==='v3')return base;
+  if(variant==='json-overlay'||variant==='json-derived'){assert.ok(/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(version),'JSON overlay requires successor version');return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
+    'admission/json-overlay-cohort-v1.json','admission/json-overlay-prior-catalog-v1.json','admission/json-overlay-prior-index-v1.json','scripts/json-overlay-public-v1.mjs','scripts/test-json-overlay-product-ci-v1.mjs',
+    ...(variant==='json-derived'?['scripts/test-ci-json-derived-routing-v1.mjs']:[])];}
+  if(variant==='mixed')return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
+    'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
+    'catalog/frozen-v030-notices-v1.json','scripts/frozen-v030-notices-v1.mjs','scripts/current-license-policy-mixed-v1.mjs',
+    'scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs','scripts/qualify-mixed-release-inputs-v1.mjs',
+    'scripts/test-current-product-mixed-v1.mjs','scripts/test-current-license-policy-mixed-v1.mjs','scripts/test-product-module-imports-v1.mjs'];
+  assert.equal(variant,'v4');
+  return [...base.filter(path=>path!=='admission/current-product-v3.json'),
+    'admission/current-product-v4.json','catalog/current-v4-license-policy.json',
+    'catalog/frozen-v030-notices-v1.json','scripts/current-license-policy-v4.mjs',
+    'scripts/frozen-v030-notices-v1.mjs','scripts/lib-refresh-license-receipt-v1.mjs',
+    'scripts/assemble-current-product-v4.mjs','scripts/test-current-product-v4.mjs',
+    'scripts/frozen-root-identities-v1.mjs','scripts/test-frozen-root-identities-v1.mjs',
+    'scripts/test-current-license-policy-v4.mjs','scripts/qualify-current-lib-refresh-v3.mjs',
+    'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs','scripts/test-current-values-component.mjs',
+    'scripts/test-json-current-differential.mjs'];
+}
+// Historical release carriers retain their original size limit.
+function usesSuccessorCompilerCarrier(version) {
+  assert.match(version,/^\d+\.\d+\.\d+$/);
+  const [major,minor,patch]=version.split('.').map(Number);
+  return major>0||minor>0||patch>=31;
+}
+export function validateCurrentCompilerBytes(raw, compiler, version) {
+  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes)
+    throw Error('compiler identity drift');
+  if(!usesSuccessorCompilerCarrier(version)&&raw.length>2*1024*1024)
+    throw Error('compiler exceeds historical byte budget');
+  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+}
+export function validateCheckedChunkAdmission(admission,compiler,read){
+  assert.equal(admission.schema,'wasmc.canonical-checked-chunk-admission/v1');
+  assert.equal(admission.accepted,true,'checked-chunk admission is not complete');
+  assert.equal(admission.version,compiler.version,'checked-chunk version mismatch');
+  assert.match(compiler.source_commit??'',/^[0-9a-f]{40}$/);
+  assert.equal(compiler.source_branch,'master');
+  assert.equal(admission.canonical_source,compiler.source_commit,'checked-chunk source mismatch');
+  const pin=(row,path)=>{
+    assert.equal(row?.path,path,'checked-chunk input path');
+    const bytes=read(path);assert.equal(bytes.length,row.bytes,'checked-chunk input bytes: '+path);
+    assert.equal(hash(bytes),row.sha256,'checked-chunk input digest: '+path);return bytes;
+  };
+  const compilerBytes=pin(admission.compiler,'current/wasmc_compiler.wasm');
+  assert.equal(hash(compilerBytes),compiler.compiler.sha256,'checked-chunk compiler mismatch');
+  assert.equal(compilerBytes.length,compiler.compiler.bytes);
+  const provider=pin(admission.canonical_provider,'current/lib_core.wasm');
+  const profile=JSON.parse(pin(admission.profile_map,'examples/current/canonical-host-v031/checked-chunk-profile.json'));
+  const plan=pin(admission.native_plan,'examples/current/canonical-host-v031/producer-assets/caller-plan.json');
+  const frame=JSON.parse(pin(admission.frame_expected,'examples/current/canonical-host-v031/expected-frame.json'));
+  assert.equal(profile.schema,'wasmc.canonical-checked-chunk-assets/v1');assert.equal(profile.version,compiler.version);
+  assert.equal(profile.compiler.sha256,compiler.compiler.sha256);assert.equal(profile.compiler.bytes,compiler.compiler.bytes);
+  assert.equal(profile.assets?.['provider.core']?.sha256,hash(provider));
+  assert.equal(frame.compiler_sha256,compiler.compiler.sha256);assert.equal(frame.caller_plan_sha256,hash(plan));
+  assert.equal(admission.native_sealed_modules,8);assert.equal(frame.module_count,8);
+  return true;
 }
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
@@ -457,16 +562,20 @@ export function currentCandidateClosure(candidate,read){
     const bytes=read(path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('current product input drift: '+path);
     return bytes;
   };
-  for(const path of currentV3ProductInputsForVersion(candidate.version))exact(path);
-  validateCurrentCIProductInputs(candidate,read);
   const catalogBytes=exact('catalog/libs-current-v2.json');
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
   const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);
+  const variant=currentProductVariant(catalogBytes,candidate.current_catalog.sha256,exact);
+  if(variant==='json-derived')validateJsonDerivedSourceAdmission(candidate.derived_source_admission);
+  for(const path of currentProductInputsForVersion(candidate.version,variant))exact(path);
+  validateCurrentCIProductInputs(candidate,read);
   if(catalog.version!==candidate.version)throw Error('current catalog release version drift');
   const compiler=JSON.parse(exact('current/compiler-release.json'));
   if(compiler.schema!=='wasmc.current-compiler/v2'||compiler.version!==candidate.version||
      compiler.source_commit!==candidate.compiler_source_authority||compiler.source_branch!=='master')
     throw Error('canonical compiler source/version authority drift');
+  if(candidate.version==='0.0.31')
+    validateCheckedChunkAdmission(JSON.parse(exact('admission/checked-chunk-v0'+candidate.version.split('.')[2]+'.json')),compiler,exact);
   const compatibility=JSON.parse(exact(currentCompatibilityPath(candidate.version)));
   assert.equal(compatibility.schema,'wasmc.core-compatibility/v1');assert.equal(compatibility.candidate_version,candidate.version);
   const compatibleCompiler=compatibility.artifacts.find(row=>row.id==='compiler');
@@ -475,9 +584,7 @@ export function currentCandidateClosure(candidate,read){
     const selected=loadBoundProtocol(exact);assert.equal(selected.protocol.release_binding.version,candidate.version);
   }
   const raw=exact('current/wasmc_compiler.wasm');
-  if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
-    throw Error('compiler identity or byte budget drift');
-  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+  validateCurrentCompilerBytes(raw,compiler.compiler,candidate.version);
   const binaries=[],embeddings=[];
   for(const [path]of rows){
     if(path.endsWith('.wasm')){
@@ -495,7 +602,8 @@ export function currentCandidateClosure(candidate,read){
   assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
-  const closure=verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  const verifier=variant==='mixed'?require('./mixed-current-product-v1.mjs').verifyMixedFromCatalog:variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
+  const closure=(variant==='json-overlay'||variant==='json-derived')?require('./json-overlay-public-v1.mjs').verifyPublicJsonOverlayPinned(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()].filter(path=>path.startsWith('current-libs/'))):verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
   historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
     compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,
@@ -503,7 +611,34 @@ export function currentCandidateClosure(candidate,read){
     compiler_carriers:{binaries,embeddings},active_compiler_versions:1};
 }
 const compositionCreationKeys=['catalog_sha256','composition_cohort_sha256','source_lineage_sha256'];
+const mixedCreationFlags={
+  '--mixed-catalog-sha256':'catalogSha','--mixed-source-root':'sourceRoot','--mixed-authority-repo':'repo',
+  '--mixed-run-root':'runRoot','--mixed-receipt-sha256':'receiptSha','--mixed-producer-sha256':'producerSha',
+  '--mixed-wit-tool':'witTool','--mixed-wit-tool-sha256':'witToolSha','--mixed-refs-path':'refsPath',
+  '--mixed-refs-sha256':'refsSha','--mixed-q2-path':'q2Path','--mixed-q2-sha256':'q2Sha',
+  '--mixed-network-path':'networkPath','--mixed-network-sha256':'networkSha',
+  '--mixed-network-root':'networkRoot','--mixed-previous-parent':'previousParent'};
+const jsonCreationFlags={'--json-operator-repo':'operatorRepo','--json-operator-commit':'operatorCommit','--json-operator-sha256':'operatorSha','--json-private-root':'privateRoot','--json-catalog-sha256':'catalogSha','--json-prior-catalog-sha256':'oldSha','--json-receipt-sha256':'receiptSha','--json-wit-tool':'witPath','--json-wit-tool-sha256':'witSha','--json-authority-commit':'commit'};
+const jsonDerivedCreationFlags={'--derived-json-operator-repo':'operatorRepo','--derived-json-operator-commit':'operatorCommit','--derived-json-operator-sha256':'operatorSha','--derived-json-private-root':'privateRoot','--derived-json-catalog-sha256':'catalogSha','--derived-json-prior-catalog-sha256':'oldSha','--derived-json-receipt-sha256':'receiptSha','--derived-json-wit-tool':'witPath','--derived-json-wit-tool-sha256':'witSha','--derived-json-authority-commit':'commit','--derived-json-producer':'producerPath','--derived-json-producer-sha256':'producerSha','--derived-json-source-repo':'sourceRepo','--derived-json-source-commit':'buildSource'};
 export async function currentCandidateArguments(argv){
+  if(argv.some(value=>Object.hasOwn(jsonDerivedCreationFlags,value))){
+    assert.equal(argv.length,Object.keys(jsonDerivedCreationFlags).length*2,'all independent derived JSON inputs required');
+    const options={kind:'json-derived'};for(let i=0;i<argv.length;i+=2){const key=jsonDerivedCreationFlags[argv[i]];
+      assert.ok(key&&!Object.hasOwn(options,key)&&argv[i+1]&&!argv[i+1].startsWith('--'),'unknown, duplicate or missing derived JSON input');options[key]=argv[i+1];}
+    return options;
+  }
+  if(argv.some(value=>Object.hasOwn(jsonCreationFlags,value))){
+    assert.equal(argv.length,Object.keys(jsonCreationFlags).length*2,'all independent JSON inputs required');
+    const options={kind:'json-overlay'};for(let i=0;i<argv.length;i+=2){const key=jsonCreationFlags[argv[i]];
+      assert.ok(key&&!Object.hasOwn(options,key)&&argv[i+1]&&!argv[i+1].startsWith('--'),'unknown, duplicate or missing JSON input');options[key]=argv[i+1];}
+    return options;
+  }
+  if(argv.some(value=>Object.hasOwn(mixedCreationFlags,value))){
+    assert.equal(argv.length,Object.keys(mixedCreationFlags).length*2,'all independent mixed inputs required');
+    const options={kind:'mixed'};for(let i=0;i<argv.length;i+=2){const key=mixedCreationFlags[argv[i]];
+      assert.ok(key&&!Object.hasOwn(options,key)&&argv[i+1]&&!argv[i+1].startsWith('--'),'unknown, duplicate or missing mixed input');options[key]=argv[i+1];}
+    return options;
+  }
   const names={'--current-catalog-sha256':'catalog_sha256',
     '--current-composition-cohort-sha256':'composition_cohort_sha256','--current-source-lineage-sha256':'source_lineage_sha256'};
   if(!argv.some(value=>Object.hasOwn(names,value))){
@@ -526,12 +661,15 @@ export function verifyCurrentCandidateComposition(repo,options){
   assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
   assert.equal(cohort.input_prefix,'admission/current-composition-inputs-v1');
   assert.equal(cohort.source_lineage_sha256,options.source_lineage_sha256,'independent source lineage identity drift');
-  const inputPaths=currentProductPaths(repo,cohort.input_prefix);
-  const authoringPaths=catalog.packages.flatMap(row=>currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)));
+  const inputPaths=cohort.input_files.map(pin=>cohort.input_prefix+'/'+pin.path);
+  const admittedIds=new Set(cohort.source_lineage.admitted_original_sources.map(({source})=>source.id));
+  const authoringPaths=catalog.packages.flatMap(row=>admittedIds.has(row.id)
+    ?Object.values(row.source).map(pin=>pin.path)
+    :currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)));
   const commonAuthoring=['libspec/registry.json','libspec/rust-policy.json','libspec/Cargo.lock'];
   const carrierPaths=cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
     [...currentProductPaths(repo,source.root.locator),...currentProductPaths(repo,source.source_packet.root)]);
-  const paths=[...inputPaths,...currentProductPaths(repo),...authoringPaths,...commonAuthoring,...carrierPaths];
+  const paths=[...inputPaths,...catalog.packages.flatMap(row=>currentProductPaths(repo,row.root)),...authoringPaths,...commonAuthoring,...carrierPaths];
   const closure=verifyCurrentRelease(bytes,options.catalog_sha256,read,paths);
   assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
   assert.equal(closure.source_lineage_sha256,options.source_lineage_sha256);
@@ -539,10 +677,51 @@ export function verifyCurrentCandidateComposition(repo,options){
   return {closure,product_inputs:[catalog.cohort.path,...inputPaths,...authoringPaths,...commonAuthoring,...carrierPaths,
     ...historicalNoticeProductInputs(cohort,read)]};
 }
+export async function verifyCurrentCandidateMixed(repo,options){
+  assert.equal(options?.kind,'mixed');
+  const {qualifyMixedReleaseInputs}=await import('./qualify-mixed-release-inputs-v1.mjs');
+  const {verifyMixedFromCatalog}=await import('./mixed-current-product-v1.mjs');
+  const qualification=await qualifyMixedReleaseInputs({...options,product:repo});assert.equal(qualification.accepted,true);
+  const read=currentProductReader(repo),bytes=read('catalog/libs-current-v2.json');
+  const catalog=checkedCurrentCatalog(bytes,options.catalogSha),cohort=JSON.parse(read(catalog.cohort.path));
+  const productInputs=new Set([catalog.cohort.path,catalog.registry.path,catalog.index.path,...cohort.common_files.map(p=>p.path)]);
+  for(const [name,graph] of Object.entries(cohort.inputs))for(const file of graph.files)
+    productInputs.add(`admission/mixed-product-inputs-v1/${name}/${file.path}`);
+  for(const row of catalog.packages){for(const file of row.files)productInputs.add(file.path);
+    for(const pin of Object.values(row.source))productInputs.add(pin.path);}
+  const closure=verifyMixedFromCatalog(bytes,options.catalogSha,read,[...productInputs]);
+  assert.equal(closure.catalog_sha256,qualification.catalog_sha256);
+  return {qualification,closure,product_inputs:[...productInputs].sort()};
+}
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
+  const mixed=currentOptions?.kind==='mixed'?await verifyCurrentCandidateMixed(repo,currentOptions):null;
+  let jsonOverlay=null;
+  let derivedSource=null;
+  if(currentOptions?.kind==='json-derived'){
+    const {verifyJsonDerivedSource}=await import('./json-derived-source-admission-v1.mjs');
+    derivedSource=verifyJsonDerivedSource({sourceRepo:currentOptions.sourceRepo,buildSource:currentOptions.buildSource,producerSha256:currentOptions.producerSha});
+  }
+  if(currentOptions?.kind==='json-overlay'||currentOptions?.kind==='json-derived'){
+    assert.ok(isAbsolute(currentOptions.operatorRepo??''),'absolute operator repository required');
+    assert.match(currentOptions.operatorCommit??'',/^[0-9a-f]{40}$/);
+    assert.match(currentOptions.operatorSha??'',/^[0-9a-f]{64}$/);
+    const tmp=mkdtempSync(join(tmpdir(),'wasmc-json-operator-'));
+    try {
+      const archive=spawnSync('git',['-C',currentOptions.operatorRepo,'archive','--format=tar',currentOptions.operatorCommit,'--','scripts'],{maxBuffer:64*1024*1024});
+      if(archive.error)throw archive.error;
+      assert.equal(archive.status,0,'operator commit archive failed');
+      const extract=spawnSync('tar',['-xf','-','-C',tmp],{input:archive.stdout,maxBuffer:1024*1024});
+      if(extract.error)throw extract.error;
+      assert.equal(extract.status,0,'operator archive extraction failed');
+      const entry=join(tmp,currentOptions.kind==='json-derived'?'scripts/json-derived-candidate-admission-v1.mjs':'scripts/json-overlay-candidate-admission-v1.mjs');
+      assert.equal(hash(readFileSync(entry)),currentOptions.operatorSha,'operator preflight entry identity');
+      const operator=await import(pathToFileURL(entry).href);
+      jsonOverlay=currentOptions.kind==='json-derived'?await operator.qualifyJsonDerivedCandidate({...currentOptions,publicRoot:repo,version}):await operator.qualifyJsonOverlayCandidate({...currentOptions,publicRoot:repo,version});
+    } finally {rmSync(tmp,{recursive:true,force:true});}
+  }
   const composed=currentOptions&&Object.hasOwn(currentOptions,'composition_cohort_sha256')
     ?verifyCurrentCandidateComposition(repo,currentOptions):null;
-  if(!composed){const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
+  if(!composed&&!mixed&&!jsonOverlay){const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
     await requireCurrentReleaseCohort(repo,currentOptions);}
   const read=path=>readFileSync(resolve(repo,path));
   const walk=p=>readdirSync(resolve(repo,p)).sort().flatMap(n=>{
@@ -552,22 +731,27 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
-  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
+  const variant=currentProductVariant(catalogBytes,hash(catalogBytes),read);
+  if(mixed){assert.equal(variant,'mixed');assert.equal(mixed.qualification.catalog_sha256,hash(catalogBytes));}
+  if(jsonOverlay){assert.equal(variant,currentOptions.kind);assert.equal(jsonOverlay.catalog_sha256,hash(catalogBytes));}
+  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...((composed||mixed||jsonOverlay)?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
     ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const compiler=JSON.parse(read('current/compiler-release.json'));
   assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
   const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
-  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentV3ProductInputsForVersion(version),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
+  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentProductInputsForVersion(version,variant),...(composed?.product_inputs??[]),...(mixed?.product_inputs??[]),...(jsonOverlay?.public_input_paths??[]),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);
   for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
   const addImports=path=>{
     const source=read(path).toString('utf8');
-    for(const match of source.matchAll(/(?:from\s*|import\s*\(\s*|import\s*)['"](\.[^'"]+)['"]/g)){
-      const target=relative(repo,resolve(repo,dirname(path),match[1])).split('\\').join('/');
+    const targets=Number(version.split('.')[2])>=31?relativeModuleImports(path,Buffer.from(source)):
+      [...source.matchAll(/(?:from\s*|import\s*\(\s*|import\s*)['"](\.[^'"]+)['"]/g)]
+        .map(match=>relative(repo,resolve(repo,dirname(path),match[1])).split('\\').join('/'));
+    for(const target of targets){
       if(!safe(target))throw Error('module import path outside product');
       if(paths.has(target))continue;paths.add(target);if(target.endsWith('.mjs')||target.endsWith('.js'))addImports(target);
     }
@@ -579,8 +763,11 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     current_catalog:{path:'catalog/libs-current-v2.json',sha256:hash(catalogBytes)},
     stage_metadata_paths:[...currentStageMetadataPaths],
     product_files,product_set_sha256:hash(JSON.stringify(product_files))};
+  if(derivedSource)candidate.derived_source_admission=derivedSource;
   candidate.current_release_closure=currentCandidateClosure(candidate,read);
   if(composed)assert.deepEqual(composed.closure,verifyCurrentRelease(catalogBytes,currentOptions.catalog_sha256,read,[...paths]),'composition creation read fence');
+  else if(mixed){assert.deepEqual(candidate.current_release_closure,mixed.closure,'mixed creation read fence');}
+  else if(jsonOverlay){assert.equal(candidate.current_release_closure.catalog_sha256,jsonOverlay.catalog_sha256);assert.equal(candidate.current_release_closure.index_entries,jsonOverlay.index_entries);}
   else if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||
      candidate.current_release_closure.producer_sha256!==currentOptions.producer_sha256)throw Error('independent creation cohort identity drift');
   validateCandidate(candidate,read);return candidate;

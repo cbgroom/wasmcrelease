@@ -1,4 +1,4 @@
-package wasmc:system-process@0.0.1;
+package wasmc:system-process@0.1.0;
 
 interface processes {
   record environment-entry {
@@ -11,8 +11,8 @@ interface processes {
     environment: list<environment-entry>,
     inherit-environment: bool,
     stdin: list<u8>,
-    timeout-ms: u32,
-    max-output-bytes: u32,
+    timeout-ms: option<u32>,
+    max-output-bytes: option<u32>,
   }
 
   record process-request {

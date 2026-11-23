@@ -1,10 +1,10 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-system-android-input",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-input",
-  "description": "Lib-defined platform implementation: wasmc-system-android-input",
+  "description": "Android text input without adapter-local length ceilings; actual exec and device limits apply.",
   "dependencies": [],
   "apis": [
     {
@@ -12,7 +12,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-input@0.0.1"
+        "wasmc:system-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -23,7 +23,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-input@0.0.1"
+        "wasmc:system-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -34,7 +34,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-input@0.0.1"
+        "wasmc:system-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -46,13 +46,14 @@
     "target": "android",
     "files": [
       "platform/native-adapter.c",
-      "platform/native-boundary.template.json"
+      "platform/native-boundary.template.json",
+      "platform/encode.mjs"
     ],
     "entry": "platform/native-adapter.c",
     "descriptor_template": "platform/native-boundary.template.json",
     "binding_contract": "wasmc.lib-defined-host-boundary/v1",
     "binding": {
-      "implements": "wasmc:system-input@0.0.1",
+      "implements": "wasmc:system-input@0.1.0",
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "descriptor": "platform/native-boundary.template.json",
       "artifact_format": "native-adapter",
@@ -72,7 +73,7 @@
       "darwin"
     ],
     "requires": [],
-    "current_runtime_status": "not-requalified",
+    "current_runtime_status": "candidate-pending",
     "remaining": [
       "direct-android-uinput",
       "descriptor-schema-review",

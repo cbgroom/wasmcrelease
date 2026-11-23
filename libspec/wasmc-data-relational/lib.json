@@ -1,12 +1,12 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-data-relational",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "profile": "value",
-  "crate": "wasmc_data_relational_refresh_v2",
-  "artifact_name": "wasmc_data_relational_refresh_v2",
+  "crate": "wasmc_data_relational_memory_v031",
+  "artifact_name": "wasmc_data_relational_memory_v031",
   "world": "data-relational",
-  "description": "Relational grouping, union, joins, distinct and window algorithms over the shared neutral Data snapshot model.",
+  "description": "Relational grouping, union, joins, distinct and window algorithms over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
   "dependencies": [
     "arrow-arith",
     "arrow-select",
@@ -21,7 +21,7 @@
   "apis": [
     {
       "api": "distinct",
-      "delta": "Distinct rows by selected key columns.",
+      "delta": "Distinct rows by selected key columns. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow 60 + ordered-float 5.5",
       "host_authorities": [],
       "implementation": "lib",
@@ -30,7 +30,7 @@
     },
     {
       "api": "equi-join",
-      "delta": "Inner/left equi-join with bounded output.",
+      "delta": "Inner/left equi-join with output. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Rust ordered maps + neutral columns",
       "host_authorities": [],
       "implementation": "lib",
@@ -39,7 +39,7 @@
     },
     {
       "api": "group-aggregate",
-      "delta": "Grouped count/sum/min/max/mean/first/last/variance/stddev.",
+      "delta": "Grouped count/sum/min/max/mean/first/last/variance/stddev. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow Arith 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -48,7 +48,7 @@
     },
     {
       "api": "union-all",
-      "delta": "Schema-checked append of compatible batches.",
+      "delta": "Schema-checked append of compatible batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "neutral Data model",
       "host_authorities": [],
       "implementation": "lib",
@@ -57,7 +57,7 @@
     },
     {
       "api": "window-aggregate",
-      "delta": "ROWS-frame window aggregates.",
+      "delta": "ROWS-frame window aggregates. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow Arith 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -66,7 +66,7 @@
     },
     {
       "api": "window-offset",
-      "delta": "Lag/lead over ordered partitions.",
+      "delta": "Lag/lead over ordered partitions. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "neutral Data model",
       "host_authorities": [],
       "implementation": "lib",
@@ -75,7 +75,7 @@
     },
     {
       "api": "window-rank",
-      "delta": "row-number/rank/dense-rank over ordered partitions.",
+      "delta": "row-number/rank/dense-rank over ordered partitions. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "neutral Data model",
       "host_authorities": [],
       "implementation": "lib",

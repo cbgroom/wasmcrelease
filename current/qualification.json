@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.current-compiler-qualification/v1",
   "accepted": true,
-  "version": "0.0.30",
-  "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-  "product_manifest_sha256": "eca810bc7aee10e0affec2852ae3c8fe0eace2f06f3ab14fa64f7c1ca6ca203d",
+  "version": "0.0.31",
+  "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+  "product_manifest_sha256": "4579bbc2ce46867be646c820069a71e78b48116b6eb94a05c3913f027c9bc46d",
   "source_free": true,
   "compiler_private_source_present": false,
   "platform": "darwin",
@@ -19,7 +19,7 @@
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -51,15 +51,71 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.2",
-        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "provider": "4.12.0-candidate.1",
+        "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
         "calls": 768,
         "boolean_conditional_calls": 1536,
         "boolean_numeric_rejections": 6,
-        "old_provider_fallback": false
+        "old_provider_fallback": false,
+        "collection_capacity": {
+          "sidecar": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "embedded": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "global": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          }
+        }
       }
     },
     {
@@ -87,17 +143,17 @@
       "engine": "node",
       "version": "v26.12.1",
       "args": [
-        "scripts/test-canonical-host-sdk.mjs"
+        "scripts/test-canonical-host-sdk-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
-        "frame_bytes": 76134,
+        "native_parity": "ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb",
+        "frame_bytes": 73438,
         "checked_chunk_profile": true,
         "exact_native_modules": 8,
         "rejection_then_recovery": true,
@@ -115,7 +171,7 @@
       "result": {
         "accepted": true,
         "engine": "node",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 5,
         "scalar_calls": 1200,
         "managed_calls": 192,
@@ -128,14 +184,14 @@
       "engine": "node",
       "version": "v26.12.1",
       "args": [
-        "scripts/test-canonical-host-import-demand.mjs"
+        "scripts/test-canonical-host-import-demand-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-        "baseline_producer_compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+        "baseline_producer_compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "cases": 3,
         "static_imports": 13,
         "json_read_imports": 13,
@@ -143,7 +199,7 @@
         "modules_per_frame": 8,
         "exact_frame_pins": true,
         "real_Host_invocation": false,
-        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+        "merged_execution_scope": "JSON-read separately executed; static and table execution not claimed"
       }
     },
     {
@@ -155,7 +211,7 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 4,
         "guest_calls": 1152,
         "host_effects": 1280,
@@ -171,13 +227,13 @@
       "engine": "node",
       "version": "v26.12.1",
       "args": [
-        "scripts/test-canonical-checked-results.mjs"
+        "scripts/test-canonical-checked-results-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "http_only_imports": 13,
@@ -202,28 +258,31 @@
       "engine": "node",
       "version": "v26.12.1",
       "args": [
-        "scripts/test-current-string-support.mjs"
+        "scripts/test-current-string-support-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "host": "node",
-        "CoreLib_version": "4.11.0-candidate.2",
-        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "CoreLib_version": "4.12.0-candidate.1",
+        "CoreLib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "Root_APIs": 30,
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "old_Root_and_compiler_unchanged": true,
+        "candidate_profile": true,
         "basic_Guest_calls": 544,
-        "Guest_calls": 581,
+        "Guest_calls": 584,
         "large_input_bytes": [
           131072,
           262144,
-          524288
+          524288,
+          1048576,
+          1200000,
+          1500000
         ],
         "Unicode_case_expansion": true,
-        "canonical_ingress_work_budget_rejected": true,
+        "explicit_host_limit_rejected": true,
         "same_instance_recovery": true,
         "pending_counters_zero": 2,
         "Host_imports": 13,
@@ -242,7 +301,7 @@
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -274,15 +333,71 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.2",
-        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "provider": "4.12.0-candidate.1",
+        "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
         "calls": 768,
         "boolean_conditional_calls": 1536,
         "boolean_numeric_rejections": 6,
-        "old_provider_fallback": false
+        "old_provider_fallback": false,
+        "collection_capacity": {
+          "sidecar": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "embedded": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "global": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          }
+        }
       }
     },
     {
@@ -310,17 +425,17 @@
       "engine": "bun",
       "version": "1.3.14",
       "args": [
-        "scripts/test-canonical-host-sdk.mjs"
+        "scripts/test-canonical-host-sdk-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
-        "frame_bytes": 76134,
+        "native_parity": "ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb",
+        "frame_bytes": 73438,
         "checked_chunk_profile": true,
         "exact_native_modules": 8,
         "rejection_then_recovery": true,
@@ -338,7 +453,7 @@
       "result": {
         "accepted": true,
         "engine": "bun",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 5,
         "scalar_calls": 1200,
         "managed_calls": 192,
@@ -351,14 +466,14 @@
       "engine": "bun",
       "version": "1.3.14",
       "args": [
-        "scripts/test-canonical-host-import-demand.mjs"
+        "scripts/test-canonical-host-import-demand-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-        "baseline_producer_compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+        "baseline_producer_compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "cases": 3,
         "static_imports": 13,
         "json_read_imports": 13,
@@ -366,7 +481,7 @@
         "modules_per_frame": 8,
         "exact_frame_pins": true,
         "real_Host_invocation": false,
-        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+        "merged_execution_scope": "JSON-read separately executed; static and table execution not claimed"
       }
     },
     {
@@ -378,7 +493,7 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 4,
         "guest_calls": 1152,
         "host_effects": 1280,
@@ -394,13 +509,13 @@
       "engine": "bun",
       "version": "1.3.14",
       "args": [
-        "scripts/test-canonical-checked-results.mjs"
+        "scripts/test-canonical-checked-results-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "http_only_imports": 13,
@@ -418,19 +533,19 @@
       "engine": "bun",
       "version": "1.3.14",
       "args": [
-        "scripts/test-current-string-support.mjs"
+        "scripts/test-current-string-support-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "host": "bun",
-        "CoreLib_version": "4.11.0-candidate.2",
-        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "CoreLib_version": "4.12.0-candidate.1",
+        "CoreLib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "Root_APIs": 30,
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "old_Root_and_compiler_unchanged": true,
+        "candidate_profile": true,
         "Guest_calls": 0,
         "execution_profile": "compiler-frames-only",
         "unsupported_feature": "multi-memory",
@@ -453,7 +568,7 @@
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -489,15 +604,71 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.2",
-        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "provider": "4.12.0-candidate.1",
+        "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
         "calls": 768,
         "boolean_conditional_calls": 1536,
         "boolean_numeric_rejections": 6,
-        "old_provider_fallback": false
+        "old_provider_fallback": false,
+        "collection_capacity": {
+          "sidecar": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "embedded": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          },
+          "global": {
+            "strings": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ],
+            "records": [
+              96,
+              97,
+              128,
+              129,
+              10000,
+              7
+            ]
+          }
+        }
       }
     },
     {
@@ -529,17 +700,17 @@
       "args": [
         "run",
         "--allow-read",
-        "scripts/test-canonical-host-sdk.mjs"
+        "scripts/test-canonical-host-sdk-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
-        "frame_bytes": 76134,
+        "native_parity": "ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb",
+        "frame_bytes": 73438,
         "checked_chunk_profile": true,
         "exact_native_modules": 8,
         "rejection_then_recovery": true,
@@ -559,7 +730,7 @@
       "result": {
         "accepted": true,
         "engine": "deno",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 5,
         "scalar_calls": 1200,
         "managed_calls": 192,
@@ -574,14 +745,14 @@
       "args": [
         "run",
         "--allow-read",
-        "scripts/test-canonical-host-import-demand.mjs"
+        "scripts/test-canonical-host-import-demand-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-        "baseline_producer_compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+        "baseline_producer_compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "cases": 3,
         "static_imports": 13,
         "json_read_imports": 13,
@@ -589,7 +760,7 @@
         "modules_per_frame": 8,
         "exact_frame_pins": true,
         "real_Host_invocation": false,
-        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+        "merged_execution_scope": "JSON-read separately executed; static and table execution not claimed"
       }
     },
     {
@@ -603,7 +774,7 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "source_cases": 4,
         "guest_calls": 1152,
         "host_effects": 1280,
@@ -621,13 +792,13 @@
       "args": [
         "run",
         "--allow-read",
-        "scripts/test-canonical-checked-results.mjs"
+        "scripts/test-canonical-checked-results-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "http_only_imports": 13,
@@ -654,28 +825,31 @@
       "args": [
         "run",
         "--allow-read",
-        "scripts/test-current-string-support.mjs"
+        "scripts/test-current-string-support-v031.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
         "host": "deno",
-        "CoreLib_version": "4.11.0-candidate.2",
-        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
-        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "CoreLib_version": "4.12.0-candidate.1",
+        "CoreLib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+        "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
         "Root_APIs": 30,
         "compiled_frames": 4,
         "modules_per_frame": 8,
-        "old_Root_and_compiler_unchanged": true,
+        "candidate_profile": true,
         "basic_Guest_calls": 544,
-        "Guest_calls": 581,
+        "Guest_calls": 584,
         "large_input_bytes": [
           131072,
           262144,
-          524288
+          524288,
+          1048576,
+          1200000,
+          1500000
         ],
         "Unicode_case_expansion": true,
-        "canonical_ingress_work_budget_rejected": true,
+        "explicit_host_limit_rejected": true,
         "same_instance_recovery": true,
         "pending_counters_zero": 2,
         "Host_imports": 13,

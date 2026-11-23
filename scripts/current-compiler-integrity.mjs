@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {admissibleCompilerSourceDiff} from './compiler-source-diff-policy.mjs';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync,readdirSync,lstatSync,existsSync} from 'node:fs';
@@ -27,9 +28,11 @@ if(refresh){const args=process.argv.slice(3);assert.equal(args.length,14);
 const prior=refresh?null:json('current/compiler-release.json');
 const productVersion=refresh?options['--version']:prior.version;assert.match(productVersion,/^0\.0\.[0-9]+$/);
 const versionKey='v0'+productVersion.split('.')[2];
+const legacyMaxCompilerBytes=Number(productVersion.split('.')[2])<31 ? 2*1024*1024 : null;
 const pin=refresh?options['--compiler-sha256']:prior.compiler.sha256;
 const canonical=read('current/wasmc_compiler.wasm');
-assert.equal(sha(canonical),pin);assert.ok(canonical.length<=2097152);
+assert.equal(sha(canonical),pin);
+if(legacyMaxCompilerBytes!==null)assert.ok(canonical.length<=legacyMaxCompilerBytes,'compiler exceeds historical byte budget');
 // Canonical admission and the earlier measured build retain separate identities.
 const custodyPath='current/source-build-custody-'+versionKey+'.json';
 const custody=json(custodyPath),build=json(custody.actual_build_receipt.path),proof=json(custody.canonical_input_proof.path);
@@ -47,7 +50,7 @@ assert.equal(build.lock_sha256,refresh?options['--cargo-lock-sha256']:prior.carg
 assert.equal(proof.source_inputs.length,proof.source_input_count);assert.ok(proof.source_input_count>0);
 assert.equal(new Set(proof.source_inputs.map(x=>x.path)).size,proof.source_input_count);
 for(const input of proof.source_inputs){assert.match(input.sha256,/^[a-f0-9]{64}$/);assert.match(input.build_blob,/^[a-f0-9]{40}$/);assert.equal(input.build_blob,input.canonical_blob);}
-assert.ok(proof.all_changed_paths.every(p=>p.startsWith('.agents/')));
+assert.ok(admissibleCompilerSourceDiff(productVersion,proof.all_changed_paths,proof.source_inputs),'only non-input source governance differences are permitted');
 assert.equal(proof.actual_compiler_dependencies_and_Cargo_inputs_equal,true);assert.equal(proof.tracked_non_governance_tree_equal,true);
 assert.equal(proof.private_implementation_source_included,false);assert.equal(proof.new_builds,0);
 const cm=new WebAssembly.Module(canonical);assert.deepEqual(WebAssembly.Module.imports(cm),[]);
@@ -76,12 +79,23 @@ if(refresh){
  ...(Number(productVersion.split('.')[2])>=27?['admission/checked-chunk-v0'+productVersion.split('.')[2]+'.json']:[]),
  ...(Number(productVersion.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=31?['scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=30?['scripts/test-current-string-support.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=31?['scripts/test-current-string-support-v031.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=31?['scripts/compiler-source-diff-policy.mjs','scripts/test-compiler-source-diff-policy.mjs']:[]),
  'compatibility/core-artifacts-'+versionKey+'.json','scripts/core-compatibility.mjs','scripts/test-current-lib-api-v021.mjs','scripts/current-compiler-integrity.mjs','scripts/test-current-compiler-integrity.mjs','scripts/test-current-compiler.mjs','scripts/test-current-private-helpers.mjs','scripts/qualify-current-compiler.mjs',
  'runtime/wasmc-runtime-v0/compiler.wasm','runtime/wasmc-runtime-v0/manifest.json','runtime/wasmc-runtime-v0/receipts/compiler-wasm.json','runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json','runtime/registry-v0/channels/dev.json'].sort();
- put('current/compiler-release.json',{schema:'wasmc.current-compiler/v2',version:options['--version'],source_commit:options['--source-commit'],source_branch:options['--source-branch'],source_build_receipt_sha256:options['--build-receipt-sha256'],cargo_lock_sha256:options['--cargo-lock-sha256'],compiler:row('current/wasmc_compiler.wasm'),imports:0,max_bytes:2097152,standard_app_sha256:options['--standard-app-sha256'],active_compiler_versions:1,binary_paths:binaries,embedded_paths:embeddings,artifacts:paths.map(row),immutable_selection:'Use the whole product candidate digest and fixed public commit; mutable main is discovery.',scope:'Current compiler identity and carrier integrity; whole product and publication require independent release admission'});
+ put('current/compiler-release.json',{schema:'wasmc.current-compiler/v2',version:options['--version'],source_commit:options['--source-commit'],source_branch:options['--source-branch'],source_build_receipt_sha256:options['--build-receipt-sha256'],cargo_lock_sha256:options['--cargo-lock-sha256'],compiler:row('current/wasmc_compiler.wasm'),imports:0,...(legacyMaxCompilerBytes===null?{}:{max_bytes:legacyMaxCompilerBytes}),standard_app_sha256:options['--standard-app-sha256'],active_compiler_versions:1,binary_paths:binaries,embedded_paths:embeddings,artifacts:paths.map(row),immutable_selection:'Use the whole product candidate digest and fixed public commit; mutable main is discovery.',scope:'Current compiler identity and carrier integrity; whole product and publication require independent release admission'});
 }
-const model=json('current/compiler-release.json');assert.equal(model.schema,'wasmc.current-compiler/v2');assert.equal(model.version,productVersion);assert.match(model.source_commit,/^[a-f0-9]{40}$/);assert.match(model.source_build_receipt_sha256,/^[a-f0-9]{64}$/);assert.match(model.cargo_lock_sha256,/^[a-f0-9]{64}$/);
+const model=json('current/compiler-release.json');
+assert.equal(model.schema,'wasmc.current-compiler/v2');
+assert.equal(model.version,productVersion);
+if(legacyMaxCompilerBytes===null){
+ assert.equal(Object.hasOwn(model,'max_bytes'),false,'successor manifest has no fixed compiler ceiling');
+}else{
+ assert.equal(model.max_bytes,legacyMaxCompilerBytes,'historical compiler manifest byte budget');
+}
+assert.match(model.source_commit,/^[a-f0-9]{40}$/);assert.match(model.source_build_receipt_sha256,/^[a-f0-9]{64}$/);assert.match(model.cargo_lock_sha256,/^[a-f0-9]{64}$/);
 assert.deepEqual(model.compiler,row('current/wasmc_compiler.wasm'));assert.equal(model.active_compiler_versions,1);assert.deepEqual(model.binary_paths,binaries);assert.deepEqual(model.embedded_paths,embeddings);
 assert.equal(new Set(model.artifacts.map(r=>r.path)).size,model.artifacts.length);for(const v of model.artifacts)assert.deepEqual(v,row(v.path));
 const runtime=json('runtime/wasmc-runtime-v0/manifest.json'),receipt=json('runtime/wasmc-runtime-v0/receipts/compiler-wasm.json'),descriptor=json('runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json'),channel=json('runtime/registry-v0/channels/dev.json');

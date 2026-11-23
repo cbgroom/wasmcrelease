@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, requiresCanonicalCheckedResultsQualification, requiresStringStorageQualification, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
+import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, requiresCanonicalCheckedResultsQualification, currentCheckedQualificationScript, currentHostQualificationScript, currentImportDemandQualificationScript, requiresStringStorageQualification, currentStringQualificationScript, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
 import {currentV3ProductInputsForVersion} from './release-candidate.mjs';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const read = p => readFileSync(new URL('../' + p, import.meta.url));
@@ -9,7 +9,54 @@ const q = JSON.parse(read('current/qualification.json'));
 const compiler = JSON.parse(read('current/compiler-release.json'));
 const check = value => assertCompilerQualification(value, compiler.version, compiler.compiler.sha256, hash(read('current/compiler-release.json')));
 assert.equal(check(q), true);
+// Validator-only synthetic successor: real execution receipts are produced separately.
+const successor = structuredClone(q); successor.version = '0.0.31';
+for (const run of successor.runs) {
+  if (run.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs') {
+    run.args[run.args.length-1] = currentHostQualificationScript('0.0.31');
+    run.result.native_parity = 'ad89b3431f9cc402bf09006dc9bc3846e98c09f38007dce7d3e7e1e4147833bb';
+  }
+  if (run.args.at(-1) === 'scripts/test-canonical-host-import-demand.mjs') run.args[run.args.length-1] = currentImportDemandQualificationScript('0.0.31');
+  if (run.args.at(-1) === 'scripts/test-canonical-checked-results.mjs') run.args[run.args.length-1] = 'scripts/test-canonical-checked-results-v031.mjs';
+  if (run.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs') {
+    run.result.provider = '4.12.0-candidate.1';
+    run.result.provider_sha256 = '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e';
+    run.result.collection_capacity = Object.fromEntries(['sidecar', 'embedded', 'global'].map(name => [
+      name, {strings: [96, 97, 128, 129, 10000, 7], records: [96, 97, 128, 129, 10000, 7]}
+    ]));
+  }
+  if (run.args.at(-1) === 'scripts/test-current-string-support.mjs') {
+    run.args[run.args.length-1] = 'scripts/test-current-string-support-v031.mjs';
+    run.result.CoreLib_sha256 = '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e';
+    if (run.engine !== 'bun') {
+      run.result.Guest_calls = 584; run.result.explicit_host_limit_rejected = true;
+      run.result.large_input_bytes = [131072,262144,524288,1048576,1200000,1500000];
+    }
+  }
+}
+const checkSuccessor = value => assertCompilerQualification(value, '0.0.31', compiler.compiler.sha256, hash(read('current/compiler-release.json')));
+assert.equal(checkSuccessor(successor), true);
+for (const update of [
+  managed => delete managed.collection_capacity,
+  managed => managed.collection_capacity.embedded.records.pop()
+]) {
+  const incomplete = structuredClone(successor);
+  const managed = incomplete.runs.find(r => r.engine === 'node' && r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs');
+  update(managed.result);
+  assert.throws(() => checkSuccessor(incomplete));
+}
+const badSuccessor = structuredClone(successor);
+badSuccessor.runs.find(r=>r.engine==='node' && r.args.at(-1)==='scripts/test-current-string-support-v031.mjs').result.large_input_bytes.pop();
+assert.throws(()=>checkSuccessor(badSuccessor));
+const badHostSuccessor = structuredClone(successor);
+badHostSuccessor.runs.find(r=>r.engine==='node' && r.args.at(-1)==='scripts/test-canonical-host-sdk-v031.mjs').result.native_parity = '91209ccc10ac3e2d7864498492164838b2d966f4116cbfa3c6d12befe9333af1';
+assert.throws(()=>checkSuccessor(badHostSuccessor));
+
 assert.equal(usesCurrentProductV3('0.0.20'), false);
+for(const p of ['scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs']) {
+  assert.equal(currentV3ProductInputsForVersion('0.0.30').includes(p),false);
+  assert.equal(currentV3ProductInputsForVersion('0.0.31').includes(p),true);
+}
 for (const version of ['0.0.21', '0.0.22', '0.0.23', '0.0.100']) {
   assert.equal(usesCurrentProductV3(version), true);
   const path = currentCompatibilityPath(version);
@@ -26,9 +73,17 @@ assert.equal(requiresIfBranchScopeQualification('0.0.24'), false);
 assert.equal(requiresIfBranchScopeQualification('0.0.25'), true);
 assert.equal(requiresUnitResultMatchQualification('0.0.27'), false);
 assert.equal(requiresUnitResultMatchQualification('0.0.28'), true);
+assert.equal(currentHostQualificationScript('0.0.30'),'scripts/test-canonical-host-sdk.mjs');
+assert.equal(currentHostQualificationScript('0.0.31'),'scripts/test-canonical-host-sdk-v031.mjs');
+assert.equal(currentImportDemandQualificationScript('0.0.30'),'scripts/test-canonical-host-import-demand.mjs');
+assert.equal(currentImportDemandQualificationScript('0.0.31'),'scripts/test-canonical-host-import-demand-v031.mjs');
+assert.equal(currentCheckedQualificationScript('0.0.30'),'scripts/test-canonical-checked-results.mjs');
+assert.equal(currentCheckedQualificationScript('0.0.31'),'scripts/test-canonical-checked-results-v031.mjs');
 assert.equal(requiresCanonicalCheckedResultsQualification('0.0.28'), false);
 assert.equal(requiresCanonicalCheckedResultsQualification('0.0.29'), true);
 assert.equal(requiresStringStorageQualification('0.0.29'),false);assert.equal(requiresStringStorageQualification('0.0.30'),true);
+assert.equal(currentStringQualificationScript('0.0.30'),'scripts/test-current-string-support.mjs');
+assert.equal(currentStringQualificationScript('0.0.31'),'scripts/test-current-string-support-v031.mjs');
 let rejected = 0;
 for (const version of ['0.0.023', '0.0.23-dev.1', '../23', '0.1.0', '0.0.9007199254740992', null]) {
   assert.throws(() => usesCurrentProductV3(version)); rejected++;

@@ -8,6 +8,7 @@ import { generatedLib } from './generated-lib-v2.mjs';
 import { inventory, sha, digest } from './lib-refresh-cache-v2.mjs';
 import { verifyUpstreamSourceReceipt } from './lib-refresh-upstream-source-v2.mjs';
 import { verifyResourceCoreReceipt } from './lib-refresh-resource-core-v2.mjs';
+import { verifyReleaseLicenseReceipt } from './lib-refresh-license-receipt-v1.mjs';
 import { verifyWitClosure } from './lib-wit-closure-v2.mjs';
 
 const order = (a, b) => a < b ? -1 : a > b ? 1 : 0;
@@ -64,7 +65,10 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
     const receipt = JSON.parse(receiptBytes);
     assert.equal(receipt.accepted, true, 'partial refresh cannot authorize binding');
     assert.equal(receipt.schema, 'wasmc.lib-refresh-receipt/v2');
-    await verifyResourceCoreReceipt(repo, receipt, readFile, await verifyUpstreamSourceReceipt(repo, receipt, readFile));
+    await verifyResourceCoreReceipt(repo, receipt, readFile, {
+      ...await verifyUpstreamSourceReceipt(repo, receipt, readFile),
+      ...await verifyReleaseLicenseReceipt(repo, receipt, readFile),
+    });
     assert.equal(receipt.cargo_lock_sha256, lockHash, 'binding has stale shared lock');
     assert.equal(receipt.source_digests?.['libspec/rust-policy.json'], sha(policyBytes), 'binding has stale Rust policy');
     assert.equal(new Set(receipt.rows.map(row => row.id)).size, receipt.rows.length);
@@ -105,7 +109,10 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
       };
       if (native) assert.equal(current.delivery.component_sha256, null);
     }
-    await verifyResourceCoreReceipt(repo, receipt, readFile, await verifyUpstreamSourceReceipt(repo, receipt, readFile));
+    await verifyResourceCoreReceipt(repo, receipt, readFile, {
+      ...await verifyUpstreamSourceReceipt(repo, receipt, readFile),
+      ...await verifyReleaseLicenseReceipt(repo, receipt, readFile),
+    });
     receipts.push({ receipt_sha256: binding.receipt_sha256, ids: receipt.rows.map(row => row.id).sort(order) });
   }
   const entries = [];
@@ -125,7 +132,10 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
   }
   entries.sort((a, b) => order(a.identity, b.identity));
   assert.equal(new Set(entries.map(e => e.identity)).size, entries.length, 'duplicate search identity');
-  assert.ok(entries.length <= 4096, 'index entry budget');
+  // Frozen Search 0.5.0 rejects larger snapshots; successor Roots allocate
+  // dynamically and are constrained by their runtime's available memory.
+  const legacySearch = sources.get('wasmc-lib-search')?.spec.version === '0.5.0';
+  if (legacySearch) assert.ok(entries.length <= 4096, 'index entry budget');
   const input = Object.fromEntries(Object.entries(source).sort(([a], [b]) => order(a, b)));
   const packages = entries.filter(e => e.kind === 'package').map(e => {
     const { identity, kind, ...base } = e;
@@ -136,7 +146,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
     source_fingerprint: digest(input), packages };
   assert.deepEqual(indexEntries(index), entries, 'normalization lost discovery data');
   const bytes = Buffer.from(JSON.stringify(index) + '\n');
-  assert.ok(bytes.length <= 2 * 1024 * 1024, 'index byte budget');
+  if (legacySearch) assert.ok(bytes.length <= 2 * 1024 * 1024, 'index byte budget');
   for (const [path, expected] of Object.entries(input)) assert.equal(sha(await readFile(join(repo, path))), expected, 'source changed during index generation: ' + path);
   assert.equal(sha(await readFile(join(repo, 'libspec/registry.json'))), index.registry_sha256);
   assert.equal(sha(await readFile(join(repo, 'libspec/rust-policy.json'))), sha(policyBytes));

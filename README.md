@@ -1,7 +1,10 @@
-# WAsmC0.0.30
+# WAsmC 0.0.31
 
-v0.0.30 makes the existing Text0.0.1 Rust library discoverable through the normal catalog and replaces fixed CoreLib byte/String pools with fallible Rust Vec storage. The matching current CoreLib is4.11.0-candidate.2. Compiler bytes, all51 CoreLib export signatures, Host contracts and previously published Lib Roots remain unchanged. Run `node scripts/test-current-string-support.mjs` for ordinary Source, Unicode, larger input and failure/recovery checks. Caller memory, fuel, handle limits and the existing canonical ingress work budget still apply.
-
+WAsmC 0.0.31 includes JSON 0.2.4 for constructing values, applying ordered edits
+and reading typed values from ordinary WAsmC and the Rust 2024 SDK. The
+compiler and Host tooling accept larger inputs. Selected fixed limits on
+ordinary collections and JSON operations have been removed. Execution memory
+and explicit Host input bounds still apply.
 
 Start with [AGENTS.md](AGENTS.md) or [agent-quickstart.json](agent-quickstart.json).
 Read [agent-release-orientation.json](agent-release-orientation.json) and run its
@@ -77,5 +80,4 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.30 release evidence](docs/RELEASE_V027.md) keeps source, artifact,
-runtime, Native platform, whole-candidate and lifecycle gates separate.
+See the [0.0.31 release notes](docs/RELEASE_V031.md) for the JSON API and validation scope.

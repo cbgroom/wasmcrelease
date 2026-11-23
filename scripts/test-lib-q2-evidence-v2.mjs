@@ -1,6 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkQ2Evidence, checkQ2Resume } from './lib-q2-evidence-v2.mjs';
+import { checkQ2Evidence, checkQ2Resume, readQ2Receipt } from './lib-q2-evidence-v2.mjs';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { command } from './lib-refresh-cache-v2.mjs';
 
 const cases = [{export:'validate',arguments:[],expected:{ok:null}},
   {export:'select',arguments:[],expected:{ok:[{some:'值'},null]}}];
@@ -38,3 +42,15 @@ for (const key of ['schema','cases_sha256','index_sha256','root_manifest_sha256'
     assert.throws(()=>checkQ2Resume(changed,resume));
   });
 }
+
+test('reads a complete receipt larger than the diagnostic stdout tail',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'wasmc-q2-large-receipt-'));
+  try { const value={data:'x'.repeat(2*1024*1024)};
+    const childScript = `const fs=require('fs'); const v={data:'x'.repeat(2*1024*1024)}; fs.writeFileSync(process.argv[1],JSON.stringify(v)); console.log(JSON.stringify(v));`;
+    const result=await command(process.execPath,['-e',childScript,join(dir,'receipt.json')],{cwd:dir,logs:join(dir,'run')});
+    assert.throws(()=>JSON.parse(result.stdout),SyntaxError,'diagnostic tail must not be parsed as a receipt');
+    assert.deepEqual(await readQ2Receipt(dir),value);
+    await writeFile(join(dir,'receipt.json'),'{');
+    await assert.rejects(readQ2Receipt(dir),SyntaxError);
+  } finally { await rm(dir,{recursive:true,force:true}); }
+});

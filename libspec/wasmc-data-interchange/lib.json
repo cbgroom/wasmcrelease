@@ -1,12 +1,12 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-data-interchange",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "profile": "value",
-  "crate": "wasmc_data_interchange_refresh_v2",
-  "artifact_name": "wasmc_data_interchange_refresh_v2",
+  "crate": "wasmc_data_interchange_memory_v031",
+  "artifact_name": "wasmc_data_interchange_memory_v031",
   "world": "data-interchange",
-  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model.",
+  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
   "dependencies": [
     "arrow-ipc",
     "bytes",
@@ -21,7 +21,7 @@
   "apis": [
     {
       "api": "ipc-file-decode",
-      "delta": "Decode bounded Arrow IPC file bytes into neutral batches.",
+      "delta": "Decode Arrow IPC file bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow IPC 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -30,7 +30,7 @@
     },
     {
       "api": "ipc-file-encode",
-      "delta": "Encode validated neutral batches as bounded Arrow IPC file bytes.",
+      "delta": "Encode validated neutral batches as Arrow IPC file bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow IPC 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -39,7 +39,7 @@
     },
     {
       "api": "parquet-decode",
-      "delta": "Decode bounded Parquet bytes into neutral batches.",
+      "delta": "Decode Parquet bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Parquet 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -48,7 +48,7 @@
     },
     {
       "api": "parquet-encode",
-      "delta": "Encode validated neutral batches as bounded Parquet bytes.",
+      "delta": "Encode validated neutral batches as Parquet bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Parquet 60",
       "host_authorities": [],
       "implementation": "lib",

@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url));
 assert.equal(existsSync(root+'.git'),false,'negative controls require disposable archive');
 const check=()=>spawnSync(process.execPath,[root+'scripts/current-compiler-integrity.mjs'],{encoding:'utf8',timeout:30000});
+const version=JSON.parse(readFileSync(root+'current/compiler-release.json')).version;
+if(Number(version.split('.')[2])>=31){
+  const policy=spawnSync(process.execPath,[root+'scripts/test-compiler-source-diff-policy.mjs'],{encoding:'utf8',timeout:30000});
+  assert.equal(policy.status,0,policy.stderr);assert.equal(JSON.parse(policy.stdout).accepted,true);
+}
 assert.equal(check().status,0);
 let rejected=0;
 function mutate(path,change) {

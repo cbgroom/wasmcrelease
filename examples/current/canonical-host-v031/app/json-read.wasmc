@@ -1,0 +1,17 @@
+package ordinary:http_table;
+interface api {
+ enum json_error {input_too_large,depth_limit,invalid_json,too_many_pointers,pointer_too_long,invalid_pointer,output_too_large}
+ record selected_value {present:bool,json:string}
+ record selection_view {valid:bool,values:list<selected_value>,error:option<json_error>}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ record set_field {field:string,value_json:string}
+ record patch_field {field:string,patch:string,expected_value_sha256:option<string>}
+ record insert_operation {operation_id:string,key:string,row_json:string}
+ record update_operation {operation_id:string,key:string,expected_row_version:u64,field_updates:list<variant {set(set_field),unset(string),apply_patch(patch_field)}>}
+ record delete_operation {operation_id:string,key:string,expected_row_version:u64}
+ record transaction {table_path:string,expected_revision:string,transaction_id:string,idempotency_key:option<string>,operations:list<variant {insert(insert_operation),update(update_operation),delete(delete_operation)}>}
+ run:func(req:request)->response {let text:string = document::compact_or_bytes(req.body,"{}");let body:list<u8> = utf8::encode(text);return {status:200,body:body};}
+} world app {export api;}
