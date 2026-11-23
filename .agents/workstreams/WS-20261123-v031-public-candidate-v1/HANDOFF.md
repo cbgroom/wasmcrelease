@@ -42,3 +42,10 @@ The macOS ARM job in run 45106500378 ended before assigning a runner.
 The candidate uses the macos-15 runner already exercised by this repository,
 with aarch64-apple-darwin unchanged. The final manifest and all 19 local
 candidate checks were reopened against this exact product.
+
+v0.0.31 is formally published at the immutable tag on .
+The final complete two-model cohort, independent review and anonymous
+download readback are under publication/. The official latest release,
+default package index, exact archive and both Std installation mirrors
+were checked independently. The compiled JSON decision/atomic-write
+fixture is local test-Host coverage.
