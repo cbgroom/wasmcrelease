@@ -8,7 +8,6 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {resolve,relative,dirname,posix,join,isAbsolute} from 'node:path';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
-import {createRequire} from 'node:module';
 import {checkedCurrentCatalog,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
@@ -16,8 +15,9 @@ import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
 import {historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
 import {validateJsonDerivedSourceAdmission} from './json-derived-source-admission-v1.mjs';
+import {verifyMixedFromCatalog} from './mixed-current-product-v1.mjs';
+import {verifyPublicJsonOverlayPinned} from './json-overlay-public-v1.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
-const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
 export function relativeModuleImports(path,bytes){
@@ -602,8 +602,8 @@ export function currentCandidateClosure(candidate,read){
   assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
-  const verifier=variant==='mixed'?require('./mixed-current-product-v1.mjs').verifyMixedFromCatalog:variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
-  const closure=(variant==='json-overlay'||variant==='json-derived')?require('./json-overlay-public-v1.mjs').verifyPublicJsonOverlayPinned(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()].filter(path=>path.startsWith('current-libs/'))):verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  const verifier=variant==='mixed'?verifyMixedFromCatalog:variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
+  const closure=(variant==='json-overlay'||variant==='json-derived')?verifyPublicJsonOverlayPinned(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()].filter(path=>path.startsWith('current-libs/'))):verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
   historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
     compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,

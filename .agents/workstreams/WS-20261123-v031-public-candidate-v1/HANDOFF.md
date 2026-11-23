@@ -17,3 +17,10 @@ The repaired source-free snapshot binds product set 9bb5b535de63f0ea950fe1efead3
 All 19 local candidate checks pass, and both public mirrors freshly installed
 the selected 26-file Std 1.5.2 Root and passed 256 Base64 rounds. Re-run the
 public workflows on the new exact product commit. Formal publication is pending.
+
+Public LibSearch on Node 18 and 22 reproduced CommonJS loading of the ESM
+JSON verifier. The Native CLI stopped at its old compiler digest. The scoped
+repair uses ESM imports and binds the build and runtime CLI to the measured
+compiler and existing release gate. These failures remain in runs 45105977167
+and 45105976999. The new exact product passes the 19-case local candidate
+suite and Node 22 checks with CommonJS loading of ESM disabled.

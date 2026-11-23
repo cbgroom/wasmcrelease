@@ -3,7 +3,7 @@ use std::{env, fs, path::PathBuf};
 use sha2::{Digest, Sha256};
 use wasmtime::{Config, Engine, OptLevel};
 
-const COMPILER_SHA256: &str = "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817";
+const COMPILER_SHA256: &str = "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c";
 
 fn main() {
     // Windows build-script processes have a much smaller default stack than
@@ -32,6 +32,7 @@ fn build_compiler_aot() {
         COMPILER_SHA256,
         "public compiler.wasm digest drifted"
     );
+    println!("cargo:rustc-env=WASMC_COMPILER_SHA256={COMPILER_SHA256}");
 
     // This is target-local derivation only. The checked-in Core Wasm remains
     // the public/release authority; compiler.cwasm is never admitted as a
