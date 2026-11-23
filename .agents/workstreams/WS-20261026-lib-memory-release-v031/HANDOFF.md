@@ -1169,3 +1169,19 @@ passed all 10 JavaScript cells and the actual Rust cell. Native run
 on macOS 14. Complete the exact input bridges and verify all required Native
 download-consumer jobs before the final unpushed Pi pair rehearsal. The
 official default remains v0.0.30.
+
+The newer v031 product at `98d813cc020bae00f34a302e44512a4f36e4404d`
+keeps the same compiler, Runtime carriers, CoreLib and 43 selected Roots.
+Its public Agent and Lib entrypoints use the verified v031 catalog pin,
+Std 1.5.2, LibSearch 0.6.0 and JSON 0.2.4. Native run 45107673272 passed
+all six builds and all six downloaded-package consumers, including required
+macOS ARM on macOS 15. LibSearch run 45108785719 passed the corrected
+fail-closed JavaScript and Rust workflow. The normal qualification retains
+45106824758's original aggregate failure and all five successful Rust
+execution commands, then substitutes only the public catalog check actually
+executed in the corrected workflow. The final rehearsal verifies the
+declared notice inventory, SDK routing and lifecycle projections. Only its
+exact controlled Pi pair and formal publisher/readback can close the task.
+Final runtime and candidate verification is run 45110114054. The earlier
+successful Pi structural cohort for 158e6e1b has no publication authority
+for this subsequent documentation correction.
