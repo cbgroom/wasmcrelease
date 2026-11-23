@@ -2,7 +2,8 @@
 import {fileURLToPath} from 'node:url';
 import {isAbsolute} from 'node:path';
 import assert from 'node:assert/strict';
-import {currentProductReader,currentProductPaths,verifyCurrentRelease} from './current-lib-release-v3.mjs';
+import {currentProductReader,currentProductPaths,pinnedCurrentCatalog,verifyCurrentRelease} from './current-lib-release-v3.mjs';
+import {verifyPublicJsonOverlayPinned} from './json-overlay-public-v1.mjs';
 import {checkNormalCoreSdkBudgets} from './current-normal-core-sdk-quota-check.mjs';
 const args=process.argv.slice(2);let root=fileURLToPath(new URL('../',import.meta.url)),expected=null;
 if(args.length){
@@ -23,6 +24,9 @@ if(expected){
   assert.equal(admission.schema,'wasmc.current-composition-release-closure/v1');
   closure=verifyCurrentRelease(catalogBytes,admission.catalog_sha256,read,currentProductPaths(root));
   assert.deepEqual(closure,admission,'independently retained composition closure');
+}else if(['wasmc.json-overlay-cohort/v1','wasmc.json-derived-overlay-cohort/v1'].includes(cohort.schema)){
+  const {sha256}=pinnedCurrentCatalog(catalogBytes);
+  closure=verifyPublicJsonOverlayPinned(catalogBytes,sha256,read,currentProductPaths(root));
 }else closure=verifyCurrentRelease(catalogBytes,'81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74',read,currentProductPaths(root));
 if(Number(catalog.version.split('.')[2])>=31)checkNormalCoreSdkBudgets(catalog,read);
 console.log(JSON.stringify({accepted:true,...closure,scope:expected?'independently pinned candidate assembly; not formal release':'current complete Roots, public WIT routes, source/notice pins and actual compiled Core Search; source-only Native remains unexecuted'}));

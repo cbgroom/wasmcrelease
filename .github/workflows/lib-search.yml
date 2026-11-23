@@ -33,6 +33,7 @@ jobs:
         with:
           deno-version: 2.9.4
       - name: Formal API, public compiler independent WAsmC and typed client
+        shell: bash
         env:
           RUNTIME: ${{ matrix.runtime }}
         run: |
