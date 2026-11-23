@@ -49,7 +49,7 @@ jobs:
       - run: cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
       - run: node scripts/native-package.mjs build native-package ${{ matrix.target }} ${{ env.SOURCE_COMMIT }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: wasmc-${{ matrix.target }}-${{ env.SOURCE_COMMIT }}
           path: native-package/
