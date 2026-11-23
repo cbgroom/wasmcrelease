@@ -1134,3 +1134,18 @@ carrier. The frozen v0.0.30 wrapper is the read-only input to that recipe.
 The newly replayed producer passed preflight for all 43 selected packages.
 Recheck its exact 123 Git inputs against canonical Source before candidate
 creation and bind formal compiler custody to the integrated commit.
+
+The compiler scope is integrated into private master
+`05696756c6a5252e62ab18a0fdfce34e63c37658`. Canonical custody matches 121
+compiler inputs and 123 JSON producer inputs. The public candidate at
+`9af4bfd7385f7ad02a05f6386f4ff9130e8ce250` freezes product digest
+`9bb5b535de63f0ea950fe1efead3da92bd78ddedb8b2ed7ac472e3f88dd7c561`.
+It reuses the same compiler and licensed Roots. All 19 local candidate
+checks pass and both public mirrors installed and exercised the exact
+Std 1.5.2 Root. The original failed public runs 45104598958 and 45104598466
+remain linked from the public candidate workstream.
+
+Resume the exact-commit public gates 45105977289 (normal consumers),
+45105977167 (LibSearch), and 45105976999 (Native CLI). Create the final
+rehearsal only after qualifying those receipts and retaining any first
+failures. v0.0.30 remains the published default.
