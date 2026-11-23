@@ -1,30 +1,49 @@
 {
-  "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
-  "runtime": "node",
-  "compiler_bytes": 2055961,
-  "output_bytes": 41,
-  "runtime_version": "v26.12.1",
-  "candidate_commit": "f4736bed7fbb2d756731c5aee16b55fd5c77ffe1",
-  "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-  "source_free_package": {
-    "archive_sha256": "7246acd94895686e8cd09495ffdb072d77af73fd5e10144670a509206240d5ef",
-    "private_source_checked_out": false,
-    "git_metadata_present": false,
-    "origin": "Exact commit git archive subset: runtime/wasmc-runtime-v0, scripts/assert-runtime-output.mjs, examples/agent-start/06_if_branch_scope.wasmc; actual HTTPS release download remains separate"
+  "candidate_commit": "f7dc2aeaca0fad8579f5eec620c09f563e6f3f28",
+  "compiler_bytes": 2036236,
+  "compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+  "evidence": {
+    "actual_steps": [
+      {
+        "exit": 0,
+        "host": "node",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "09e6ea6fcae8af442fffb3026e22243c9c77d071ca555405cff6e2586ef7e5d0",
+        "step": 1
+      },
+      {
+        "exit": 0,
+        "host": "node",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "5eb1c54b313b7da9715964fd572c056216ac4575b8c1807bbfb0044f2cfc71d9",
+        "step": 2
+      },
+      {
+        "exit": 0,
+        "host": "node",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+        "step": 3
+      },
+      {
+        "exit": 0,
+        "host": "node",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "55f1ea04150866213488b8bd093fa8cb45990b10bd431cf296a3c8aa3acc05d2",
+        "step": 4
+      },
+      {
+        "exit": 0,
+        "host": "node",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "20384dec34a4222490e12385ee89d07a44a5e7654432c8dc2a0ac2f24b9ed787",
+        "step": 5
+      }
+    ]
   },
+  "executed_at_utc": "2026-11-23T03:45:38.708408+00:00",
   "execution": {
-    "self_test": true,
-    "compile": true,
-    "compile_output_bytes": 44,
-    "wasm_validate": true,
-    "instantiate": true,
-    "oracle_export": "run",
-    "oracle_args": [
-      6,
-      18
-    ],
-    "oracle_result": 42,
     "branch_inputs": [
       0,
       1
@@ -32,55 +51,36 @@
     "branch_results": [
       14,
       26
-    ]
-  },
-  "tool_source": {
-    "provider": "local-executable",
-    "command": "node",
-    "executable_sha256": "92a0c4293164f55741d9b3fbf00bd61c50263ccfa847b583348f5eb5f64f6d08"
-  },
-  "executed_at_utc": "2026-10-26T09:46:35.165133+00:00",
-  "evidence": {
-    "actual_steps": [
-      {
-        "host": "node",
-        "step": 1,
-        "exit": 0,
-        "stdout_sha256": "4691acb54083f2bb27aa18080078b2d41b4dd8e1cbd069ce44470d547c619eca",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "host": "node",
-        "step": 2,
-        "exit": 0,
-        "stdout_sha256": "206b4390c8d2099d03eda5f8c483ffa3cfdb41ff2c7398b8e8ada5e274f32ddf",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "host": "node",
-        "step": 3,
-        "exit": 0,
-        "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "host": "node",
-        "step": 4,
-        "exit": 0,
-        "stdout_sha256": "bbc03ec908d683eec34ed0cdc0bbfd6ed533087d4e13b184d2f716dd9d1a62c0",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "host": "node",
-        "step": 5,
-        "exit": 0,
-        "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      }
-    ]
+    ],
+    "compile": true,
+    "compile_output_bytes": 44,
+    "instantiate": true,
+    "oracle_args": [
+      6,
+      18
+    ],
+    "oracle_export": "run",
+    "oracle_result": 42,
+    "self_test": true,
+    "wasm_validate": true
   },
   "host": {
     "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+    "uname": "Darwin 25.6.0 arm64"
+  },
+  "output_bytes": 44,
+  "runtime": "node",
+  "runtime_version": "v26.12.1",
+  "schema": "wasmc.runtime-js-self-test/v0",
+  "source_free_package": {
+    "archive_sha256": "dd17098412ebeb2df9e5314f4af7c617571c2960a812f38de4aa318809667f2a",
+    "git_metadata_present": false,
+    "origin": "Exact candidate commit git archive of the public Runtime and two oracle fixtures, excluding historical self-test receipts.",
+    "private_source_checked_out": false
+  },
+  "tool_source": {
+    "command": "node",
+    "executable_sha256": "92a0c4293164f55741d9b3fbf00bd61c50263ccfa847b583348f5eb5f64f6d08",
+    "provider": "local-executable"
   }
 }
